@@ -85,6 +85,7 @@ function Compositor() {
       <Zoom in={true}>
         <Paper className={`ohm-card`}>
           <Grid container direction="column" spacing={2}>
+            <div>Dropzone will be here</div>
           </Grid>
         </Paper>
       </Zoom>
@@ -94,12 +95,12 @@ function Compositor() {
           elevation={3}
         />
         <div>
-          <img
+          {/*<img
             id="image"
             src={zeusImg}
             alt='zeus'
             style={{ cursor: 'url('+{sOhm}+'),auto' }}
-          />
+          />*/}
           <canvas
             id="canvas"
           ></canvas>
