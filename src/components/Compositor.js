@@ -85,7 +85,7 @@ function Compositor() {
       <Zoom in={true}>
         <Paper className={`ohm-card`}>
           <Grid container direction="column" spacing={2}>
-            <div>Dropzone will be here</div>
+            <div>Dropzone will be here & centered, etc.</div>
           </Grid>
         </Paper>
       </Zoom>
