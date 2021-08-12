@@ -33,17 +33,17 @@ const canvasContainer = {
   marginTop: 16
 };
 
-const canvasStyle = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 350,
-  height: 350,
-  padding: 4,
-  boxSizing: 'border-box'
-};
+// const canvasStyle = {
+//   display: 'inline-flex',
+//   borderRadius: 2,
+//   border: '1px solid #eaeaea',
+//   marginBottom: 8,
+//   marginRight: 8,
+//   width: 350,
+//   height: 350,
+//   padding: 4,
+//   boxSizing: 'border-box'
+// };
 
 const thumbsContainer = {
   display: 'flex',
