@@ -1,4 +1,5 @@
-import React from 'react';
+// import React, {useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   Grid,
@@ -23,17 +24,23 @@ import {
   Zoom,
 } from "@material-ui/core";
 
+import {useDropzone} from 'react-dropzone'
+
 import "./stake.scss";
 import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 
 function Compositor() {
 
-  function draw() {
+  function draw(baseImg) {
+    if (baseImg === undefined) {
+      baseImg = zeusImg;
+    };
     var canvasOnly = document.getElementById('canvas')
     var ctx = canvasOnly.getContext('2d');
     var img = new Image();
-    img.src = zeusImg;
+
+    img.src = baseImg;
     var logo = new Image();
     logo.src = sOhm;
     
@@ -41,7 +48,10 @@ function Compositor() {
     console.log(img.naturalHeight);
     ctx.canvas.height = img.naturalHeight;
     ctx.canvas.width = img.naturalWidth;
+
     img.onload = function() {
+      console.log('onload');
+      console.log(img);
       ctx.drawImage(img, 0, 0);
       // ctx.drawImage(logo, 10, 10, 20, 20);
     };
@@ -79,15 +89,73 @@ function Compositor() {
         isDrawing = false;
       }
     });
-    
   }
 
-  return (
+  const onDrop = useCallback(acceptedFiles => {
+    // Do something with the files
+
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader()
+
+      reader.onabort = () => console.log('file reading was aborted')
+      reader.onerror = () => console.log('file reading has failed')
+      reader.onload = () => {
+      // Do whatever you want with the file contents
+        // const binaryStr = reader.result
+        // console.log(binaryStr)
+        // draw(binaryStr);
+
+        // convert image file to base64 string
+        console.log('load');
+        var canvasOnly = document.getElementById('canvas')
+        var ctx = canvasOnly.getContext('2d');
+        var img = new Image();
+
+        console.log("img.naturalHeight");
+        console.log(img.naturalHeight);
+        ctx.canvas.height = img.naturalHeight || 100;
+        ctx.canvas.width = img.naturalWidth || 100;
+
+        img.src = reader.result;
+
+        console.log(img);
+        ctx.drawImage(img, 0, 0);
+      }
+      // reader.readAsDataURL(file)
+
+      // reader.addEventListener("load", function () {
+        
+      // }, false);
+  
+      if (file) {
+        console.log('if file');
+        reader.readAsDataURL(file);
+      }
+    });
+
+  }, [])
+
+  // const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+  const {getRootProps, getInputProps} = useDropzone({onDrop})
+
+  // useEffect(() => {
+  //   console.log('useeffect');
+  //   // draw();
+  //   setupDropZone();
+  // }, []);
+    
+    return (
     <div id="stake-view">
       <Zoom in={true}>
         <Paper className={`ohm-card`}>
           <Grid container direction="column" spacing={2}>
-            <div>Dropzone will be here & centered, etc.</div>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <p>Drag 'n' drop some files here, or click to select files</p>
+            </div>
+            <canvas
+                id="canvas"
+              ></canvas>
           </Grid>
         </Paper>
       </Zoom>
@@ -103,9 +171,7 @@ function Compositor() {
             alt='zeus'
             style={{ cursor: 'url('+{sOhm}+'),auto' }}
           />*/}
-          <canvas
-            id="canvas"
-          ></canvas>
+          
         </div>
         {/* <img src={sOhm} alt='sOhm' /> */}
 
