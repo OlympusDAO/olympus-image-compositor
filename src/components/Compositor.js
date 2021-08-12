@@ -22,6 +22,8 @@ import {
   // Link,
   Zoom,
 } from "@material-ui/core";
+
+import "./stake.scss";
 import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 
