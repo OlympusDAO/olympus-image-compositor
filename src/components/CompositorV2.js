@@ -23,6 +23,9 @@ import {
 
 import React, {useCallback, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
+
+import "./stake.scss";
+
 import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 
