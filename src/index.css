@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.dropContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: column;
+}
+
+.dropZone {
+  cursor: pointer;
+  height: 300px;
+}
+
+.dropZone-sm {
+  cursor: pointer;
+  /* height: 300px; */
+}

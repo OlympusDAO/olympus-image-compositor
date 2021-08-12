@@ -142,13 +142,13 @@ function CompositorV2(props) {
   // const imageRef = React.useRef(null);
 
   const [files, setFiles] = useState([]);
-  const [hideImage, setHideImage] = useState(false);
+  const [showCanvas, setshowCanvas] = useState(false);
   
   const {getRootProps, getInputProps} = useDropzone({
     accept: 'image/*',
     onDrop: acceptedFiles => {
 
-      setHideImage(false);
+      setshowCanvas(false);
       loadFile(acceptedFiles[0]);
       setFiles(acceptedFiles.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
@@ -168,7 +168,7 @@ function CompositorV2(props) {
             onClick={e => {
               console.log(e);
               files.forEach(file => loadFile(file));
-              setHideImage(true);
+              setshowCanvas(true);
             }}
           />
         </div>
@@ -208,18 +208,18 @@ function CompositorV2(props) {
       <Zoom in={true}>
         <Paper className={`ohm-card`}>
           <Grid container direction="column" spacing={2}></Grid>
-          <section className="container">
-            <div {...getRootProps({className: 'dropzone'})}>
+          <div className="dropContainer">
+            <div {...getRootProps({className: !showCanvas ? ('dropZone') : ('dropZone-sm')})}>
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files. Then click on the image to place the logo.</p>
             </div>
-            {!hideImage &&
-              <aside style={thumbsContainer}>
+            {!showCanvas &&
+              <div style={thumbsContainer}>
                 {thumbs}
-              </aside>
+              </div>
             }
             
-            <aside style={canvasContainer}>
+            <div style={canvasContainer}>
               <canvas
                 id="canvas"
                 ref={canvasRef}
@@ -227,8 +227,8 @@ function CompositorV2(props) {
                 height={window.innerHeight-10}
               >
               </canvas>
-            </aside>
-          </section>
+            </div>
+          </div>
         </Paper>
       </Zoom>
     </div>
