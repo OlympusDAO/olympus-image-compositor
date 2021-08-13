@@ -163,7 +163,6 @@ function CompositorV2(props) {
   
   // Canvas sizing
   //
-  // 1. this causes a problem where "small" images are stretched too large & accuracy of logo placement suffers...
   function fitToContainer(canvas){
     console.log('fitToContainer');
     // Make it visually fill the positioned parent
@@ -201,9 +200,11 @@ function CompositorV2(props) {
     const image = new Image();
     image.src = file.preview;
 
-    // need to limit image height & width, make responsive
-    ctx.canvas.height = image.naturalHeight || 100;
-    ctx.canvas.width = image.naturalWidth || 100;
+    // need to limit image & canvas height & width to parent
+    var parent_height = canvasOnly.parentElement.offsetHeight;
+    var parent_width = canvasOnly.parentElement.offsetWidth;
+    ctx.canvas.height = parent_height;
+    ctx.canvas.width = parent_width;
 
     image.onload = () => {
       ctx.drawImage(image, 0, 0, canvasOnly.width, canvasOnly.height);
