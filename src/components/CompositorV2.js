@@ -161,6 +161,19 @@ function CompositorV2(props) {
     }
   });
   
+  // Canvas sizing
+  //
+  // 1. this causes a problem where "small" images are stretched too large & accuracy of logo placement suffers...
+  function fitToContainer(canvas){
+    console.log('fitToContainer');
+    // Make it visually fill the positioned parent
+    canvas.style.width ='100%';
+    canvas.style.height='100%';
+    // ...then set the internal size to match
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
   const thumbs = files.map(file => (
       <div style={thumb} key={file.name}>
         <div style={thumbInner}>
@@ -188,6 +201,7 @@ function CompositorV2(props) {
     const image = new Image();
     image.src = file.preview;
 
+    // need to limit image height & width, make responsive
     ctx.canvas.height = image.naturalHeight || 100;
     ctx.canvas.width = image.naturalWidth || 100;
 
@@ -202,6 +216,8 @@ function CompositorV2(props) {
   useEffect(() => () => {
     // Make sure to revoke the data uris to avoid memory leaks
     files.forEach(file => URL.revokeObjectURL(file.preview));
+    fitToContainer(canvasRef.current);
+
     // files.forEach(file => loadFile(file));
 
   }, [files]);
@@ -216,18 +232,19 @@ function CompositorV2(props) {
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files. Then click on the image to place the logo.</p>
             </div>
-            {!showCanvas &&
-              <div style={thumbsContainer}>
-                {thumbs}
-              </div>
-            }
+            
             
             <div style={canvasContainer}>
+              {!showCanvas &&
+                <div style={thumbsContainer}>
+                  {thumbs}
+                </div>
+              }
               <canvas
                 id="canvas"
                 ref={canvasRef}
-                width={window.innerWidth-10}
-                height={window.innerHeight-10}
+                // width={window.innerWidth-10}
+                // height={window.innerHeight-10}
               >
               </canvas>
             </div>
