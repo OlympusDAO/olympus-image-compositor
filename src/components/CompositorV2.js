@@ -28,12 +28,14 @@ import "./stake.scss";
 
 import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
+import classifyImage from "../helpers/classifyImage";
 
 const canvasContainer = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  marginTop: 16
+  marginTop: 16,
+  margin: 'auto'
 };
 
 // const canvasStyle = {
@@ -152,9 +154,11 @@ function CompositorV2(props) {
     onDrop: acceptedFiles => {
 
       setshowCanvas(false);
-      loadFile(acceptedFiles[0]);
+      // drawFile(acceptedFiles[0]);
+      console.log(acceptedFiles);
       setFiles(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file)
+        preview: URL.createObjectURL(file),
+        // width: 
       })));
 
       
@@ -182,7 +186,7 @@ function CompositorV2(props) {
             alt='whatever'
             onClick={e => {
               console.log(e);
-              files.forEach(file => loadFile(file));
+              files.forEach(file => drawFile(file));
               setshowCanvas(true);
             }}
           />
@@ -190,24 +194,22 @@ function CompositorV2(props) {
       </div>
   ));
 
-  const loadFile = useCallback((file) => {
+  // drawFile draws in canvas
+  const drawFile = useCallback((file) => {
     // handle the click event
-    console.log('load file');
-    // function loadFile(file) {
-    console.log(file);
+    // function drawFile(file) {
     var canvasOnly = canvasRef.current;
     var ctx = canvasOnly.getContext('2d');
-    const image = new Image();
+    let image = new Image();
     image.src = file.preview;
 
-    // need to limit image & canvas height & width to parent
-    var parent_height = canvasOnly.parentElement.offsetHeight;
-    var parent_width = canvasOnly.parentElement.offsetWidth;
-    ctx.canvas.height = parent_height;
-    ctx.canvas.width = parent_width;
+    image = classifyImage(image, canvasOnly.parentElement);
 
+    // set canvas dims based on classifyImage results
+    canvasOnly.height = image.governing_height;
+    canvasOnly.width = image.governing_width;
     image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvasOnly.width, canvasOnly.height);
+      ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
     };
 
     draw(image);
@@ -217,7 +219,7 @@ function CompositorV2(props) {
   useEffect(() => () => {
     // Make sure to revoke the data uris to avoid memory leaks
     files.forEach(file => URL.revokeObjectURL(file.preview));
-    // files.forEach(file => loadFile(file));
+    // files.forEach(file => drawFile(file));
 
   }, [files]);
 
