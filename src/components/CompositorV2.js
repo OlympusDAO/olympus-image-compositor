@@ -163,15 +163,15 @@ function CompositorV2(props) {
   
   // Canvas sizing
   //
-  function fitToContainer(canvas){
-    console.log('fitToContainer');
-    // Make it visually fill the positioned parent
-    canvas.style.width ='100%';
-    canvas.style.height='100%';
-    // ...then set the internal size to match
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
+  // function fitToContainer(canvas){
+  //   console.log('fitToContainer');
+  //   // Make it visually fill the positioned parent
+  //   canvas.style.width ='100%';
+  //   canvas.style.height='100%';
+  //   // ...then set the internal size to match
+  //   canvas.width  = canvas.offsetWidth;
+  //   canvas.height = canvas.offsetHeight;
+  // }
 
   const thumbs = files.map(file => (
       <div style={thumb} key={file.name}>
@@ -217,8 +217,6 @@ function CompositorV2(props) {
   useEffect(() => () => {
     // Make sure to revoke the data uris to avoid memory leaks
     files.forEach(file => URL.revokeObjectURL(file.preview));
-    fitToContainer(canvasRef.current);
-
     // files.forEach(file => loadFile(file));
 
   }, [files]);
