@@ -1,4 +1,10 @@
 // classifyImage.js
+
+// adds attributes to image DOM object
+//
+// .portrait (bool)
+// .governing_height
+// .governing_width
 function classifyImage(image, parentElement) {
   var portrait = true;
   if (image.height < image.width) {

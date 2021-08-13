@@ -31,56 +31,18 @@ import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
 const canvasContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16,
-  margin: 'auto'
+  // display: 'flex',
+  // flexDirection: 'row',
+  // flexWrap: 'wrap',
+  // marginTop: 16,
+  margin: 'auto',
+  width: "100%"
 };
 
-// const canvasStyle = {
-//   display: 'inline-flex',
-//   borderRadius: 2,
-//   border: '1px solid #eaeaea',
-//   marginBottom: 8,
-//   marginRight: 8,
-//   width: 350,
-//   height: 350,
-//   padding: 4,
-//   boxSizing: 'border-box'
-// };
-
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 350,
-  height: 350,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const imgStyle = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
-
+const canvasStyle = {
+  margin: "auto",
+  display: "block"
+}
 
 function CompositorV2(props) {
 
@@ -95,18 +57,6 @@ function CompositorV2(props) {
     // img.src = baseImg;
     var logo = new Image();
     logo.src = sOhm;
-    
-    // console.log("img.naturalHeight");
-    // console.log(img.naturalHeight);
-    // ctx.canvas.height = img.naturalHeight;
-    // ctx.canvas.width = img.naturalWidth;
-
-    // img.onload = function() {
-    //   console.log('onload');
-    //   console.log(img);
-    //   ctx.drawImage(img, 0, 0);
-    //   // ctx.drawImage(logo, 10, 10, 20, 20);
-    // };
 
     // When true, moving the mouse draws on the canvas
     let isDrawing = false;
@@ -144,58 +94,74 @@ function CompositorV2(props) {
   }
 
   const canvasRef = React.useRef(null);
-  // const imageRef = React.useRef(null);
+  const imageRef = React.useRef(null);
 
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState(false);
   const [showCanvas, setshowCanvas] = useState(false);
   
   const {getRootProps, getInputProps} = useDropzone({
     accept: 'image/*',
+    multiple: false,
     onDrop: acceptedFiles => {
-
-      setshowCanvas(false);
-      // drawFile(acceptedFiles[0]);
       console.log(acceptedFiles);
-      setFiles(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file),
-        // width: 
-      })));
+      var previewUrl = null;
+      if (acceptedFiles.length > 0) {
+        console.log(acceptedFiles[0]);
+        previewUrl = URL.createObjectURL(acceptedFiles[0]);
+      }
+      setFile(Object.assign(acceptedFiles[0], {
+        preview: previewUrl,
+      }));
+      setshowCanvas(false);
+      let image = new Image();
+      console.log('on drop');
+      image.onload = () => {
+        console.log('img load');
+        sizeImgDom(image);
+      };
+      image.src = previewUrl;
 
-      
     }
   });
-  
+
+  const sizeImgDom = (image) => {
+
+    console.log('sizeImgDom', image);
+    // handle the click event
+    var canvasOnly = canvasRef.current;
+    var ctx = canvasOnly.getContext('2d');
+    // let image = new Image();
+    // image.src = file_preview;
+
+    image = classifyImage(image, canvasOnly.parentElement);
+    console.log(image.governing_height, image.governing_width)
+    // set canvas dims based on classifyImage results
+    canvasOnly.height = image.governing_height;
+    canvasOnly.width = image.governing_width;
+    // fitToContainer(canvasOnly);
+    // image.onload = () => {
+      ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
+    // };
+
+    draw(image);
+  }
+
   // Canvas sizing
   //
-  // function fitToContainer(canvas){
-  //   console.log('fitToContainer');
-  //   // Make it visually fill the positioned parent
-  //   canvas.style.width ='100%';
-  //   canvas.style.height='100%';
-  //   // ...then set the internal size to match
-  //   canvas.width  = canvas.offsetWidth;
-  //   canvas.height = canvas.offsetHeight;
-  // }
-
-  const thumbs = files.map(file => (
-      <div style={thumb} key={file.name}>
-        <div style={thumbInner}>
-          <img
-            src={file.preview}
-            style={imgStyle}
-            alt='whatever'
-            onClick={e => {
-              console.log(e);
-              files.forEach(file => drawFile(file));
-              setshowCanvas(true);
-            }}
-          />
-        </div>
-      </div>
-  ));
+  function fitToContainer(canvas){
+    console.log('fitToContainer');
+    // Make it visually fill the positioned parent
+    canvas.style.width ='100%';
+    canvas.style.height='100%';
+    canvas.style.margin='auto';
+    // ...then set the internal size to match
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
 
   // drawFile draws in canvas
   const drawFile = useCallback((file) => {
+    console.log('drawfile', file);
     // handle the click event
     // function drawFile(file) {
     var canvasOnly = canvasRef.current;
@@ -216,12 +182,18 @@ function CompositorV2(props) {
 
   }, []);  
 
-  useEffect(() => () => {
-    // Make sure to revoke the data uris to avoid memory leaks
-    files.forEach(file => URL.revokeObjectURL(file.preview));
-    // files.forEach(file => drawFile(file));
+  // useEffect(() => () => {
+  //   // Make sure to revoke the data uris to avoid memory leaks
+  //   // URL.revokeObjectURL(file.preview);
+  //     // Make it visually fill the positioned parent
+  //     var canvas = canvasRef.current;
+  //     canvas.style.width ='100%';
+  //     canvas.style.height='100%';
+  //     // ...then set the internal size to match
+  //     canvas.width  = canvas.offsetWidth;
+  //     canvas.height = canvas.offsetHeight;
 
-  }, [files]);
+  // }, [file]);
 
   return (
     <div id="stake-view">
@@ -236,14 +208,10 @@ function CompositorV2(props) {
             
             
             <div style={canvasContainer}>
-              {!showCanvas &&
-                <div style={thumbsContainer}>
-                  {thumbs}
-                </div>
-              }
               <canvas
                 id="canvas"
                 ref={canvasRef}
+                style={canvasStyle}
                 // width={window.innerWidth-10}
                 // height={window.innerHeight-10}
               >
