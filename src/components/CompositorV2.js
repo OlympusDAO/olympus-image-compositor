@@ -52,6 +52,33 @@ function CompositorV2(props) {
     };
     var canvasOnly = canvasRef.current
     var ctx = canvasOnly.getContext('2d');
+    
+    //////////// HISTORY
+    var history = {
+      redo_list: [],
+      undo_list: [],
+      // saveState: function(canvasOnly, list, keep_redo) {
+      //   keep_redo = keep_redo || false;
+      //   if(!keep_redo) {
+      //     this.redo_list = [];
+      //   }
+        
+      //   (list || this.undo_list).push(canvasOnly.toDataURL());   
+      // },
+      // undo: function(canvasOnly, ctx) {
+      //   this.restoreState(canvasOnly, ctx);
+      // },
+      restoreState: function() {
+        console.log('restorState');
+        // if(pop.length) {
+          // this.saveState(canvasOnly, push, true);
+          ctx.clearRect(0, 0, baseImg.governing_width, baseImg.governing_height);
+          ctx.drawImage(baseImg, 0, 0, baseImg.governing_width, baseImg.governing_height);  
+        // }
+      }
+    }
+    ///////////////
+
     // var img = new Image();
 
     // img.src = baseImg;
@@ -75,6 +102,8 @@ function CompositorV2(props) {
     canvasOnly.addEventListener('mousemove', e => {
       if (isDrawing === true) {
         // ctx.drawImage(image, dx, dy, dWidth, dHeight);
+        // history.undo(canvasOnly, ctx);
+        history.restoreState();
         ctx.drawImage(logo, e.offsetX, e.offsetY, 20, 20);
         // drawLine(context, x, y, e.offsetX, e.offsetY);
         // x = e.offsetX;
@@ -84,6 +113,9 @@ function CompositorV2(props) {
 
     window.addEventListener('mouseup', e => {
       if (isDrawing === true) {
+        // history.undo(canvasOnly, ctx);
+        history.restoreState();
+
         ctx.drawImage(logo, e.offsetX, e.offsetY, 20, 20);
         // drawLine(context, x, y, e.offsetX, e.offsetY);
         // x = 0;
