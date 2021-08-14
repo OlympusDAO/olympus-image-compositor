@@ -1,13 +1,13 @@
 import {
-  Grid,
-  // Box,
+  // Grid,
+  Box,
   Paper,
   // Typography,
   // FormControl,
   // InputAdornment,
   // InputLabel,
   // OutlinedInput,
-  // Button,
+  Button,
   // SvgIcon,
   // Tab,
   // Tabs,
@@ -139,12 +139,13 @@ function CompositorV2(props) {
         console.log(acceptedFiles[0]);
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
-      setshowCanvas(false);
       let image = new Image();
       console.log('on drop');
       image.onload = () => {
         console.log('img load');
         sizeImgDom(image);
+        setshowCanvas(true);
+
       };
       image.src = previewUrl;
 
@@ -166,12 +167,18 @@ function CompositorV2(props) {
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
     // image.onload = () => {
-      ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
+    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
     // };
 
     draw(image);
   }
 
+  const downloadImage = () => {
+    var link = document.createElement('a');
+    link.download = 'sOhmTag.png';
+    link.href = canvasRef.current.toDataURL()
+    link.click();
+  }
   // drawFile draws in canvas
   // const drawFile = useCallback((file) => {
   //   console.log('drawfile', file);
@@ -199,25 +206,33 @@ function CompositorV2(props) {
     <div id="stake-view">
       <Zoom in={true}>
         <Paper className={`ohm-card`}>
-          <Grid container direction="column" spacing={2}></Grid>
+          {/*<Grid container direction="column" spacing={2}></Grid>*/}
           <div className="dropContainer">
-            <div {...getRootProps({className: !showCanvas ? ('dropZone') : ('dropZone-sm')})}>
+            <div {...getRootProps({className: showCanvas ? ('dropZone-sm') : ('dropZone')})}>
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files. Then click on the image to place the logo.</p>
             </div>
-            
-            
-            <div style={canvasContainer}>
-              <canvas
-                id="canvas"
-                ref={canvasRef}
-                style={canvasStyle}
-                // width={window.innerWidth-10}
-                // height={window.innerHeight-10}
-              >
-              </canvas>
-            </div>
           </div>
+
+          <div style={canvasContainer}>
+            <canvas
+              id="canvas"
+              ref={canvasRef}
+              style={canvasStyle}
+              // width={window.innerWidth-10}
+              // height={window.innerHeight-10}
+            >
+            </canvas>
+            {showCanvas &&
+              <Box textAlign='center' m="1rem">
+                <Button variant="contained" color="primary" onClick={downloadImage} >
+                  Download Image
+                </Button>
+              </Box>
+            }
+
+          </div>
+
         </Paper>
       </Zoom>
     </div>
