@@ -135,9 +135,11 @@ function CompositorV2(props) {
     cursor: 'pointer'
   }
 
+  const areaHt = (windowSize.height*0.8);
+
   const dropZoneReg = {
     cursor: "pointer",
-    height: (windowSize.height*0.8)
+    height: areaHt
   }
 
   const [showCanvas, setshowCanvas] = useState(false);
@@ -174,7 +176,7 @@ function CompositorV2(props) {
     // let image = new Image();
     // image.src = file_preview;
 
-    image = classifyImage(image, canvasOnly.parentElement);
+    image = classifyImage(image, canvasOnly.parentElement, areaHt);
     console.log(image.governing_height, image.governing_width)
     // set canvas dims based on classifyImage results
     canvasOnly.height = image.governing_height;

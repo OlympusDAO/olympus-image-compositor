@@ -5,7 +5,7 @@
 // .portrait (bool)
 // .governing_height
 // .governing_width
-function classifyImage(image, parentElement) {
+function classifyImage(image, parentElement, areaHt) {
   var portrait = true;
   if (image.height < image.width) {
     portrait = false;
@@ -13,7 +13,7 @@ function classifyImage(image, parentElement) {
   image.portrait = portrait;
 
   // need to limit image & canvas height & width to parent
-  var parent_height = parentElement.offsetHeight;
+  var parent_height = areaHt;
   var parent_width = parentElement.offsetWidth;
   var image_height = image.height;
   var image_width = image.width;
