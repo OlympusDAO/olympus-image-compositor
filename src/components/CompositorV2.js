@@ -21,7 +21,7 @@ import {
   Zoom,
 } from "@material-ui/core";
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 
 import "./stake.scss";
@@ -126,9 +126,7 @@ function CompositorV2(props) {
   }
 
   const canvasRef = React.useRef(null);
-  const imageRef = React.useRef(null);
 
-  const [file, setFile] = useState(false);
   const [showCanvas, setshowCanvas] = useState(false);
   
   const {getRootProps, getInputProps} = useDropzone({
@@ -141,9 +139,6 @@ function CompositorV2(props) {
         console.log(acceptedFiles[0]);
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
-      setFile(Object.assign(acceptedFiles[0], {
-        preview: previewUrl,
-      }));
       setshowCanvas(false);
       let image = new Image();
       console.log('on drop');
@@ -170,7 +165,6 @@ function CompositorV2(props) {
     // set canvas dims based on classifyImage results
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
-    // fitToContainer(canvasOnly);
     // image.onload = () => {
       ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
     // };
@@ -178,54 +172,28 @@ function CompositorV2(props) {
     draw(image);
   }
 
-  // Canvas sizing
-  //
-  function fitToContainer(canvas){
-    console.log('fitToContainer');
-    // Make it visually fill the positioned parent
-    canvas.style.width ='100%';
-    canvas.style.height='100%';
-    canvas.style.margin='auto';
-    // ...then set the internal size to match
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-
   // drawFile draws in canvas
-  const drawFile = useCallback((file) => {
-    console.log('drawfile', file);
-    // handle the click event
-    // function drawFile(file) {
-    var canvasOnly = canvasRef.current;
-    var ctx = canvasOnly.getContext('2d');
-    let image = new Image();
-    image.src = file.preview;
+  // const drawFile = useCallback((file) => {
+  //   console.log('drawfile', file);
+  //   // handle the click event
+  //   // function drawFile(file) {
+  //   var canvasOnly = canvasRef.current;
+  //   var ctx = canvasOnly.getContext('2d');
+  //   let image = new Image();
+  //   image.src = file.preview;
 
-    image = classifyImage(image, canvasOnly.parentElement);
+  //   image = classifyImage(image, canvasOnly.parentElement);
 
-    // set canvas dims based on classifyImage results
-    canvasOnly.height = image.governing_height;
-    canvasOnly.width = image.governing_width;
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
-    };
+  //   // set canvas dims based on classifyImage results
+  //   canvasOnly.height = image.governing_height;
+  //   canvasOnly.width = image.governing_width;
+  //   image.onload = () => {
+  //     ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
+  //   };
 
-    draw(image);
+  //   draw(image);
 
-  }, []);  
-
-  // useEffect(() => () => {
-  //   // Make sure to revoke the data uris to avoid memory leaks
-  //   // URL.revokeObjectURL(file.preview);
-  //     // Make it visually fill the positioned parent
-  //     var canvas = canvasRef.current;
-  //     canvas.style.width ='100%';
-  //     canvas.style.height='100%';
-  //     // ...then set the internal size to match
-  //     canvas.width  = canvas.offsetWidth;
-  //     canvas.height = canvas.offsetHeight;
-
-  // }, [file]);
+  // }, []);  
 
   return (
     <div id="stake-view">
