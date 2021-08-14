@@ -30,6 +30,8 @@ import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
+import useWindowSize from "../hooks/useWindowSize";
+
 const canvasContainer = {
   // display: 'flex',
   // flexDirection: 'row',
@@ -45,7 +47,7 @@ const canvasStyle = {
 }
 
 function CompositorV2(props) {
-
+  
   function draw(baseImg) {
     if (baseImg === undefined) {
       baseImg = zeusImg;
@@ -126,6 +128,17 @@ function CompositorV2(props) {
   }
 
   const canvasRef = React.useRef(null);
+
+  const windowSize = useWindowSize();
+
+  const dropZoneSm = {
+    cursor: 'pointer'
+  }
+
+  const dropZoneReg = {
+    cursor: "pointer",
+    height: (windowSize.height*0.8)
+  }
 
   const [showCanvas, setshowCanvas] = useState(false);
   
@@ -208,7 +221,7 @@ function CompositorV2(props) {
         <Paper className={`ohm-card`}>
           {/*<Grid container direction="column" spacing={2}></Grid>*/}
           <div className="dropContainer">
-            <div {...getRootProps({className: showCanvas ? ('dropZone-sm') : ('dropZone')})}>
+            <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files. Then click on the image to place the logo.</p>
             </div>
@@ -230,6 +243,9 @@ function CompositorV2(props) {
                 </Button>
               </Box>
             }
+            <div>
+              {windowSize.width}px / {windowSize.height}px
+            </div>
 
           </div>
 
