@@ -48,42 +48,44 @@ const canvasStyle = {
 
 function CompositorV2(props) {
   
+  const sOhmSize = 60;
   function draw(baseImg) {
     if (baseImg === undefined) {
       baseImg = zeusImg;
     };
     var canvasOnly = canvasRef.current
     var ctx = canvasOnly.getContext('2d');
+
+    //// trying to remove pixelated images...
+    // ctx.imageSmoothingEnabled = false;
+    //get DPI
+    // let dpi = window.devicePixelRatio;
+
+    // function fix_dpi() {
+    //   //get CSS height
+    //   //the + prefix casts it to an integer
+    //   //the slice method gets rid of "px"
+    //   let style_height = +getComputedStyle(canvasOnly).getPropertyValue("height").slice(0, -2);
+    //   //get CSS width
+    //   let style_width = +getComputedStyle(canvasOnly).getPropertyValue("width").slice(0, -2);
+    //   //scale the canvas
+    //   canvasOnly.setAttribute('height', style_height * dpi);
+    //   canvasOnly.setAttribute('width', style_width * dpi);
+    // }
+    // fix_dpi();
     
     //////////// HISTORY
     var history = {
       redo_list: [],
       undo_list: [],
-      // saveState: function(canvasOnly, list, keep_redo) {
-      //   keep_redo = keep_redo || false;
-      //   if(!keep_redo) {
-      //     this.redo_list = [];
-      //   }
-        
-      //   (list || this.undo_list).push(canvasOnly.toDataURL());   
-      // },
-      // undo: function(canvasOnly, ctx) {
-      //   this.restoreState(canvasOnly, ctx);
-      // },
       restoreState: function() {
         console.log('restorState');
-        // if(pop.length) {
-          // this.saveState(canvasOnly, push, true);
-          ctx.clearRect(0, 0, baseImg.governing_width, baseImg.governing_height);
-          ctx.drawImage(baseImg, 0, 0, baseImg.governing_width, baseImg.governing_height);  
-        // }
+        ctx.clearRect(0, 0, baseImg.governing_width, baseImg.governing_height);
+        ctx.drawImage(baseImg, 0, 0, baseImg.governing_width, baseImg.governing_height);  
       }
     }
     ///////////////
 
-    // var img = new Image();
-
-    // img.src = baseImg;
     var logo = new Image();
     logo.src = sOhm;
 
@@ -94,8 +96,6 @@ function CompositorV2(props) {
 
     // Add the event listeners for mousedown, mousemove, and mouseup
     canvasOnly.addEventListener('mousedown', e => {
-      // x = e.offsetX;
-      // y = e.offsetY;
       isDrawing = true;
     });
 
@@ -106,7 +106,7 @@ function CompositorV2(props) {
         // ctx.drawImage(image, dx, dy, dWidth, dHeight);
         // history.undo(canvasOnly, ctx);
         history.restoreState();
-        ctx.drawImage(logo, e.offsetX, e.offsetY, 20, 20);
+        ctx.drawImage(logo, e.offsetX-30, e.offsetY-30, sOhmSize, sOhmSize);
         // drawLine(context, x, y, e.offsetX, e.offsetY);
         // x = e.offsetX;
         // y = e.offsetY;
@@ -118,7 +118,7 @@ function CompositorV2(props) {
         // history.undo(canvasOnly, ctx);
         history.restoreState();
 
-        ctx.drawImage(logo, e.offsetX, e.offsetY, 20, 20);
+        ctx.drawImage(logo, e.offsetX-30, e.offsetY-30, sOhmSize, sOhmSize);
         // drawLine(context, x, y, e.offsetX, e.offsetY);
         // x = 0;
         // y = 0;
@@ -234,12 +234,19 @@ function CompositorV2(props) {
               id="canvas"
               ref={canvasRef}
               style={canvasStyle}
+              className="canvas"
               // width={window.innerWidth-10}
               height="0"
             >
             </canvas>
             {showCanvas &&
               <Box textAlign='center' m="1rem">
+                <img
+                  src={sOhm}
+                  alt="sOhmLogo"
+                  width={sOhmSize}
+                  height={sOhmSize}
+                />
                 <Button variant="contained" color="primary" onClick={downloadImage} >
                   Download Image
                 </Button>
