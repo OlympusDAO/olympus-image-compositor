@@ -60,6 +60,8 @@ function CompositorV2(props) {
     // ctx.imageSmoothingEnabled = false;
     //get DPI
     // let dpi = window.devicePixelRatio;
+    // // canvasOnly.width = Math.floor(size * scale);
+    // ctx.scale = (dpi, dpi);
 
     // function fix_dpi() {
     //   //get CSS height
@@ -241,12 +243,12 @@ function CompositorV2(props) {
             </canvas>
             {showCanvas &&
               <Box textAlign='center' m="1rem">
-                <img
+                {/*<img
                   src={sOhm}
                   alt="sOhmLogo"
                   width={sOhmSize}
                   height={sOhmSize}
-                />
+                />*/}
                 <Button variant="contained" color="primary" onClick={downloadImage} >
                   Download Image
                 </Button>
