@@ -233,7 +233,7 @@ function CompositorV2(props) {
               ref={canvasRef}
               style={canvasStyle}
               // width={window.innerWidth-10}
-              // height={window.innerHeight-10}
+              height="0"
             >
             </canvas>
             {showCanvas &&
