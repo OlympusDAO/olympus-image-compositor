@@ -169,8 +169,12 @@ function CompositorV2(props) {
     }
   });
 
+  // PIXELATED logo issue:
+  // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
+  // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
+  // fixed, and then using the .scale() method to scale all of your future draws to the new bigger size.
+  // https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas/26047748
   const sizeImgDom = (image) => {
-
     console.log('sizeImgDom', image);
     // handle the click event
     var canvasOnly = canvasRef.current;
@@ -186,9 +190,40 @@ function CompositorV2(props) {
     // image.onload = () => {
     ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
     // };
+    setDPI();
 
     draw(image);
   }
+
+  function setDPI() {
+    var canvas = canvasRef.current;
+    var dpi = 96*10;
+    // Set up CSS size.
+    canvas.style.width = canvas.style.width || canvas.width + 'px';
+    canvas.style.height = canvas.style.height || canvas.height + 'px';
+
+    console.log('setDpi', canvas.style.width, canvas.style.height);
+    // Get size information.
+    var scaleFactor = dpi / 96;
+    var width = parseFloat(canvas.style.width);
+    var height = parseFloat(canvas.style.height);
+
+    // Backup the canvas contents.
+    var oldScale = canvas.width / width;
+    var backupScale = scaleFactor / oldScale;
+    var backup = canvas.cloneNode(false);
+    backup.getContext('2d').drawImage(canvas, 0, 0);
+
+    // Resize the canvas.
+    var ctx = canvas.getContext('2d');
+    canvas.width = Math.ceil(width * scaleFactor);
+    canvas.height = Math.ceil(height * scaleFactor);
+
+    // Redraw the canvas image and scale future draws.
+    ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
+    ctx.drawImage(backup, 0, 0);
+    ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
+}
 
   const downloadImage = () => {
     var link = document.createElement('a');
