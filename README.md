@@ -11,4 +11,5 @@
 6. Styling
 7. ~~don't save multiple logos on multiple clicks~~
 8. ~~increase DPI~~
-9. Square landscape images...
+9. Square landscape images... crop them
+10. fix padding so that screen is scrollable on mobile...

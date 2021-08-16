@@ -127,7 +127,7 @@ function CompositorV2(props) {
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.8);
+  const areaHt = (windowSize.height*0.7) || 0;
 
   const dropZoneReg = {
     display: "flex",
@@ -186,7 +186,7 @@ function CompositorV2(props) {
     // image.src = file_preview;
 
     image = classifyImage(image, canvasOnly.parentElement, areaHt);
-    console.log(image.governing_height, image.governing_width)
+    console.log(image.governing_width, image.governing_height)
     // set canvas dims based on classifyImage results
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
@@ -274,7 +274,7 @@ function CompositorV2(props) {
               </div>
             </Grid>
           </Grid>
-          <div class="dropContainer" style={dropContainerStyle}>
+          <div className="dropContainer" style={dropContainerStyle}>
             <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
               <input {...getInputProps()} />
               <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
