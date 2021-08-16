@@ -70,33 +70,12 @@ function CompositorV2(props) {
     };
     var canvasOnly = canvasRef.current
     var ctx = canvasOnly.getContext('2d');
-
-    //// trying to remove pixelated images...
-    // ctx.imageSmoothingEnabled = false;
-    //get DPI
-    // let dpi = window.devicePixelRatio;
-    // // canvasOnly.width = Math.floor(size * scale);
-    // ctx.scale = (dpi, dpi);
-
-    // function fix_dpi() {
-    //   //get CSS height
-    //   //the + prefix casts it to an integer
-    //   //the slice method gets rid of "px"
-    //   let style_height = +getComputedStyle(canvasOnly).getPropertyValue("height").slice(0, -2);
-    //   //get CSS width
-    //   let style_width = +getComputedStyle(canvasOnly).getPropertyValue("width").slice(0, -2);
-    //   //scale the canvas
-    //   canvasOnly.setAttribute('height', style_height * dpi);
-    //   canvasOnly.setAttribute('width', style_width * dpi);
-    // }
-    // fix_dpi();
     
     //////////// HISTORY
     var history = {
       redo_list: [],
       undo_list: [],
       restoreState: function() {
-        console.log('restorState');
         ctx.clearRect(0, 0, baseImg.governing_width, baseImg.governing_height);
         ctx.drawImage(baseImg, 0, 0, baseImg.governing_width, baseImg.governing_height);  
       }
@@ -202,6 +181,7 @@ function CompositorV2(props) {
     // handle the click event
     var canvasOnly = canvasRef.current;
     var ctx = canvasOnly.getContext('2d');
+
     // let image = new Image();
     // image.src = file_preview;
 
@@ -320,7 +300,7 @@ function CompositorV2(props) {
                   height={sOhmSize}
                 />*/}
                 <Button variant="contained" color="primary" onClick={downloadImage} >
-                  Download Image
+                  Download pfp
                 </Button>
               </Box>
             }
