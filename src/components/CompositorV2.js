@@ -122,14 +122,17 @@ function CompositorV2(props) {
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.7) || 0;
+  const areaHt = (windowSize.height*0.75) || 0;
 
   const compositorPaper = {
     padding: "15px",
     textAlign: "center",
     marginBottom: "20px",
+  }
+
+  const stakeStyle = {
     overflow: "auto",
-    height: windowSize.height*0.9
+    height: windowSize.height
   }
 
   const dropZoneReg = {
@@ -267,7 +270,7 @@ function CompositorV2(props) {
   }, [showCanvas]);
 
   return (
-    <div id="stake-view">
+    <div id="stake-view" style={stakeStyle}>
       <Zoom in={true}>
         <Paper className={`ohm-card`} elevation={3} style={compositorPaper}>
           <Grid container direction="column" spacing={2}>
