@@ -55,11 +55,6 @@ const dropContainerStyle = {
 
 }
 
-const compositorPaper = {
-  padding: "15px",
-  textAlign: "center",
-}
-
 function CompositorV2(props) {
   
   const sOhmSize = 60;
@@ -128,6 +123,14 @@ function CompositorV2(props) {
   const windowSize = useWindowSize();
 
   const areaHt = (windowSize.height*0.7) || 0;
+
+  const compositorPaper = {
+    padding: "15px",
+    textAlign: "center",
+    marginBottom: "20px",
+    overflow: "auto",
+    height: windowSize.height*0.9
+  }
 
   const dropZoneReg = {
     display: "flex",
