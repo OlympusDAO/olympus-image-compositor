@@ -1,8 +1,8 @@
 import {
-  // Grid,
+  Grid,
   Box,
   Paper,
-  // Typography,
+  Typography,
   // FormControl,
   // InputAdornment,
   // InputLabel,
@@ -31,6 +31,7 @@ import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
+// import { dark } from "../themes/dark";
 
 const canvasContainer = {
   // display: 'flex',
@@ -44,6 +45,19 @@ const canvasContainer = {
 const canvasStyle = {
   margin: "auto",
   display: "block"
+}
+
+const dropContainerStyle = {
+  display: "flex",
+  flexFlow: "column wrap",
+  justifyContent: "center"
+  // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
+
+}
+
+const compositorPaper = {
+  padding: "15px",
+  textAlign: "center",
 }
 
 function CompositorV2(props) {
@@ -133,15 +147,21 @@ function CompositorV2(props) {
 
   const windowSize = useWindowSize();
 
-  const dropZoneSm = {
-    cursor: 'pointer'
-  }
-
   const areaHt = (windowSize.height*0.8);
 
   const dropZoneReg = {
+    display: "flex",
+    flexFlow: "column wrap",
+    justifyContent: "center",
     cursor: "pointer",
     height: areaHt
+  }
+
+  const dropZoneSm = {
+    display: "flex",
+    flexFlow: "column wrap",
+    justifyContent: "center",
+    cursor: 'pointer'
   }
 
   const [showCanvas, setshowCanvas] = useState(false);
@@ -257,12 +277,18 @@ function CompositorV2(props) {
   return (
     <div id="stake-view">
       <Zoom in={true}>
-        <Paper className={`ohm-card`}>
-          {/*<Grid container direction="column" spacing={2}></Grid>*/}
-          <div className="dropContainer">
+        <Paper className={`ohm-card`} elevation={3} style={compositorPaper}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <div className="card-header">
+                <Typography variant="h5">Welcome Incooohmer</Typography>
+              </div>
+            </Grid>
+          </Grid>
+          <div class="dropContainer" style={dropContainerStyle}>
             <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
               <input {...getInputProps()} />
-              <p>Drag 'n' drop some files here, or click to select files. Then click on the image to place the logo.</p>
+              <Typography variant="h5" color="textSecondary">Set your pfp here. Then click to place the logo.</Typography>
             </div>
           </div>
 

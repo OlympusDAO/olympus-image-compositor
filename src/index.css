@@ -12,22 +12,6 @@ code {
     monospace;
 }
 
-.dropContainer {
-  display: flex;
-  flex-wrap: wrap;
-  flex-flow: column;
-}
-
-.dropZone {
-  cursor: pointer;
-  height: 300px;
-}
-
-.dropZone-sm {
-  cursor: pointer;
-  /* height: 300px; */
-}
-
 .canvas {
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
