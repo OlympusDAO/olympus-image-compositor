@@ -183,7 +183,7 @@ function CompositorV2(props) {
       image.onload = () => {
         console.log('img load');
         sizeImgDom(image);
-        setTextPromptState("Start over, Incooohmer?");
+        setTextPromptState("Click here if you need to start over, Incooohmer");
         setshowCanvas(true);
 
       };
