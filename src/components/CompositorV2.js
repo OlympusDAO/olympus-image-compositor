@@ -21,7 +21,7 @@ import {
   Zoom,
 } from "@material-ui/core";
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
 
 import "./stake.scss";
@@ -63,6 +63,7 @@ const compositorPaper = {
 function CompositorV2(props) {
   
   const sOhmSize = 60;
+
   function draw(baseImg) {
     if (baseImg === undefined) {
       baseImg = zeusImg;
@@ -165,6 +166,7 @@ function CompositorV2(props) {
   }
 
   const [showCanvas, setshowCanvas] = useState(false);
+  const [textPromptState, setTextPromptState] = useState("Set your pfp here. Then click to place the logo.");
   
   const {getRootProps, getInputProps} = useDropzone({
     accept: 'image/*',
@@ -181,6 +183,7 @@ function CompositorV2(props) {
       image.onload = () => {
         console.log('img load');
         sizeImgDom(image);
+        setTextPromptState("Start over, Incooohmer?");
         setshowCanvas(true);
 
       };
@@ -272,7 +275,13 @@ function CompositorV2(props) {
 
   //   draw(image);
 
-  // }, []);  
+  // }, []);
+
+  useEffect(() => {
+    console.log('useeffect');
+    if (showCanvas) {
+    }
+  }, [showCanvas]);
 
   return (
     <div id="stake-view">
@@ -288,7 +297,7 @@ function CompositorV2(props) {
           <div class="dropContainer" style={dropContainerStyle}>
             <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
               <input {...getInputProps()} />
-              <Typography variant="h5" color="textSecondary">Set your pfp here. Then click to place the logo.</Typography>
+              <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
             </div>
           </div>
 
@@ -297,7 +306,7 @@ function CompositorV2(props) {
               id="canvas"
               ref={canvasRef}
               style={canvasStyle}
-              className="canvas"
+              // className="canvasRendering"
               // width={window.innerWidth-10}
               height="0"
             >

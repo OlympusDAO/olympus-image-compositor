@@ -1,0 +1,79 @@
+* {
+  outline: none;
+}
+
+html,
+body,
+#root {
+  font-family: "Square";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  z-index: 1;
+  background-size: cover;
+  font-family: "Square";
+  overflow: hidden;
+  // transform: translate3d(0, 0, 0);
+  // -webkit-transform: translate3d(0, 0, 0);
+}
+
+.MuiDrawer-paperAnchorDockedLeft {
+  border-right: 0 !important;
+}
+
+.ohm-card {
+  .card-header {
+    width: 100%;
+    min-height: 2rem;
+    h5 {
+      font-weight: 600 !important;
+    }
+  }
+  .card-content {
+    width: 100%;
+    position: relative;
+    align-items: left;
+    justify-content: center;
+    flex-flow: column;
+    padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+    height: 100%;
+  }
+
+  .help-text {
+    margin: 10px 0px;
+  }
+
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 12px 0px;
+  }
+}
+
+.ohm-pairs {
+  display: flex;
+  align-items: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
+
+a:hover svg {
+  color: inherit;
+}
