@@ -1,5 +1,5 @@
 {
-  "short_name": "Olympus PFP",
+  "short_name": "Olympus PFP Compositor",
   "name": "Olympus Image Compositor",
   "icons": [
     {
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#FCFCFC",
+  "background_color": "#080F35"
 }
