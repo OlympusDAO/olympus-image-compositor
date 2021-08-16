@@ -127,10 +127,11 @@ function CompositorV2(props) {
   const compositorPaper = {
     padding: "15px",
     textAlign: "center",
-    marginBottom: "20px",
+    // marginBottom: "20px",
   }
 
   const stakeStyle = {
+    justifyContent: "start",
     overflow: "auto",
     height: windowSize.height
   }
