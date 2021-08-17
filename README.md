@@ -1,5 +1,7 @@
 # Olympus Dao image compositor
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/92a140a3-d170-4b8f-b19c-30cc2ebf1e90/deploy-status)](https://app.netlify.com/sites/sharp-lichterman-549b48/deploys)
+
 ## Quick Roadmap
 
 1. ~~Allow uploading custom image in lieu of Zeus placeholder (simple)~~

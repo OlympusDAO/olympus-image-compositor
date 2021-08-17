@@ -344,7 +344,7 @@ function CompositorV2(props) {
   const downloadImage = () => {
     var link = document.createElement('a');
     link.download = 'sOhmTag.png';
-    link.href = canvasRef.current.toDataURL(fileImageType, 1);
+    link.href = canvasRef.current.toDataURL(fileImageType);
     link.click();
   }
 
