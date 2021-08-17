@@ -6,7 +6,7 @@
 // .governing_height
 // .governing_width
 function classifyImage(image, parentElement, areaHt) {
-  console.log('classifyImage', image.height, image.width);
+  // console.log('classifyImage', image.height, image.width);
   var portrait = true;
   if (image.height < image.width) {
     portrait = false;
@@ -16,10 +16,10 @@ function classifyImage(image, parentElement, areaHt) {
   // need to limit image & canvas height & width to parent
   var parent_height = areaHt;
   var parent_width = parentElement.offsetWidth;
-  console.log(portrait, parent_width, parent_height);
+  // console.log(portrait, parent_width, parent_height);
   var image_height = image.height;
   var image_width = image.width;
-  console.log(image_width, image_height);
+  // console.log(image_width, image_height);
   image.aspectRatio = (image_width/image_height);
 
   // if image_width & image_height are each less than parent
@@ -35,7 +35,7 @@ function classifyImage(image, parentElement, areaHt) {
         image.governing_width = image_width;
       } else {
         // too wide, shrink
-        console.log('too wide');
+        // console.log('too wide');
         widthGoverning();
       }
       
@@ -48,7 +48,7 @@ function classifyImage(image, parentElement, areaHt) {
         // ok, we're good
       } else {
         // too wide, shrink
-        console.log('too wide');
+        // console.log('too wide');
         widthGoverning();
       }
     }
@@ -74,20 +74,20 @@ function classifyImage(image, parentElement, areaHt) {
         // ok, we're good
       } else {
         // too tall, shrink
-        console.log('too wide');
+        // console.log('too wide');
         heightGoverning();
       }
     }
   }
 
   function heightGoverning() {
-    console.log('heightGoverning');
+    // console.log('heightGoverning');
     image.governing_height = parent_height;
     image.governing_width = (parent_height * image.aspectRatio);
   }
 
   function widthGoverning() {
-    console.log('widthGoverning');
+    // console.log('widthGoverning');
     image.governing_width = parent_width;
     image.governing_height = (parent_width / image.aspectRatio);
   }

@@ -189,7 +189,7 @@ function CompositorV2(props) {
     setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
     // clear the canvas...
     clearTheCanvas(fileCropped);
-    sizeImgDom(fileCropped);
+    drawCroppedCanvas(fileCropped);
     setuiStep(3);
   }
 
@@ -206,25 +206,25 @@ function CompositorV2(props) {
     }
   }
 
+  // dropzone handling
   const {getRootProps, getInputProps} = useDropzone({
     accept: 'image/*',
     multiple: false,
     onDrop: acceptedFiles => {
-      console.log(acceptedFiles);
+      // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
         setfileImageType(acceptedFiles[0].type);
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
       let image = new Image();
-      console.log('on drop');
+      // console.log('on drop');
       image.onload = () => {
-        console.log('img load');
+        // console.log('img load');
         goToStepTwo(image);
 
       };
       image.src = previewUrl;
-
     }
   });
 
@@ -250,35 +250,28 @@ function CompositorV2(props) {
     canvas.height = 0;
     canvas.style.height = 0;
   }
+
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
   // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
   // fixed, and then using the .scale() method to scale all of your future draws to the new bigger size.
   // https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas/26047748
-  const sizeImgDom = (image) => {
-    console.log('sizeImgDom', image);
+  const drawCroppedCanvas = (image) => {
+    // console.log('drawCroppedCanvas', image);
     // handle the click event
     var canvasOnly = canvasRef.current;
-    console.log(canvasOnly);
+    // console.log(canvasOnly);
     var ctx = canvasOnly.getContext('2d');
 
-    // let image = new Image();
-    // image.src = file_preview;
-
-    // // classified in Step 2
-    // // classify based on width of finalCanvas ref object
-    // image = classifyImage(image, finalCanvas.current, areaHt);
-    console.log(image.governing_width, image.governing_height)
+    // console.log(image.governing_width, image.governing_height)
     // set canvas dims based on classifyImage results
     canvasOnly.style.height = image.governing_height + "px";
     canvasOnly.style.width = image.governing_width + "px";
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
-    // image.onload = () => {
-    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
-    // };
-    setDPI();
 
+    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
+    setDPI();
     draw(image);
   }
 
@@ -292,7 +285,7 @@ function CompositorV2(props) {
     canvas.style.width = canvas.style.width || canvas.width + 'px';
     canvas.style.height = canvas.style.height || canvas.height + 'px';
 
-    console.log('setDpi', canvas.style.width, canvas.style.height);
+    // console.log('setDpi', canvas.style.width, canvas.style.height);
     // Get size information.
     var width = parseFloat(canvas.style.width);
     var height = parseFloat(canvas.style.height);
@@ -321,15 +314,8 @@ function CompositorV2(props) {
     link.click();
   }
 
-  // const finishCropping = () => {
-  //   goToStepThree();
-  // }
-
   useEffect(() => {
-    console.log('useeffect');
-    // if (fileImage) {
-    //   console.log(fileImage);
-    // }
+    // controlling when re-render occurs (only via uiStep state change)
   }, [uiStep]);
 
   return (
@@ -379,6 +365,12 @@ function CompositorV2(props) {
               </Box>
             </div>
           }
+
+          {/* 
+            Notes for below (Step 3): 
+            1. canvas must ALWAYS be on screen
+            2. when we don't want the CroppedCanvas to appear we change height to 0
+          */}
           <div style={canvasContainer} ref={finalCanvas}>
             <canvas
               id="canvas"
@@ -400,12 +392,13 @@ function CompositorV2(props) {
                 </Button>
               </Box>
             }
+
+            {/* below is screen size notation for debugging */}
             <div>
               {windowSize.width}px / {windowSize.height}px
             </div>
 
           </div>
-
         </Paper>
       </Zoom>
     </div>
