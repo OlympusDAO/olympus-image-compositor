@@ -20,6 +20,9 @@ import {
   // Link,
   Zoom,
 } from "@material-ui/core";
+import {
+  isIOS,
+} from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
@@ -177,7 +180,13 @@ function CompositorV2(props) {
   // 3. take user's cropped image to stamper
 
   const goToStepTwo = (image) => {
-    image = classifyImage(image, finalCanvas.current, 1024);
+    var useHt = areaHt;
+    if (isIOS) {
+      // set max height so as not to overload ios Memory, per:
+      // https://github.com/fengyuanchen/cropperjs#known-issues
+      useHt = 1024;
+    }
+    image = classifyImage(image, finalCanvas.current, useHt);
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
@@ -214,7 +223,7 @@ function CompositorV2(props) {
       // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
-        console.log('dropzone', acceptedFiles[0])
+        // console.log('dropzone', acceptedFiles[0])
         // keep jpegs as pngs for transparent background
         if (acceptedFiles[0].type === "image/jpeg") {
           setfileImageType("image/png");
