@@ -357,12 +357,6 @@ function CompositorV2(props) {
     ////// NEW WAY
     if (canvasRef.current.toBlob) {
       canvasRef.current.toBlob(function (blob) {
-        // Do something with the blob object,
-        // e.g. create multipart form data for file uploads:
-        // var formData = new FormData()
-        // formData.append('file', blob, 'sOhm-pfp.jpg')
-        // ...
-
         const anchor = document.createElement('a');
         anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
         anchor.href = URL.createObjectURL(blob);
