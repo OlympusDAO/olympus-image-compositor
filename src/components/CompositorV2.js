@@ -342,19 +342,7 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
-    // var link = document.createElement('a');
-    // link.download = 'sOhmTag.png';
-    // console.log('download', canvasRef.current.toDataURL(fileImageType, 1));
-    // link.style.display = 'none';
-    
-
-    // link.href = canvasRef.current.toDataURL(fileImageType, 1);
-
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    ////// OLD WAY ^^^^
-    ////// NEW WAY
+    // polyfill for browsers...
     // using blueimp-canvas-to-blob
     if (canvasRef.current.toBlob) {
       canvasRef.current.toBlob(function (blob) {
@@ -362,9 +350,9 @@ function CompositorV2(props) {
         anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
         anchor.href = URL.createObjectURL(blob);
 
-        anchor.click(); // ✨ magic!
+        anchor.click();
 
-        URL.revokeObjectURL(anchor.href); // remove it from memory and save on memory! 😎
+        URL.revokeObjectURL(anchor.href); // remove it from memory
       }, fileImageType, 1);
     }  
   }
