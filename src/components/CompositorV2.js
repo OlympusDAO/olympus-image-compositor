@@ -344,8 +344,15 @@ function CompositorV2(props) {
   const downloadImage = () => {
     var link = document.createElement('a');
     link.download = 'sOhmTag.png';
-    link.href = canvasRef.current.toDataURL(fileImageType);
+    console.log('download', canvasRef.current.toDataURL(fileImageType, 1));
+    link.style.display = 'none';
+    
+
+    link.href = canvasRef.current.toDataURL(fileImageType, 1);
+
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);     
   }
 
   useEffect(() => {
