@@ -355,6 +355,7 @@ function CompositorV2(props) {
     // document.body.removeChild(link);
     ////// OLD WAY ^^^^
     ////// NEW WAY
+    // using blueimp-canvas-to-blob
     if (canvasRef.current.toBlob) {
       canvasRef.current.toBlob(function (blob) {
         const anchor = document.createElement('a');
@@ -369,6 +370,16 @@ function CompositorV2(props) {
   }
 
   useEffect(() => {
+    // adding canvas-to-blob script    
+    const script = document.createElement('script');
+    script.src = "../assets/js/canvas-to-blob.min.js";
+    script.type = "text/jsx";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+
     // controlling when re-render occurs (only via uiStep state change)
   }, [uiStep]);
 
