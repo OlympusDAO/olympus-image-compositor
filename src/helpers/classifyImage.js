@@ -14,11 +14,11 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
   image.portrait = portrait;
 
   // need to limit image & canvas height & width to parent
-
-  // console.log(portrait, parentWidth, parentHeight);
+  console.log('classifyimage');
+  console.log(portrait, parentWidth, parentHeight);
   var image_height = image.height;
   var image_width = image.width;
-  // console.log(image_width, image_height);
+  console.log(image_width, image_height);
   image.aspectRatio = (image_width/image_height);
 
   // if image_width & image_height are each less than parent
@@ -43,7 +43,7 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
       // new_width = new_height * aspect_ratio
       heightGoverning();
       // don't shrink any further unless width is too wide:
-      if (image_width < parentWidth) {
+      if (image.governing_width < parentWidth) {
         // ok, we're good
       } else {
         // too wide, shrink
@@ -69,7 +69,7 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
       // aspectRatio = w/h = new_width/new_height
       // new_height = new_width / aspect_ratio
       widthGoverning();
-      if (image_height < parentHeight) {
+      if (image.governing_height < parentHeight) {
         // ok, we're good
       } else {
         // too tall, shrink

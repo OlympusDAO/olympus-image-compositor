@@ -237,7 +237,7 @@ function CompositorV2(props) {
         // ... so we need to resize the image
         var maxHt = areaHt;
         var maxWdth = finalCanvas.current.offsetWidth;
-        console.log(maxWdth);
+        console.log('maxwdith', maxWdth);
         var mobile = false;
         if (isIOS) {
           // set max height so as not to overload ios Memory, per:
