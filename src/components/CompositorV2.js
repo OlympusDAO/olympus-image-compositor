@@ -342,17 +342,36 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
-    var link = document.createElement('a');
-    link.download = 'sOhmTag.png';
-    console.log('download', canvasRef.current.toDataURL(fileImageType, 1));
-    link.style.display = 'none';
+    // var link = document.createElement('a');
+    // link.download = 'sOhmTag.png';
+    // console.log('download', canvasRef.current.toDataURL(fileImageType, 1));
+    // link.style.display = 'none';
     
 
-    link.href = canvasRef.current.toDataURL(fileImageType, 1);
+    // link.href = canvasRef.current.toDataURL(fileImageType, 1);
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);     
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    ////// OLD WAY ^^^^
+    ////// NEW WAY
+    if (canvasRef.current.toBlob) {
+      canvasRef.current.toBlob(function (blob) {
+        // Do something with the blob object,
+        // e.g. create multipart form data for file uploads:
+        // var formData = new FormData()
+        // formData.append('file', blob, 'sOhm-pfp.jpg')
+        // ...
+
+        const anchor = document.createElement('a');
+        anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
+        anchor.href = URL.createObjectURL(blob);
+
+        anchor.click(); // ✨ magic!
+
+        URL.revokeObjectURL(anchor.href); // remove it from memory and save on memory! 😎
+      }, fileImageType, 1);
+    }  
   }
 
   useEffect(() => {
