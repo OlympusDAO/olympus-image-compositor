@@ -163,7 +163,7 @@ function CompositorV2(props) {
   }
 
   const [fileImage, setfileImage] = useState(false);
-  const [fileImageType, setfileImageType] = useState("image/jpeg");
+  const [fileImageType, setfileImageType] = useState("image/png");
   const [fileCropped, setfileCropped] = useState(false);
   const [uiStep, setuiStep] = useState(1);
   const step1Text = "Set your pfp here. Click to Start.";
@@ -177,7 +177,7 @@ function CompositorV2(props) {
   // 3. take user's cropped image to stamper
 
   const goToStepTwo = (image) => {
-    image = classifyImage(image, finalCanvas.current, areaHt);
+    image = classifyImage(image, finalCanvas.current, 1024);
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
@@ -214,13 +214,20 @@ function CompositorV2(props) {
       // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
-        setfileImageType(acceptedFiles[0].type);
+        console.log('dropzone', acceptedFiles[0])
+        // keep jpegs as pngs for transparent background
+        if (acceptedFiles[0].type === "image/jpeg") {
+          setfileImageType("image/png");
+        } else {
+          setfileImageType(acceptedFiles[0].type);
+        }
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
       let image = new Image();
       // console.log('on drop');
       image.onload = () => {
         // console.log('img load');
+
         goToStepTwo(image);
 
       };
@@ -230,6 +237,9 @@ function CompositorV2(props) {
 
   // react-cropper
   const cropperRef = React.useRef(null);
+  const cropperCanvasSettings = {
+    imageSmoothingQuality: "high",
+  };
   const onCrop = () => {
     const imageElement = cropperRef?.current;
     const cropper = imageElement?.cropper;
@@ -240,7 +250,7 @@ function CompositorV2(props) {
       setfileCropped(image);
     };
 
-    image.src = cropper.getCroppedCanvas({imageSmoothingQuality: "high"}).toDataURL(fileImageType, 1);
+    image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(fileImageType, 1);
   };
 
   const clearTheCanvas = (image) => {
@@ -347,7 +357,7 @@ function CompositorV2(props) {
                 src={fileImage.src}
                 style={{ height: areaHt, width: "100%" }}
                 // Cropper.js options
-                aspectRatio={16 / 16}
+                aspectRatio={1}
                 cropBoxResizable={false}
                 dragMode={"crop"}
                 guides={false}
