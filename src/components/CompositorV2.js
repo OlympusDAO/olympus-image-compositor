@@ -342,20 +342,32 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
-    var link = document.createElement('a');
-    link.download = 'sOhmTag.png';
-    console.log('download', canvasRef.current.toDataURL(fileImageType, 1));
-    link.style.display = 'none';
-    
+    // polyfill for browsers...
+    // using blueimp-canvas-to-blob
+    if (canvasRef.current.toBlob) {
+      canvasRef.current.toBlob(function (blob) {
+        const anchor = document.createElement('a');
+        anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
+        anchor.href = URL.createObjectURL(blob);
 
-    link.href = canvasRef.current.toDataURL(fileImageType, 1);
+        anchor.click();
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);     
+        URL.revokeObjectURL(anchor.href); // remove it from memory
+      }, fileImageType, 1);
+    }  
   }
 
   useEffect(() => {
+    // adding canvas-to-blob script    
+    const script = document.createElement('script');
+    script.src = "../assets/js/canvas-to-blob.min.js";
+    script.type = "text/jsx";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+
     // controlling when re-render occurs (only via uiStep state change)
   }, [uiStep]);
 
