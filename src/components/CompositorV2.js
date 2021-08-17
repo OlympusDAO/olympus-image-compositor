@@ -242,8 +242,12 @@ function CompositorV2(props) {
         if (isIOS) {
           // set max height so as not to overload ios Memory, per:
           // https://github.com/fengyuanchen/cropperjs#known-issues
-          maxHt = 1024;
-          maxWdth = 1024;
+          if (1024 < maxWdth) {
+            maxWdth = 1024;
+          }
+          if (1024 < maxHt) {
+            maxHt = 1024;
+          }
           mobile = true;
 
         }
