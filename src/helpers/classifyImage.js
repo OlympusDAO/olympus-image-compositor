@@ -5,8 +5,8 @@
 // .portrait (bool)
 // .governing_height
 // .governing_width
-function classifyImage(image, parentElement, areaHt) {
-  // console.log('classifyImage', image.height, image.width);
+function classifyImage(image, parentWidth, parentHeight, mobile) {
+  // mobile is used to limit memory usage in Cropper.js
   var portrait = true;
   if (image.height < image.width) {
     portrait = false;
@@ -14,9 +14,8 @@ function classifyImage(image, parentElement, areaHt) {
   image.portrait = portrait;
 
   // need to limit image & canvas height & width to parent
-  var parent_height = areaHt;
-  var parent_width = parentElement.offsetWidth;
-  // console.log(portrait, parent_width, parent_height);
+
+  // console.log(portrait, parentWidth, parentHeight);
   var image_height = image.height;
   var image_width = image.width;
   // console.log(image_width, image_height);
@@ -27,9 +26,9 @@ function classifyImage(image, parentElement, areaHt) {
   if (portrait === true) {
     // PORTRAIT --- OR ---- SQUARE
     // then height is the governing factor...
-    if (image_height < parent_height) {
+    if (image_height < parentHeight) {
       // don't stretch... unless width is too wide
-      if (image_width < parent_width) {
+      if (image_width < parentWidth) {
         // ok, don't stretch
         image.governing_height = image_height;
         image.governing_width = image_width;
@@ -44,7 +43,7 @@ function classifyImage(image, parentElement, areaHt) {
       // new_width = new_height * aspect_ratio
       heightGoverning();
       // don't shrink any further unless width is too wide:
-      if (image_width < parent_width) {
+      if (image_width < parentWidth) {
         // ok, we're good
       } else {
         // too wide, shrink
@@ -56,9 +55,9 @@ function classifyImage(image, parentElement, areaHt) {
     // LANDSCAPE
     // width is the governing factor
 
-    if (image_width < parent_width) {
+    if (image_width < parentWidth) {
       // don't stretch ... unless height is too tall
-      if (image_height < parent_height) {
+      if (image_height < parentHeight) {
         // ok, don't stretch
         image.governing_width = image_width;
         image.governing_height = image_height;
@@ -70,7 +69,7 @@ function classifyImage(image, parentElement, areaHt) {
       // aspectRatio = w/h = new_width/new_height
       // new_height = new_width / aspect_ratio
       widthGoverning();
-      if (image_height < parent_height) {
+      if (image_height < parentHeight) {
         // ok, we're good
       } else {
         // too tall, shrink
@@ -80,16 +79,22 @@ function classifyImage(image, parentElement, areaHt) {
     }
   }
 
+  if (mobile) {
+    // resizing the image for cropper.js
+    image.height = image.governing_height;
+    image.width = image.governing_width;
+  }
+
   function heightGoverning() {
     // console.log('heightGoverning');
-    image.governing_height = parent_height;
-    image.governing_width = (parent_height * image.aspectRatio);
+    image.governing_height = parentHeight;
+    image.governing_width = (parentHeight * image.aspectRatio);
   }
 
   function widthGoverning() {
     // console.log('widthGoverning');
-    image.governing_width = parent_width;
-    image.governing_height = (parent_width / image.aspectRatio);
+    image.governing_width = parentWidth;
+    image.governing_height = (parentWidth / image.aspectRatio);
   }
 
   return image;

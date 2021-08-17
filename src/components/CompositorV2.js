@@ -180,13 +180,6 @@ function CompositorV2(props) {
   // 3. take user's cropped image to stamper
 
   const goToStepTwo = (image) => {
-    var useHt = areaHt;
-    if (isIOS) {
-      // set max height so as not to overload ios Memory, per:
-      // https://github.com/fengyuanchen/cropperjs#known-issues
-      useHt = 1024;
-    }
-    image = classifyImage(image, finalCanvas.current, useHt);
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
@@ -215,8 +208,10 @@ function CompositorV2(props) {
     }
   }
 
+  // STEP 1
   // dropzone handling
   const {getRootProps, getInputProps} = useDropzone({
+    // heic/heif images aren't allowable...
     accept: 'image/*',
     multiple: false,
     onDrop: acceptedFiles => {
@@ -237,6 +232,22 @@ function CompositorV2(props) {
       image.onload = () => {
         // console.log('img load');
 
+        // handle mobile low mem
+        // CROPPER IS very slow on MOBILE...
+        // ... so we need to resize the image
+        var maxHt = areaHt;
+        var maxWdth = finalCanvas.current.offsetWidth;
+        console.log(maxWdth);
+        var mobile = false;
+        if (isIOS) {
+          // set max height so as not to overload ios Memory, per:
+          // https://github.com/fengyuanchen/cropperjs#known-issues
+          maxHt = 1024;
+          maxWdth = 1024;
+          mobile = true;
+
+        }
+        image = classifyImage(image, maxWdth, maxHt, mobile);
         goToStepTwo(image);
 
       };
@@ -255,7 +266,7 @@ function CompositorV2(props) {
     // console.log(cropper.getCroppedCanvas().toDataURL());
     let image = new Image();
     image.onload = () => {
-      image = classifyImage(image, finalCanvas.current, areaHt);
+      image = classifyImage(image, finalCanvas.current.offsetWidth, areaHt, false);
       setfileCropped(image);
     };
 
