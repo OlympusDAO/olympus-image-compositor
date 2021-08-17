@@ -54,7 +54,6 @@ const dropContainerStyle = {
   flexFlow: "column wrap",
   justifyContent: "center"
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
-
 }
 
 function CompositorV2(props) {
@@ -147,18 +146,15 @@ function CompositorV2(props) {
     height: areaHt
   }
 
-  const dropZoneSm = {
-    display: "flex",
-    flexFlow: "column wrap",
-    justifyContent: "center",
-    cursor: 'pointer'
+  const stepPromptStyle = {
+    cursor: "pointer"
   }
 
-  const [showCanvas, setshowCanvas] = useState(false);
   const [fileImage, setfileImage] = useState(false);
   const [fileCropped, setfileCropped] = useState(false);
   const [uiStep, setuiStep] = useState(1);
-  const [textPromptState, setTextPromptState] = useState("Set your pfp here. Click to Start.");
+  const step1Text = "Set your pfp here. Click to Start.";
+  const [textPromptState, setTextPromptState] = useState(step1Text);
   
   // uiSteps
   // 1. Click to start
@@ -169,8 +165,28 @@ function CompositorV2(props) {
     image = classifyImage(image, finalCanvas.current, areaHt);
     setfileImage(image);
     setTextPromptState("Click here if you need to start over, Incooohmer");
-    setshowCanvas(true);
     setuiStep(2);
+  }
+
+  const goToStepThree = () => {
+    setTextPromptState("Click here to go back to cropping, Incooohmer");
+    // clear the canvas...
+    clearTheCanvas(fileCropped);
+    sizeImgDom(fileCropped);
+    setuiStep(3);
+  }
+
+  const goBackOneStep = () => {
+    if (uiStep === 3) {
+      // go to step 2
+      clearTheCanvas(fileCropped);
+      goToStepTwo(fileImage);
+    } else if (uiStep === 2) {
+      clearTheCanvas(fileCropped);
+      setTextPromptState(step1Text);
+      setuiStep(1);
+      
+    }
   }
 
   const {getRootProps, getInputProps} = useDropzone({
@@ -192,7 +208,6 @@ function CompositorV2(props) {
         // image = classifyImage(image, finalCanvas.current, areaHt);
         // setfileImage(image);
         // setTextPromptState("Click here if you need to start over, Incooohmer");
-        // setshowCanvas(true);
         goToStepTwo(image);
 
       };
@@ -216,6 +231,13 @@ function CompositorV2(props) {
     image.src = cropper.getCroppedCanvas().toDataURL();
   };
 
+  const clearTheCanvas = (image) => {
+    var canvas = canvasRef.current;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, image.governing_width, image.governing_height);
+    canvas.height = 0;
+    canvas.style.height = 0;
+  }
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
   // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
@@ -225,6 +247,7 @@ function CompositorV2(props) {
     console.log('sizeImgDom', image);
     // handle the click event
     var canvasOnly = canvasRef.current;
+    console.log(canvasOnly);
     var ctx = canvasOnly.getContext('2d');
 
     // let image = new Image();
@@ -235,6 +258,8 @@ function CompositorV2(props) {
     // image = classifyImage(image, finalCanvas.current, areaHt);
     console.log(image.governing_width, image.governing_height)
     // set canvas dims based on classifyImage results
+    canvasOnly.style.height = image.governing_height + "px";
+    canvasOnly.style.width = image.governing_width + "px";
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
     // image.onload = () => {
@@ -247,7 +272,7 @@ function CompositorV2(props) {
 
   function setDPI() {
     var canvas = canvasRef.current;
-    var dpi = 96*10;
+    var dpi = 96*3;
     // Set up CSS size.
     canvas.style.width = canvas.style.width || canvas.width + 'px';
     canvas.style.height = canvas.style.height || canvas.height + 'px';
@@ -282,11 +307,9 @@ function CompositorV2(props) {
     link.click();
   }
 
-  const finishCropping = () => {
-
-    sizeImgDom(fileCropped);
-    setuiStep(3);
-  }
+  // const finishCropping = () => {
+  //   goToStepThree();
+  // }
 
   useEffect(() => {
     console.log('useeffect');
@@ -306,12 +329,21 @@ function CompositorV2(props) {
               </div>
             </Grid>
           </Grid>
-          <div className="dropContainer" style={dropContainerStyle}>
-            <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
-              <input {...getInputProps()} />
-              <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
+
+          {(uiStep === 2 || uiStep === 3) &&
+            <Box textAlign='center' m="1rem">
+              <Typography variant="h5" color="textSecondary" onClick={goBackOneStep} style={stepPromptStyle}>{textPromptState}</Typography>
+            </Box>
+          }
+          
+          {uiStep === 1 &&
+            <div className="dropContainer" style={dropContainerStyle}>
+              <div {...getRootProps({style: dropZoneReg})}>
+                <input {...getInputProps()} />
+                <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
+              </div>
             </div>
-          </div>
+          }
 
           {uiStep === 2 && fileImage &&
             <div>
@@ -320,6 +352,7 @@ function CompositorV2(props) {
                 style={{ height: areaHt, width: "100%" }}
                 // Cropper.js options
                 initialAspectRatio={16 / 16}
+                imageSmoothingQuality={"high"}
                 cropBoxResizable={false}
                 guides={false}
                 crop={onCrop}
@@ -332,38 +365,36 @@ function CompositorV2(props) {
                   width={sOhmSize}
                   height={sOhmSize}
                 />*/}
-                <Button variant="contained" color="primary" onClick={finishCropping} >
+                <Button variant="contained" color="primary" onClick={goToStepThree} >
                   DoneCropping
                 </Button>
               </Box>
             </div>
           }
           <div style={canvasContainer} ref={finalCanvas}>
-            
-            
-                <canvas
-                  id="canvas"
-                  ref={canvasRef}
-                  style={canvasStyle}
-                  // className="canvasRendering"
-                  // width={window.innerWidth-10}
-                  height="0"
-                >
-                </canvas>
-                {uiStep === 3 && fileCropped &&
-                  // {/*showCanvas && */}
-                  <Box textAlign='center' m="1rem">
-                    {/*<img
-                      src={sOhm}
-                      alt="sOhmLogo"
-                      width={sOhmSize}
-                      height={sOhmSize}
-                    />*/}
-                    <Button variant="contained" color="primary" onClick={downloadImage} >
-                      Download pfp
-                    </Button>
-                  </Box>
-                }
+            <canvas
+              id="canvas"
+              ref={canvasRef}
+              style={canvasStyle}
+              // className="canvasRendering"
+              // width={window.innerWidth-10}
+              height="0"
+            >
+            </canvas>
+            {uiStep === 3 && fileCropped &&
+              // {/*showCanvas && */}
+              <Box textAlign='center' m="1rem">
+                {/*<img
+                  src={sOhm}
+                  alt="sOhmLogo"
+                  width={sOhmSize}
+                  height={sOhmSize}
+                />*/}
+                <Button variant="contained" color="primary" onClick={downloadImage} >
+                  Download pfp
+                </Button>
+              </Box>
+            }
             <div>
               {windowSize.width}px / {windowSize.height}px
             </div>
