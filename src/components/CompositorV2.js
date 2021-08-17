@@ -20,9 +20,14 @@ import {
   // Link,
   Zoom,
 } from "@material-ui/core";
+import {
+  isIOS,
+} from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
@@ -52,11 +57,10 @@ const dropContainerStyle = {
   flexFlow: "column wrap",
   justifyContent: "center"
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
-
 }
 
 function CompositorV2(props) {
-  
+
   const sOhmSize = 60;
 
   function draw(baseImg) {
@@ -119,10 +123,11 @@ function CompositorV2(props) {
   }
 
   const canvasRef = React.useRef(null);
+  const finalCanvas = React.useRef(null);
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.75) || 0;
+  const areaHt = (windowSize.height*0.7 ) || 0;
 
   const compositorPaper = {
     padding: "15px",
@@ -144,77 +149,178 @@ function CompositorV2(props) {
     height: areaHt
   }
 
-  const dropZoneSm = {
-    display: "flex",
-    flexFlow: "column wrap",
-    justifyContent: "center",
-    cursor: 'pointer'
+  const outlineButton = {
+    height: "33px",
+    marginLeft: "0.25rem",
+    marginRight: "0.25rem",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
   }
 
-  const [showCanvas, setshowCanvas] = useState(false);
-  const [textPromptState, setTextPromptState] = useState("Set your pfp here. Then click to place the logo.");
+  const containerButton = {
+    height: "33px",
+    marginLeft: "0.25rem",
+    marginRight: "0.25rem",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
+  }
+
+  const [fileImage, setfileImage] = useState(false);
+  const [fileImageType, setfileImageType] = useState("image/png");
+  const [fileCropped, setfileCropped] = useState(false);
+  const [uiStep, setuiStep] = useState(1);
+  const step1Text = "Set your pfp here. Click to Start.";
+  const step1Direction = "";
+  // const [textPromptState, setTextPromptState] = useState(step1Text);
+  const [directionState, setdirectionState] = useState(step1Direction);
   
+  // uiSteps
+  // 1. Click to start
+  // 2. take user's image to cropper
+  // 3. take user's cropped image to stamper
+
+  const goToStepTwo = (image) => {
+    setfileImage(image);
+    // setTextPromptState("Start Over");
+    setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
+    setuiStep(2);
+  }
+
+  const goToStepThree = () => {
+    // setTextPromptState("Back to Cropping");
+    setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
+    // clear the canvas...
+    clearTheCanvas(fileCropped);
+    drawCroppedCanvas(fileCropped);
+    setuiStep(3);
+  }
+
+  const goBackOneStep = () => {
+    if (uiStep === 3) {
+      // go to step 2
+      clearTheCanvas(fileCropped);
+      goToStepTwo(fileImage);
+    } else if (uiStep === 2) {
+      clearTheCanvas(fileCropped);
+      setdirectionState(step1Direction);
+      setuiStep(1);
+      
+    }
+  }
+
+  // STEP 1
+  // dropzone handling
   const {getRootProps, getInputProps} = useDropzone({
+    // heic/heif images aren't allowable...
     accept: 'image/*',
     multiple: false,
     onDrop: acceptedFiles => {
-      console.log(acceptedFiles);
+      // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
-        console.log(acceptedFiles[0]);
+        // console.log('dropzone', acceptedFiles[0])
+        // keep jpegs as pngs for transparent background
+        if (acceptedFiles[0].type === "image/jpeg") {
+          setfileImageType("image/png");
+        } else {
+          setfileImageType(acceptedFiles[0].type);
+        }
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
       let image = new Image();
-      console.log('on drop');
+      // console.log('on drop');
       image.onload = () => {
-        console.log('img load');
-        sizeImgDom(image);
-        setTextPromptState("Click here if you need to start over, Incooohmer");
-        setshowCanvas(true);
+        // console.log('img load');
+
+        // handle mobile low mem
+        // CROPPER IS very slow on MOBILE...
+        // ... so we need to resize the image
+        var maxHt = areaHt;
+        var maxWdth = finalCanvas.current.offsetWidth;
+        console.log('maxwdith', maxWdth);
+        var mobile = false;
+        if (isIOS) {
+          // set max height so as not to overload ios Memory, per:
+          // https://github.com/fengyuanchen/cropperjs#known-issues
+          if (1024 < maxWdth) {
+            maxWdth = 1024;
+          }
+          if (1024 < maxHt) {
+            maxHt = 1024;
+          }
+          mobile = true;
+
+        }
+        image = classifyImage(image, maxWdth, maxHt, mobile);
+        goToStepTwo(image);
 
       };
       image.src = previewUrl;
-
     }
   });
+
+  // react-cropper
+  const cropperRef = React.useRef(null);
+  const cropperCanvasSettings = {
+    imageSmoothingQuality: "high",
+  };
+  const onCrop = () => {
+    const imageElement = cropperRef?.current;
+    const cropper = imageElement?.cropper;
+    // console.log(cropper.getCroppedCanvas().toDataURL());
+    let image = new Image();
+    image.onload = () => {
+      image = classifyImage(image, finalCanvas.current.offsetWidth, areaHt, false);
+      setfileCropped(image);
+    };
+
+    image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(fileImageType, 1);
+  };
+
+  const clearTheCanvas = (image) => {
+    var canvas = canvasRef.current;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, image.governing_width, image.governing_height);
+    canvas.height = 0;
+    canvas.style.height = 0;
+  }
 
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
   // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
   // fixed, and then using the .scale() method to scale all of your future draws to the new bigger size.
   // https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas/26047748
-  const sizeImgDom = (image) => {
-    console.log('sizeImgDom', image);
+  const drawCroppedCanvas = (image) => {
+    // console.log('drawCroppedCanvas', image);
     // handle the click event
     var canvasOnly = canvasRef.current;
+    // console.log(canvasOnly);
     var ctx = canvasOnly.getContext('2d');
 
-    // let image = new Image();
-    // image.src = file_preview;
-
-    image = classifyImage(image, canvasOnly.parentElement, areaHt);
-    console.log(image.governing_width, image.governing_height)
+    // console.log(image.governing_width, image.governing_height)
     // set canvas dims based on classifyImage results
+    canvasOnly.style.height = image.governing_height + "px";
+    canvasOnly.style.width = image.governing_width + "px";
     canvasOnly.height = image.governing_height;
     canvasOnly.width = image.governing_width;
-    // image.onload = () => {
-    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
-    // };
-    setDPI();
 
+    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
+    setDPI();
     draw(image);
   }
 
   function setDPI() {
     var canvas = canvasRef.current;
-    var dpi = 96*10;
+    // var dpi = 96*3;
+    // var scaleFactor = dpi / 96;
+    var scaleFactor = 3;
+    
     // Set up CSS size.
     canvas.style.width = canvas.style.width || canvas.width + 'px';
     canvas.style.height = canvas.style.height || canvas.height + 'px';
 
-    console.log('setDpi', canvas.style.width, canvas.style.height);
+    // console.log('setDpi', canvas.style.width, canvas.style.height);
     // Get size information.
-    var scaleFactor = dpi / 96;
     var width = parseFloat(canvas.style.width);
     var height = parseFloat(canvas.style.height);
 
@@ -238,37 +344,13 @@ function CompositorV2(props) {
   const downloadImage = () => {
     var link = document.createElement('a');
     link.download = 'sOhmTag.png';
-    link.href = canvasRef.current.toDataURL()
+    link.href = canvasRef.current.toDataURL(fileImageType, 1);
     link.click();
   }
-  // drawFile draws in canvas
-  // const drawFile = useCallback((file) => {
-  //   console.log('drawfile', file);
-  //   // handle the click event
-  //   // function drawFile(file) {
-  //   var canvasOnly = canvasRef.current;
-  //   var ctx = canvasOnly.getContext('2d');
-  //   let image = new Image();
-  //   image.src = file.preview;
-
-  //   image = classifyImage(image, canvasOnly.parentElement);
-
-  //   // set canvas dims based on classifyImage results
-  //   canvasOnly.height = image.governing_height;
-  //   canvasOnly.width = image.governing_width;
-  //   image.onload = () => {
-  //     ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
-  //   };
-
-  //   draw(image);
-
-  // }, []);
 
   useEffect(() => {
-    console.log('useeffect');
-    if (showCanvas) {
-    }
-  }, [showCanvas]);
+    // controlling when re-render occurs (only via uiStep state change)
+  }, [uiStep]);
 
   return (
     <div id="stake-view" style={stakeStyle}>
@@ -277,18 +359,53 @@ function CompositorV2(props) {
           <Grid container direction="column" spacing={2}>
             <Grid item>
               <div className="card-header">
-                <Typography variant="h5">Welcome Incooohmer</Typography>
+                <Typography variant="h5">Welcome, Incooohmer</Typography>
               </div>
             </Grid>
           </Grid>
-          <div className="dropContainer" style={dropContainerStyle}>
-            <div {...getRootProps({style: showCanvas ? (dropZoneSm) : (dropZoneReg)})}>
-              <input {...getInputProps()} />
-              <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
-            </div>
-          </div>
 
-          <div style={canvasContainer}>
+          <Typography variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{directionState}</Typography>
+          
+          {uiStep === 1 &&
+            <div className="dropContainer" style={dropContainerStyle}>
+              <div {...getRootProps({style: dropZoneReg})}>
+                <input {...getInputProps()} />
+                <Typography variant="h5" color="textSecondary">{step1Text}</Typography>
+              </div>
+            </div>
+          }
+
+          {uiStep === 2 && fileImage &&
+            <div>
+              <Cropper
+                src={fileImage.src}
+                style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
+                // Cropper.js options
+                aspectRatio={1}
+                cropBoxResizable={false}
+                dragMode={"crop"}
+                guides={false}
+                autoCropArea={1}
+                crop={onCrop}
+                ref={cropperRef}
+              />
+              <Box textAlign='center'>
+                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                  Back
+                </Button>
+                <Button variant="contained" color="primary" onClick={goToStepThree} style={containerButton}>
+                  Crop pfp
+                </Button>
+              </Box>
+            </div>
+          }
+
+          {/* 
+            Notes for below (Step 3): 
+            1. canvas must ALWAYS be on screen
+            2. when we don't want the CroppedCanvas to appear we change height to 0
+          */}
+          <div style={canvasContainer} ref={finalCanvas}>
             <canvas
               id="canvas"
               ref={canvasRef}
@@ -298,25 +415,24 @@ function CompositorV2(props) {
               height="0"
             >
             </canvas>
-            {showCanvas &&
-              <Box textAlign='center' m="1rem">
-                {/*<img
-                  src={sOhm}
-                  alt="sOhmLogo"
-                  width={sOhmSize}
-                  height={sOhmSize}
-                />*/}
-                <Button variant="contained" color="primary" onClick={downloadImage} >
+            {uiStep === 3 && fileCropped &&
+              // {/*showCanvas && */}
+              <Box textAlign='center'>
+                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                  Back
+                </Button>
+                <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
                   Download pfp
                 </Button>
               </Box>
             }
+
+            {/* below is screen size notation for debugging */}
             <div>
               {windowSize.width}px / {windowSize.height}px
             </div>
 
           </div>
-
         </Paper>
       </Zoom>
     </div>
