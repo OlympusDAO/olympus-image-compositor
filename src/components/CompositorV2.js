@@ -124,7 +124,7 @@ function CompositorV2(props) {
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.75) || 0;
+  const areaHt = (windowSize.height*0.7 ) || 0;
 
   const compositorPaper = {
     padding: "15px",
@@ -146,15 +146,30 @@ function CompositorV2(props) {
     height: areaHt
   }
 
-  const stepPromptStyle = {
-    cursor: "pointer"
+  const outlineButton = {
+    height: "33px",
+    marginLeft: "0.25rem",
+    marginRight: "0.25rem",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
+  }
+
+  const containerButton = {
+    height: "33px",
+    marginLeft: "0.25rem",
+    marginRight: "0.25rem",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
   }
 
   const [fileImage, setfileImage] = useState(false);
+  const [fileImageType, setfileImageType] = useState("image/jpeg");
   const [fileCropped, setfileCropped] = useState(false);
   const [uiStep, setuiStep] = useState(1);
   const step1Text = "Set your pfp here. Click to Start.";
-  const [textPromptState, setTextPromptState] = useState(step1Text);
+  const step1Direction = "";
+  // const [textPromptState, setTextPromptState] = useState(step1Text);
+  const [directionState, setdirectionState] = useState(step1Direction);
   
   // uiSteps
   // 1. Click to start
@@ -164,12 +179,14 @@ function CompositorV2(props) {
   const goToStepTwo = (image) => {
     image = classifyImage(image, finalCanvas.current, areaHt);
     setfileImage(image);
-    setTextPromptState("Click here if you need to start over, Incooohmer");
+    // setTextPromptState("Start Over");
+    setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
     setuiStep(2);
   }
 
   const goToStepThree = () => {
-    setTextPromptState("Click here to go back to cropping, Incooohmer");
+    // setTextPromptState("Back to Cropping");
+    setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
     // clear the canvas...
     clearTheCanvas(fileCropped);
     sizeImgDom(fileCropped);
@@ -183,7 +200,7 @@ function CompositorV2(props) {
       goToStepTwo(fileImage);
     } else if (uiStep === 2) {
       clearTheCanvas(fileCropped);
-      setTextPromptState(step1Text);
+      setdirectionState(step1Direction);
       setuiStep(1);
       
     }
@@ -196,18 +213,13 @@ function CompositorV2(props) {
       console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
-        console.log(acceptedFiles[0]);
+        setfileImageType(acceptedFiles[0].type);
         previewUrl = URL.createObjectURL(acceptedFiles[0]);
       }
       let image = new Image();
       console.log('on drop');
       image.onload = () => {
         console.log('img load');
-        // sizeImgDom(image);
-        // classify based on width of finalCanvas ref object
-        // image = classifyImage(image, finalCanvas.current, areaHt);
-        // setfileImage(image);
-        // setTextPromptState("Click here if you need to start over, Incooohmer");
         goToStepTwo(image);
 
       };
@@ -228,7 +240,7 @@ function CompositorV2(props) {
       setfileCropped(image);
     };
 
-    image.src = cropper.getCroppedCanvas().toDataURL();
+    image.src = cropper.getCroppedCanvas({imageSmoothingQuality: "high"}).toDataURL(fileImageType, 1);
   };
 
   const clearTheCanvas = (image) => {
@@ -272,14 +284,16 @@ function CompositorV2(props) {
 
   function setDPI() {
     var canvas = canvasRef.current;
-    var dpi = 96*3;
+    // var dpi = 96*3;
+    // var scaleFactor = dpi / 96;
+    var scaleFactor = 3;
+    
     // Set up CSS size.
     canvas.style.width = canvas.style.width || canvas.width + 'px';
     canvas.style.height = canvas.style.height || canvas.height + 'px';
 
     console.log('setDpi', canvas.style.width, canvas.style.height);
     // Get size information.
-    var scaleFactor = dpi / 96;
     var width = parseFloat(canvas.style.width);
     var height = parseFloat(canvas.style.height);
 
@@ -303,7 +317,7 @@ function CompositorV2(props) {
   const downloadImage = () => {
     var link = document.createElement('a');
     link.download = 'sOhmTag.png';
-    link.href = canvasRef.current.toDataURL()
+    link.href = canvasRef.current.toDataURL(fileImageType, 1);
     link.click();
   }
 
@@ -325,22 +339,18 @@ function CompositorV2(props) {
           <Grid container direction="column" spacing={2}>
             <Grid item>
               <div className="card-header">
-                <Typography variant="h5">Welcome Incooohmer</Typography>
+                <Typography variant="h5">Welcome, Incooohmer</Typography>
               </div>
             </Grid>
           </Grid>
 
-          {(uiStep === 2 || uiStep === 3) &&
-            <Box textAlign='center' m="1rem">
-              <Typography variant="h5" color="textSecondary" onClick={goBackOneStep} style={stepPromptStyle}>{textPromptState}</Typography>
-            </Box>
-          }
+          <Typography variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{directionState}</Typography>
           
           {uiStep === 1 &&
             <div className="dropContainer" style={dropContainerStyle}>
               <div {...getRootProps({style: dropZoneReg})}>
                 <input {...getInputProps()} />
-                <Typography variant="h5" color="textSecondary">{textPromptState}</Typography>
+                <Typography variant="h5" color="textSecondary">{step1Text}</Typography>
               </div>
             </div>
           }
@@ -351,22 +361,20 @@ function CompositorV2(props) {
                 src={fileImage.src}
                 style={{ height: areaHt, width: "100%" }}
                 // Cropper.js options
-                initialAspectRatio={16 / 16}
-                imageSmoothingQuality={"high"}
+                aspectRatio={16 / 16}
                 cropBoxResizable={false}
+                dragMode={"crop"}
                 guides={false}
+                autoCropArea={1}
                 crop={onCrop}
                 ref={cropperRef}
               />
-              <Box textAlign='center' m="1rem">
-                {/*<img
-                  src={sOhm}
-                  alt="sOhmLogo"
-                  width={sOhmSize}
-                  height={sOhmSize}
-                />*/}
-                <Button variant="contained" color="primary" onClick={goToStepThree} >
-                  DoneCropping
+              <Box textAlign='center'>
+                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                  Back
+                </Button>
+                <Button variant="contained" color="primary" onClick={goToStepThree} style={containerButton}>
+                  Crop pfp
                 </Button>
               </Box>
             </div>
@@ -383,14 +391,11 @@ function CompositorV2(props) {
             </canvas>
             {uiStep === 3 && fileCropped &&
               // {/*showCanvas && */}
-              <Box textAlign='center' m="1rem">
-                {/*<img
-                  src={sOhm}
-                  alt="sOhmLogo"
-                  width={sOhmSize}
-                  height={sOhmSize}
-                />*/}
-                <Button variant="contained" color="primary" onClick={downloadImage} >
+              <Box textAlign='center'>
+                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                  Back
+                </Button>
+                <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
                   Download pfp
                 </Button>
               </Box>

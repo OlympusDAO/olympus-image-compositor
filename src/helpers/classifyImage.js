@@ -6,7 +6,7 @@
 // .governing_height
 // .governing_width
 function classifyImage(image, parentElement, areaHt) {
-  console.log('classifyImage');
+  console.log('classifyImage', image.height, image.width);
   var portrait = true;
   if (image.height < image.width) {
     portrait = false;
@@ -25,7 +25,7 @@ function classifyImage(image, parentElement, areaHt) {
   // if image_width & image_height are each less than parent
   // if image_width 
   if (portrait === true) {
-    // PORTRAIT
+    // PORTRAIT --- OR ---- SQUARE
     // then height is the governing factor...
     if (image_height < parent_height) {
       // don't stretch... unless width is too wide
