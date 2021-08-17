@@ -364,7 +364,7 @@ function CompositorV2(props) {
             <div>
               <Cropper
                 src={fileImage.src}
-                style={{ height: areaHt, width: "100%" }}
+                style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
                 // Cropper.js options
                 aspectRatio={1}
                 cropBoxResizable={false}
