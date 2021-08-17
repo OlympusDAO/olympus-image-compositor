@@ -81,8 +81,8 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
 
   if (mobile) {
     // resizing the image for cropper.js
-    image.height = image.governing_height;
-    image.width = image.governing_width;
+    // image.height = image.governing_height;
+    // image.width = image.governing_width;
   }
 
   function heightGoverning() {
