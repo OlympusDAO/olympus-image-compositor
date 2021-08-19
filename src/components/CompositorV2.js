@@ -22,9 +22,12 @@ import {
 } from "@material-ui/core";
 import {
   isIOS,
+  isMobile,
+  isMobileSafari
 } from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
+
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -165,6 +168,11 @@ function CompositorV2(props) {
     marginBottom: "0.5rem",
   }
 
+  const hiddenButton = {
+    ...containerButton,
+    ...{visibility: "hidden"}
+  }
+
   const [fileImage, setfileImage] = useState(false);
   const [fileImageType, setfileImageType] = useState("image/png");
   const [fileCropped, setfileCropped] = useState(false);
@@ -186,13 +194,24 @@ function CompositorV2(props) {
     setuiStep(2);
   }
 
-  const goToStepThree = () => {
+  const goToStepThree = (sameCanvas) => {
     // setTextPromptState("Back to Cropping");
     setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
     // clear the canvas...
-    clearTheCanvas(fileCropped);
-    drawCroppedCanvas(fileCropped);
+    if (sameCanvas !== true) {
+      clearTheCanvas(fileCropped);
+      drawCroppedCanvas(fileCropped);
+    }
     setuiStep(3);
+  }
+
+  // this only happens for iOSMobile, non-Safari users
+  const goToStepFour = () => {
+    setdirectionState("Long-press to save, Incooohmer");
+    // must set display.none rather than height 0
+    // height 0 doesn't allow the image to be created...
+    canvasRef.current.style.display="none";
+    setuiStep(4);
   }
 
   const goBackOneStep = () => {
@@ -204,7 +223,10 @@ function CompositorV2(props) {
       clearTheCanvas(fileCropped);
       setdirectionState(step1Direction);
       setuiStep(1);
-      
+    } else if (uiStep === 4) {
+      // make the canvas show again
+      canvasRef.current.style.display="block";
+      goToStepThree(true);
     }
   }
 
@@ -342,23 +364,31 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
-    // polyfill for browsers...
-    // using blueimp-canvas-to-blob
-    if (canvasRef.current.toBlob) {
-      canvasRef.current.toBlob(function (blob) {
-        const anchor = document.createElement('a');
-        anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
-        anchor.href = URL.createObjectURL(blob);
+    // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
+    if (isIOS && isMobile && !isMobileSafari) {
+      // if (true) {
+      // take us to uiStep(4)
+      goToStepFour();
+    } else {
+      // polyfill for browsers...
+      // using blueimp-canvas-to-blob
+      if (canvasRef.current.toBlob) {
+        canvasRef.current.toBlob(function (blob) {
+          const anchor = document.createElement('a');
+          anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
+          anchor.href = URL.createObjectURL(blob);
 
-        anchor.click();
+          anchor.click();
 
-        URL.revokeObjectURL(anchor.href); // remove it from memory
-      }, fileImageType, 1);
-    }  
+          URL.revokeObjectURL(anchor.href); // remove it from memory
+        }, fileImageType, 1);
+      }
+    }
   }
 
   useEffect(() => {
-    // adding canvas-to-blob script    
+    console.log('useEffect');
+    // adding canvas-to-blob script
     const script = document.createElement('script');
     script.src = "../assets/js/canvas-to-blob.min.js";
     script.type = "text/jsx";
@@ -444,6 +474,27 @@ function CompositorV2(props) {
                   Download pfp
                 </Button>
               </Box>
+            }
+
+            {uiStep === 4 &&
+              <div>
+                <img
+                  alt="finalImage"
+                  src={canvasRef.current.toDataURL(fileImageType, 1)}
+                  style={{
+                    height: canvasRef.current.style.height,
+                    width: canvasRef.current.style.width,
+                  }}
+                />
+                <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
+                  <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                    Back
+                  </Button>
+                  <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
+                    Download pfp
+                  </Button>
+                </Box>
+              </div>
             }
 
             {/* below is screen size notation for debugging */}
