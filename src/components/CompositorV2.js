@@ -24,7 +24,8 @@ import {
   isIOS,
   isMobile,
   isMobileSafari,
-  deviceDetect
+  deviceDetect,
+  browserName
 } from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
@@ -505,6 +506,7 @@ function CompositorV2(props) {
             <div>
               <p>isIOS: {isIOS.toString()}</p>
               <p>isMobile: {isMobile.toString()}</p>
+              <p>browserName: {browserName}</p>
               <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
             </div>
             <div>
