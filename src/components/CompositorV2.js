@@ -503,9 +503,9 @@ function CompositorV2(props) {
               {windowSize.width}px / {windowSize.height}px
             </div>
             <div>
-              <p>isIOS: {isIOS}</p>
-              <p>isMobile: {isMobile}</p>
-              <p>isMobileSafari: {isMobileSafari}</p>
+              <p>isIOS: {isIOS.toString()}</p>
+              <p>isMobile: {isMobile.toString()}</p>
+              <p>isMobileSafari: {isMobileSafari.toString()}</p>
             </div>
             <div>
               {JSON.stringify(deviceDetect())}
