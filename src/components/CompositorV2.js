@@ -23,7 +23,8 @@ import {
 import {
   isIOS,
   isMobile,
-  isMobileSafari
+  isMobileSafari,
+  deviceDetect
 } from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
@@ -500,6 +501,9 @@ function CompositorV2(props) {
             {/* below is screen size notation for debugging */}
             <div>
               {windowSize.width}px / {windowSize.height}px
+            </div>
+            <div>
+              {JSON.stringify(deviceDetect())}
             </div>
 
           </div>
