@@ -24,8 +24,8 @@ import {
   isIOS,
   isMobile,
   isMobileSafari,
-  deviceDetect,
-  browserName
+  // deviceDetect,
+  // browserName
 } from "react-device-detect";
 
 import React, {useState, useEffect} from 'react';
