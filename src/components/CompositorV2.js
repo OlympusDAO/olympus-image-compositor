@@ -366,7 +366,7 @@ function CompositorV2(props) {
 
   const downloadImage = () => {
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
-    if (isIOS && isMobile && !isMobileSafari) {
+    if (isIOS && isMobile && isMobileSafari !== true) {
       // if (true) {
       // take us to uiStep(4)
       goToStepFour();
@@ -505,7 +505,7 @@ function CompositorV2(props) {
             <div>
               <p>isIOS: {isIOS.toString()}</p>
               <p>isMobile: {isMobile.toString()}</p>
-              <p>isMobileSafari: {isMobileSafari.toString()}</p>
+              <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
             </div>
             <div>
               {JSON.stringify(deviceDetect())}
