@@ -503,7 +503,7 @@ function CompositorV2(props) {
             <div>
               {windowSize.width}px / {windowSize.height}px
             </div>
-            <div>
+            {/*<div>
               <p>isIOS: {isIOS.toString()}</p>
               <p>isMobile: {isMobile.toString()}</p>
               <p>browserName: {browserName}</p>
@@ -511,7 +511,7 @@ function CompositorV2(props) {
             </div>
             <div>
               {JSON.stringify(deviceDetect())}
-            </div>
+            </div>*/}
 
           </div>
         </Paper>
