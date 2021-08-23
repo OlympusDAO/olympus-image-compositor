@@ -24,6 +24,8 @@ import {
   isIOS,
   isMobile,
   isMobileSafari,
+  // browser,
+  // getUA,
   // deviceDetect,
   // browserName
 } from "react-device-detect";
@@ -41,6 +43,10 @@ import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
+
+// var UAParser = require('ua-parser-js/dist/ua-parser.min');
+// var UA = new UAParser();
+
 // import { dark } from "../themes/dark";
 
 const canvasContainer = {
@@ -367,8 +373,8 @@ function CompositorV2(props) {
 
   const downloadImage = () => {
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
-    if (isIOS && isMobile && isMobileSafari !== true) {
-      // if (true) {
+    // this works for Chrome mobile, but not Brave since brave uses WebKit...
+    if (isIOS && isMobile && !isMobileSafari) {
       // take us to uiStep(4)
       goToStepFour();
     } else {
@@ -380,26 +386,47 @@ function CompositorV2(props) {
           anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
           anchor.href = URL.createObjectURL(blob);
 
-          anchor.click();
+          // TODO(Roane): seeing if we can catch mobile issue
+          // try {
+          //   (anchor.click())
+          // } catch(t) {
+          //   console.log(t);
+          // }
+          // anchor.click();
 
           URL.revokeObjectURL(anchor.href); // remove it from memory
         }, fileImageType, 1);
       }
     }
   }
+  
+  // const addCanvasToBlobPolyfill = () => {
+  //   const script = document.createElement('script');
+  //   script.src = "../assets/js/canvas-to-blob.min.js";
+  //   script.type = "text/jsx";
+  //   script.async = true;
+  //   document.body.appendChild(script);
+  //   return () => {
+  //     document.body.removeChild(script);
+  //   }
+  // }
+
+  // const addMobileConsole = () => {
+  //   const script = document.createElement('script');
+  //   script.src = "https://code.hnldesign.nl/hnl.mobileConsole.1.3.js";
+  //   script.type = "text/jsx";
+  //   script.async = true;
+  //   document.body.appendChild(script);
+  //   return () => {
+  //     document.body.removeChild(script);
+  //   }
+  // }
 
   useEffect(() => {
     console.log('useEffect');
     // adding canvas-to-blob script
-    const script = document.createElement('script');
-    script.src = "../assets/js/canvas-to-blob.min.js";
-    script.type = "text/jsx";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    }
-
+    // addCanvasToBlobPolyfill();
+    // addMobileConsole();
     // controlling when re-render occurs (only via uiStep state change)
   }, [uiStep]);
 
@@ -500,18 +527,23 @@ function CompositorV2(props) {
             }
 
             {/* below is screen size notation for debugging */}
-            <div>
-              {windowSize.width}px / {windowSize.height}px
-            </div>
             {/*<div>
+              {windowSize.width}px / {windowSize.height}px
+              {console.log(browser)}
+              {console.log(UA)}
+              {console.log(getUA)}
+            </div>
+            <div>
               <p>isIOS: {isIOS.toString()}</p>
               <p>isMobile: {isMobile.toString()}</p>
               <p>browserName: {browserName}</p>
               <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
             </div>
-            <div>
-              {JSON.stringify(deviceDetect())}
-            </div>*/}
+            
+            <div style={{overflowWrap: "anywhere"}}>
+              <p>{JSON.stringify(deviceDetect())}</p>
+            </div>
+            */}
 
           </div>
         </Paper>
