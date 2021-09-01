@@ -413,9 +413,9 @@ function CompositorV2(props) {
         </Grid>
 
         {/* direction text */}
-        {Object.entries(directionState).map(([key, value]) => {
-          <Typography key={key} variant="h5" color="textSecondary" style={{ marginBottom: "0.5rem" }}>{value}</Typography>
-        })}
+        {Object.entries(directionState).map(([key, value]) => (
+          <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+        ))}
 
         {/* Logo Resizing */}
         {uiStep === 3 &&
