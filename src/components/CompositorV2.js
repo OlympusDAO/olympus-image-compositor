@@ -201,7 +201,7 @@ function CompositorV2(props) {
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
-    setIsLoading(false);
+    setIsLoading(true);
     setuiStep(2);
   }
 
@@ -251,7 +251,6 @@ function CompositorV2(props) {
       // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
-        setIsLoading(true);
         // console.log('dropzone', acceptedFiles[0])
         // keep jpegs as pngs for transparent background
         if (acceptedFiles[0].type === "image/jpeg") {
@@ -264,8 +263,6 @@ function CompositorV2(props) {
       let image = new Image();
       // console.log('on drop');
       image.onload = () => {
-        // console.log('img load');
-
         // handle mobile low mem
         // CROPPER IS very slow on MOBILE...
         // ... so we need to resize the image
@@ -396,13 +393,17 @@ function CompositorV2(props) {
     }
   }
 
-  useEffect(() => {
-    console.log('useEffect');
-    // adding canvas-to-blob script
-    // addCanvasToBlobPolyfill();
-    // addMobileConsole();
-    // controlling when re-render occurs (only via uiStep state change)
-  }, [uiStep]);
+  const imageLoaded = () => {
+    setIsLoading(false);
+  }
+
+  // useEffect(() => {
+  //   console.log('useEffect');
+  //   // adding canvas-to-blob script
+  //   // addCanvasToBlobPolyfill();
+  //   // addMobileConsole();
+  //   // controlling when re-render occurs (only via uiStep state change)
+  // }, [uiStep]);
 
   return (
     <div id="stake-view" style={stakeStyle}>
@@ -444,6 +445,7 @@ function CompositorV2(props) {
                 guides={false}
                 autoCropArea={1}
                 crop={onCrop}
+                ready={imageLoaded}
                 ref={cropperRef}
               />
               <Box textAlign='center'>
