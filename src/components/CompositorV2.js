@@ -8,6 +8,7 @@ import {
   // InputLabel,
   // OutlinedInput,
   Button,
+  CircularProgress,
   // SvgIcon,
   // Tab,
   // Tabs,
@@ -185,6 +186,7 @@ function CompositorV2(props) {
   const [fileImageType, setfileImageType] = useState("image/png");
   const [fileCropped, setfileCropped] = useState(false);
   const [uiStep, setuiStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const step1Text = "Set your pfp here. Click to Start.";
   const step1Direction = "";
   // const [textPromptState, setTextPromptState] = useState(step1Text);
@@ -199,6 +201,7 @@ function CompositorV2(props) {
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
+    setIsLoading(false);
     setuiStep(2);
   }
 
@@ -248,6 +251,7 @@ function CompositorV2(props) {
       // console.log(acceptedFiles);
       var previewUrl = null;
       if (acceptedFiles.length > 0) {
+        setIsLoading(true);
         // console.log('dropzone', acceptedFiles[0])
         // keep jpegs as pngs for transparent background
         if (acceptedFiles[0].type === "image/jpeg") {
@@ -386,41 +390,11 @@ function CompositorV2(props) {
           anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
           anchor.href = URL.createObjectURL(blob);
 
-          // TODO(Roane): seeing if we can catch mobile issue
-          // try {
-          //   (anchor.click())
-          // } catch(t) {
-          //   console.log(t);
-          // }
-          // anchor.click();
-
           URL.revokeObjectURL(anchor.href); // remove it from memory
         }, fileImageType, 1);
       }
     }
   }
-  
-  // const addCanvasToBlobPolyfill = () => {
-  //   const script = document.createElement('script');
-  //   script.src = "../assets/js/canvas-to-blob.min.js";
-  //   script.type = "text/jsx";
-  //   script.async = true;
-  //   document.body.appendChild(script);
-  //   return () => {
-  //     document.body.removeChild(script);
-  //   }
-  // }
-
-  // const addMobileConsole = () => {
-  //   const script = document.createElement('script');
-  //   script.src = "https://code.hnldesign.nl/hnl.mobileConsole.1.3.js";
-  //   script.type = "text/jsx";
-  //   script.async = true;
-  //   document.body.appendChild(script);
-  //   return () => {
-  //     document.body.removeChild(script);
-  //   }
-  // }
 
   useEffect(() => {
     console.log('useEffect');
@@ -444,6 +418,11 @@ function CompositorV2(props) {
 
           <Typography variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{directionState}</Typography>
           
+          {/* working on loader */}
+          {isLoading &&
+            <CircularProgress />
+          }
+
           {uiStep === 1 &&
             <div className="dropContainer" style={dropContainerStyle}>
               <div {...getRootProps({style: dropZoneReg})}>
