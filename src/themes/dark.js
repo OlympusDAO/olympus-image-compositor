@@ -56,6 +56,9 @@ export const dark = responsiveFontSizes(
         primary: {
           main: darkTheme.color,
         },
+        secondary: {
+          main: darkTheme.gold,
+        },
         neutral: {
           main: darkTheme.color,
           secondary: darkTheme.gray,

@@ -1,11 +1,13 @@
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
+import { dark as darkTheme } from "../themes/dark.js"
+
 // import Typography from '@material-ui/core/Typography';
 // import Tooltip from '@material-ui/core/Tooltip';
 
 const SizeSlider = withStyles({
   root: {
-    color: '#52af77',
+    color: darkTheme.palette.secondary.main,
     height: 8,
   },
   thumb: {

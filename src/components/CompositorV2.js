@@ -191,10 +191,9 @@ function CompositorV2(props) {
     }, [stampSize.height, stampSize.width, fileCropped]
   );
     
-  const step1Text = "Set your pfp here. Click to Start.";
-  const step1Direction = "";
-  // const [textPromptState, setTextPromptState] = useState(step1Text);
+  const step1Direction = {row: ""};
   const [directionState, setdirectionState] = useState(step1Direction);
+  // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
   // uiSteps
   // 1. Click to start
@@ -204,14 +203,23 @@ function CompositorV2(props) {
   const goToStepTwo = (image) => {
     setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState("Crop your image, then click 'Crop pfp' at the bottom");
+    setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
     setIsLoading(true);
     setuiStep(2);
   }
 
   const goToStepThree = (sameCanvas) => {
     // setTextPromptState("Back to Cropping");
-    setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
+    // setdirectionState({
+    //   row: "Three steps here, fren:",
+    //   row2: "1. Resize your logo w/ the slider",
+    //   row3: "2. Click to place your logo",
+    //   row4: "3. Click 'Download pfp' at the bottom",
+    // });
+    setdirectionState({
+      row: "Click to place your logo, then click 'Download pfp' at the bottom"
+    })
+    // setSecondaryDirection({row: "2. Click to place your logo, then click 'Download pdf' at the bottom"});
     // clear the canvas...
     if (sameCanvas !== true) {
       clearTheCanvas();
@@ -222,7 +230,7 @@ function CompositorV2(props) {
 
   // this only happens for iOSMobile, non-Safari users
   const goToStepFour = () => {
-    setdirectionState("Long-press to save, Incooohmer");
+    setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     canvasRef.current.style.display="none";
@@ -430,7 +438,37 @@ function CompositorV2(props) {
             </Grid>
           </Grid>
 
-          <Typography variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{directionState}</Typography>
+          {/* Logo Resizing */}
+          {uiStep === 3 &&
+            <div style={{marginBottom: "0.75rem"}}>
+              <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
+              <StampImage
+                src={sOhm}
+                height={stampSize.height}
+                width={stampSize.width}
+                // resizeStamp={resizeStamp}
+              />
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} sm={6}>
+                  <SizeSlider
+                    valueLabelDisplay="auto"
+                    aria-label="size slider"
+                    defaultValue={sOhmSize}
+                    onChange={resizeStamp}
+                  />
+                </Grid>
+              </Grid>
+              {/*
+                Object.entries(secondaryDirection).map(([key, value]) => (
+                <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+              ))
+              */}
+            </div>
+          }
+
+          {Object.entries(directionState).map(([key, value]) => (
+            <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+          ))}
           
           {/* working on loader */}
           {isLoading &&
@@ -441,7 +479,7 @@ function CompositorV2(props) {
             <div className="dropContainer" style={dropContainerStyle}>
               <div {...getRootProps({style: dropZoneReg})}>
                 <input {...getInputProps()} />
-                <Typography variant="h5" color="textSecondary">{step1Text}</Typography>
+                <Typography variant="h5" color="textSecondary">Set your pfp here. Click to Start.</Typography>
               </div>
             </div>
           }
@@ -472,27 +510,7 @@ function CompositorV2(props) {
             </div>
           }
 
-          {/* Logo Resizing */}
-          {uiStep === 3 &&
-            <div style={{marginBottom: "0.75rem"}}>
-              <StampImage
-                src={sOhm}
-                height={stampSize.height}
-                width={stampSize.width}
-                // resizeStamp={resizeStamp}
-              />
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} sm={6}>
-                  <SizeSlider
-                    valueLabelDisplay="auto"
-                    aria-label="size slider"
-                    defaultValue={sOhmSize}
-                    onChange={resizeStamp}
-                  />
-                </Grid>
-              </Grid>
-            </div>
-          }
+          {/* Image Resizer was here... but didn't look right */}  
           {/* 
             Notes for below (Step 3): 
             1. canvas must ALWAYS be on screen
