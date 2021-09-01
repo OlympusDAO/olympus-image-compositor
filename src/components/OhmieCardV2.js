@@ -146,25 +146,20 @@ function CompositorV2(props) {
       // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
       canvasOnly.addEventListener('mousemove', e => {
         if (isDrawing === true) {
-          // ctx.drawImage(image, dx, dy, dWidth, dHeight);
-          // history.undo(canvasOnly, ctx);
+
           if (fileCropped) history.restoreState();
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
-          // drawLine(context, x, y, e.offsetX, e.offsetY);
-          // x = e.offsetX;
-          // y = e.offsetY;
+
         }
       });
 
       window.addEventListener('mouseup', e => {
         if (isDrawing === true) {
-          // history.undo(canvasOnly, ctx);
+
           if (fileCropped) history.restoreState();
 
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
-          // drawLine(context, x, y, e.offsetX, e.offsetY);
-          // x = 0;
-          // y = 0;
+
           isDrawing = false;
         }
       });
