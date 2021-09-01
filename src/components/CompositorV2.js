@@ -3,22 +3,8 @@ import {
   Box,
   Paper,
   Typography,
-  // FormControl,
-  // InputAdornment,
-  // InputLabel,
-  // OutlinedInput,
   Button,
   CircularProgress,
-  // SvgIcon,
-  // Tab,
-  // Tabs,
-  // TableHead,
-  // TableCell,
-  // TableBody,
-  // Table,
-  // TableRow,
-  // TableContainer,
-  // Link,
   Zoom,
 } from "@material-ui/core";
 import {
@@ -90,12 +76,6 @@ function CompositorV2(props) {
     padding: "15px",
     textAlign: "center",
     // marginBottom: "20px",
-  }
-
-  const stakeStyle = {
-    justifyContent: "start",
-    overflow: "auto",
-    height: windowSize.height
   }
 
   const dropZoneReg = {
@@ -427,162 +407,160 @@ function CompositorV2(props) {
   }, [stampSize, setCanvasListeners, fileCropped]);
 
   return (
-    <div id="stake-view" style={stakeStyle}>
-      <Zoom in={true}>
-        <Paper className={`ohm-card`} elevation={3} style={compositorPaper}>
-          <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <div className="card-header">
-                <Typography variant="h5">Welcome, Incooohmer</Typography>
-              </div>
-            </Grid>
+    <Zoom in={true}>
+      <Paper className={`ohm-card`} elevation={3} style={compositorPaper}>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <div className="card-header">
+              <Typography variant="h5">Welcome, Incooohmer</Typography>
+            </div>
           </Grid>
+        </Grid>
 
-          {/* direction text */}
-          {Object.entries(directionState).map(([key, value]) => (
-            <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-          ))}
+        {/* direction text */}
+        {Object.entries(directionState).map(([key, value]) => (
+          <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+        ))}
 
-          {/* Logo Resizing */}
-          {uiStep === 3 &&
-            <div style={{marginBottom: "0.75rem"}}>
-              <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
-              <StampImage
-                src={sOhm}
-                height={stampSize.height}
-                width={stampSize.width}
-                // resizeStamp={resizeStamp}
-              />
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} sm={6}>
-                  <SizeSlider
-                    valueLabelDisplay="auto"
-                    aria-label="size slider"
-                    defaultValue={sOhmSize}
-                    onChange={resizeStamp}
-                  />
-                </Grid>
+        {/* Logo Resizing */}
+        {uiStep === 3 &&
+          <div style={{marginBottom: "0.75rem"}}>
+            <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
+            <StampImage
+              src={sOhm}
+              height={stampSize.height}
+              width={stampSize.width}
+              // resizeStamp={resizeStamp}
+            />
+            <Grid container spacing={3} justifyContent="center">
+              <Grid item xs={12} sm={6}>
+                <SizeSlider
+                  valueLabelDisplay="auto"
+                  aria-label="size slider"
+                  defaultValue={sOhmSize}
+                  onChange={resizeStamp}
+                />
               </Grid>
-              {/*
-                Object.entries(secondaryDirection).map(([key, value]) => (
-                <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-              ))
-              */}
+            </Grid>
+            {/*
+              Object.entries(secondaryDirection).map(([key, value]) => (
+              <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+            ))
+            */}
+          </div>
+        }
+        
+        {/* working on loader */}
+        {isLoading &&
+          <CircularProgress />
+        }
+
+        {uiStep === 1 &&
+          <div className="dropContainer" style={dropContainerStyle}>
+            <div {...getRootProps({style: dropZoneReg})}>
+              <input {...getInputProps()} />
+              <Typography variant="h5" color="textSecondary">Set your pfp here. Click to Start.</Typography>
             </div>
-          }
-          
-          {/* working on loader */}
-          {isLoading &&
-            <CircularProgress />
+          </div>
+        }
+
+        {uiStep === 2 && fileImage &&
+          <div>
+            <Cropper
+              src={fileImage.src}
+              style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
+              // Cropper.js options
+              aspectRatio={1}
+              cropBoxResizable={false}
+              dragMode={"crop"}
+              guides={false}
+              autoCropArea={1}
+              crop={onCrop}
+              ready={imageLoaded}
+              ref={cropperRef}
+            />
+            <Box textAlign='center'>
+              <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                Back
+              </Button>
+              <Button variant="contained" color="primary" onClick={goToStepThree} style={containerButton}>
+                Crop pfp
+              </Button>
+            </Box>
+          </div>
+        }
+
+        {/* Image Resizer was here... but didn't look right */}  
+        {/* 
+          Notes for below (Step 3): 
+          1. canvas must ALWAYS be on screen
+          2. when we don't want the CroppedCanvas to appear we change height to 0
+        */}
+        <div style={canvasContainer} ref={finalCanvas}>
+          <canvas
+            id="canvas"
+            ref={canvasRef}
+            style={canvasStyle}
+            // className="canvasRendering"
+            // width={window.innerWidth-10}
+            height="0"
+          >
+          </canvas>
+          {uiStep === 3 && fileCropped &&
+            // {/*showCanvas && */}
+            <Box textAlign='center'>
+              <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                Back
+              </Button>
+              <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
+                Download pfp
+              </Button>
+            </Box>
           }
 
-          {uiStep === 1 &&
-            <div className="dropContainer" style={dropContainerStyle}>
-              <div {...getRootProps({style: dropZoneReg})}>
-                <input {...getInputProps()} />
-                <Typography variant="h5" color="textSecondary">Set your pfp here. Click to Start.</Typography>
-              </div>
-            </div>
-          }
-
-          {uiStep === 2 && fileImage &&
+          {uiStep === 4 &&
             <div>
-              <Cropper
-                src={fileImage.src}
-                style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
-                // Cropper.js options
-                aspectRatio={1}
-                cropBoxResizable={false}
-                dragMode={"crop"}
-                guides={false}
-                autoCropArea={1}
-                crop={onCrop}
-                ready={imageLoaded}
-                ref={cropperRef}
+              <img
+                alt="finalImage"
+                src={canvasRef.current.toDataURL(fileImageType, 1)}
+                style={{
+                  height: canvasRef.current.style.height,
+                  width: canvasRef.current.style.width,
+                }}
               />
-              <Box textAlign='center'>
+              <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
                 <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
                   Back
                 </Button>
-                <Button variant="contained" color="primary" onClick={goToStepThree} style={containerButton}>
-                  Crop pfp
-                </Button>
-              </Box>
-            </div>
-          }
-
-          {/* Image Resizer was here... but didn't look right */}  
-          {/* 
-            Notes for below (Step 3): 
-            1. canvas must ALWAYS be on screen
-            2. when we don't want the CroppedCanvas to appear we change height to 0
-          */}
-          <div style={canvasContainer} ref={finalCanvas}>
-            <canvas
-              id="canvas"
-              ref={canvasRef}
-              style={canvasStyle}
-              // className="canvasRendering"
-              // width={window.innerWidth-10}
-              height="0"
-            >
-            </canvas>
-            {uiStep === 3 && fileCropped &&
-              // {/*showCanvas && */}
-              <Box textAlign='center'>
-                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                  Back
-                </Button>
-                <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
+                <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
                   Download pfp
                 </Button>
               </Box>
-            }
-
-            {uiStep === 4 &&
-              <div>
-                <img
-                  alt="finalImage"
-                  src={canvasRef.current.toDataURL(fileImageType, 1)}
-                  style={{
-                    height: canvasRef.current.style.height,
-                    width: canvasRef.current.style.width,
-                  }}
-                />
-                <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                  <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                    Back
-                  </Button>
-                  <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                    Download pfp
-                  </Button>
-                </Box>
-              </div>
-            }
-
-            {/* below is screen size notation for debugging */}
-            {/*<div>
-              {windowSize.width}px / {windowSize.height}px
-              {console.log(browser)}
-              {console.log(UA)}
-              {console.log(getUA)}
             </div>
-            <div>
-              <p>isIOS: {isIOS.toString()}</p>
-              <p>isMobile: {isMobile.toString()}</p>
-              <p>browserName: {browserName}</p>
-              <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
-            </div>
-            
-            <div style={{overflowWrap: "anywhere"}}>
-              <p>{JSON.stringify(deviceDetect())}</p>
-            </div>
-            */}
+          }
 
+          {/* below is screen size notation for debugging */}
+          {/*<div>
+            {windowSize.width}px / {windowSize.height}px
+            {console.log(browser)}
+            {console.log(UA)}
+            {console.log(getUA)}
           </div>
-        </Paper>
-      </Zoom>
-    </div>
+          <div>
+            <p>isIOS: {isIOS.toString()}</p>
+            <p>isMobile: {isMobile.toString()}</p>
+            <p>browserName: {browserName}</p>
+            <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
+          </div>
+          
+          <div style={{overflowWrap: "anywhere"}}>
+            <p>{JSON.stringify(deviceDetect())}</p>
+          </div>
+          */}
+
+        </div>
+      </Paper>
+    </Zoom>
   );
 }
 
