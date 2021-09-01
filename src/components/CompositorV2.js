@@ -31,7 +31,10 @@ import {
   // browserName
 } from "react-device-detect";
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
+
+import StampImage from "./StampImage.js"
+import SizeSlider from "./SizeSlider.js"
 
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
@@ -39,11 +42,12 @@ import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
-import zeusImg from '../assets/Zeus_Full_Body.png';
+// import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
+import { useEffect } from "react";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
@@ -74,65 +78,6 @@ const dropContainerStyle = {
 function CompositorV2(props) {
 
   const sOhmSize = 60;
-
-  function draw(baseImg) {
-    if (baseImg === undefined) {
-      baseImg = zeusImg;
-    };
-    var canvasOnly = canvasRef.current
-    var ctx = canvasOnly.getContext('2d');
-    
-    //////////// HISTORY
-    var history = {
-      redo_list: [],
-      undo_list: [],
-      restoreState: function() {
-        ctx.clearRect(0, 0, baseImg.governing_width, baseImg.governing_height);
-        ctx.drawImage(baseImg, 0, 0, baseImg.governing_width, baseImg.governing_height);  
-      }
-    }
-    ///////////////
-
-    var logo = new Image();
-    logo.src = sOhm;
-
-    // When true, moving the mouse draws on the canvas
-    let isDrawing = false;
-    // let x = 0;
-    // let y = 0;
-
-    // Add the event listeners for mousedown, mousemove, and mouseup
-    canvasOnly.addEventListener('mousedown', e => {
-      isDrawing = true;
-    });
-
-    // drawImage usage
-    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-    canvasOnly.addEventListener('mousemove', e => {
-      if (isDrawing === true) {
-        // ctx.drawImage(image, dx, dy, dWidth, dHeight);
-        // history.undo(canvasOnly, ctx);
-        history.restoreState();
-        ctx.drawImage(logo, e.offsetX-30, e.offsetY-30, sOhmSize, sOhmSize);
-        // drawLine(context, x, y, e.offsetX, e.offsetY);
-        // x = e.offsetX;
-        // y = e.offsetY;
-      }
-    });
-
-    window.addEventListener('mouseup', e => {
-      if (isDrawing === true) {
-        // history.undo(canvasOnly, ctx);
-        history.restoreState();
-
-        ctx.drawImage(logo, e.offsetX-30, e.offsetY-30, sOhmSize, sOhmSize);
-        // drawLine(context, x, y, e.offsetX, e.offsetY);
-        // x = 0;
-        // y = 0;
-        isDrawing = false;
-      }
-    });
-  }
 
   const canvasRef = React.useRef(null);
   const finalCanvas = React.useRef(null);
@@ -187,6 +132,65 @@ function CompositorV2(props) {
   const [fileCropped, setfileCropped] = useState(false);
   const [uiStep, setuiStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [stampSize, setStampSize] = useState({
+    height: sOhmSize,
+    width: sOhmSize,
+  });
+
+  const setCanvasListeners = useCallback(
+    () => {
+      var canvasOnly = canvasRef.current;
+      var ctx = canvasOnly.getContext('2d');
+
+      var logo = new Image();
+      logo.src = sOhm;
+
+      // When true, moving the mouse draws on the canvas
+      let isDrawing = false;
+      
+      //////////// HISTORY
+      var history = {
+        restoreState: function() {
+          ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
+          ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);  
+        }
+      }
+      ///////////////
+      
+      // Add the event listeners for mousedown, mousemove, and mouseup
+      canvasOnly.addEventListener('mousedown', e => {
+        isDrawing = true;
+      });
+
+      // drawImage usage
+      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+      canvasOnly.addEventListener('mousemove', e => {
+        if (isDrawing === true) {
+          // ctx.drawImage(image, dx, dy, dWidth, dHeight);
+          // history.undo(canvasOnly, ctx);
+          if (fileCropped) history.restoreState();
+          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+          // drawLine(context, x, y, e.offsetX, e.offsetY);
+          // x = e.offsetX;
+          // y = e.offsetY;
+        }
+      });
+
+      window.addEventListener('mouseup', e => {
+        if (isDrawing === true) {
+          // history.undo(canvasOnly, ctx);
+          if (fileCropped) history.restoreState();
+
+          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+          // drawLine(context, x, y, e.offsetX, e.offsetY);
+          // x = 0;
+          // y = 0;
+          isDrawing = false;
+        }
+      });
+    }, [stampSize.height, stampSize.width, fileCropped]
+  );
+    
   const step1Text = "Set your pfp here. Click to Start.";
   const step1Direction = "";
   // const [textPromptState, setTextPromptState] = useState(step1Text);
@@ -210,8 +214,8 @@ function CompositorV2(props) {
     setdirectionState("Click to place sOHM Logo, then click 'Download pfp' at the bottom");
     // clear the canvas...
     if (sameCanvas !== true) {
-      clearTheCanvas(fileCropped);
-      drawCroppedCanvas(fileCropped);
+      clearTheCanvas();
+      drawCroppedCanvas();
     }
     setuiStep(3);
   }
@@ -228,10 +232,10 @@ function CompositorV2(props) {
   const goBackOneStep = () => {
     if (uiStep === 3) {
       // go to step 2
-      clearTheCanvas(fileCropped);
+      clearTheCanvas();
       goToStepTwo(fileImage);
     } else if (uiStep === 2) {
-      clearTheCanvas(fileCropped);
+      clearTheCanvas();
       setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === 4) {
@@ -268,7 +272,7 @@ function CompositorV2(props) {
         // ... so we need to resize the image
         var maxHt = areaHt;
         var maxWdth = finalCanvas.current.offsetWidth;
-        console.log('maxwdith', maxWdth);
+
         var mobile = false;
         if (isIOS) {
           // set max height so as not to overload ios Memory, per:
@@ -308,10 +312,10 @@ function CompositorV2(props) {
     image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(fileImageType, 1);
   };
 
-  const clearTheCanvas = (image) => {
+  const clearTheCanvas = () => {
     var canvas = canvasRef.current;
     var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, image.governing_width, image.governing_height);
+    if (fileCropped) ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
     canvas.height = 0;
     canvas.style.height = 0;
   }
@@ -321,24 +325,27 @@ function CompositorV2(props) {
   // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
   // fixed, and then using the .scale() method to scale all of your future draws to the new bigger size.
   // https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas/26047748
-  const drawCroppedCanvas = (image) => {
-    // console.log('drawCroppedCanvas', image);
-    // handle the click event
-    var canvasOnly = canvasRef.current;
-    // console.log(canvasOnly);
-    var ctx = canvasOnly.getContext('2d');
+  const drawCroppedCanvas = useCallback( () => {
+    if (fileCropped) {
+      // console.log('drawCroppedCanvas', image);
+      // handle the click event
+      var canvasOnly = canvasRef.current;
+      // console.log(canvasOnly);
+      var ctx = canvasOnly.getContext('2d');
 
-    // console.log(image.governing_width, image.governing_height)
-    // set canvas dims based on classifyImage results
-    canvasOnly.style.height = image.governing_height + "px";
-    canvasOnly.style.width = image.governing_width + "px";
-    canvasOnly.height = image.governing_height;
-    canvasOnly.width = image.governing_width;
+      // console.log(image.governing_width, image.governing_height)
+      // set canvas dims based on classifyImage results
+      canvasOnly.style.height = fileCropped.governing_height + "px";
+      canvasOnly.style.width = fileCropped.governing_width + "px";
+      canvasOnly.height = fileCropped.governing_height;
+      canvasOnly.width = fileCropped.governing_width;
 
-    ctx.drawImage(image, 0, 0, image.governing_width, image.governing_height);
-    setDPI();
-    draw(image);
-  }
+      ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);
+      setDPI();
+      setCanvasListeners();
+    }
+    
+  }, [setCanvasListeners, fileCropped]);
 
   function setDPI() {
     var canvas = canvasRef.current;
@@ -373,6 +380,7 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
+    console.log("downloadImage");
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {
@@ -381,29 +389,34 @@ function CompositorV2(props) {
     } else {
       // polyfill for browsers...
       // using blueimp-canvas-to-blob
+      console.log(canvasRef.current.toBlob);
       if (canvasRef.current.toBlob) {
         canvasRef.current.toBlob(function (blob) {
+          console.log(blob);
           const anchor = document.createElement('a');
           anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
           anchor.href = URL.createObjectURL(blob);
-
+          console.log(anchor);
+          anchor.click();
           URL.revokeObjectURL(anchor.href); // remove it from memory
         }, fileImageType, 1);
       }
     }
   }
 
+  const resizeStamp = (e, value) => {
+    setStampSize({height: value, width: value});
+  }
+
   const imageLoaded = () => {
+    // this isn't quite working
     setIsLoading(false);
   }
 
-  // useEffect(() => {
-  //   console.log('useEffect');
-  //   // adding canvas-to-blob script
-  //   // addCanvasToBlobPolyfill();
-  //   // addMobileConsole();
-  //   // controlling when re-render occurs (only via uiStep state change)
-  // }, [uiStep]);
+  useEffect(() => {
+    // needs to run when stampSize changes
+    setCanvasListeners();
+  }, [stampSize, setCanvasListeners, fileCropped]);
 
   return (
     <div id="stake-view" style={stakeStyle}>
@@ -459,6 +472,27 @@ function CompositorV2(props) {
             </div>
           }
 
+          {/* Logo Resizing */}
+          {uiStep === 3 &&
+            <div style={{marginBottom: "0.75rem"}}>
+              <StampImage
+                src={sOhm}
+                height={stampSize.height}
+                width={stampSize.width}
+                // resizeStamp={resizeStamp}
+              />
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} sm={6}>
+                  <SizeSlider
+                    valueLabelDisplay="auto"
+                    aria-label="size slider"
+                    defaultValue={sOhmSize}
+                    onChange={resizeStamp}
+                  />
+                </Grid>
+              </Grid>
+            </div>
+          }
           {/* 
             Notes for below (Step 3): 
             1. canvas must ALWAYS be on screen
