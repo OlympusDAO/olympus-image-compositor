@@ -19,8 +19,7 @@ import {
 
 import React, {useState, useCallback} from 'react';
 
-import StampImage from "./StampImage.js"
-import SizeSlider from "./SizeSlider.js"
+import LogoResizer from "./LogoResizer.js"
 
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
@@ -424,30 +423,13 @@ function CompositorV2(props) {
 
         {/* Logo Resizing */}
         {uiStep === 3 &&
-          <div style={{marginBottom: "0.75rem"}}>
-            <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
-            <StampImage
-              src={sOhm}
-              height={stampSize.height}
-              width={stampSize.width}
-              // resizeStamp={resizeStamp}
-            />
-            <Grid container spacing={3} justifyContent="center">
-              <Grid item xs={12} sm={6}>
-                <SizeSlider
-                  valueLabelDisplay="auto"
-                  aria-label="size slider"
-                  defaultValue={sOhmSize}
-                  onChange={resizeStamp}
-                />
-              </Grid>
-            </Grid>
-            {/*
-              Object.entries(secondaryDirection).map(([key, value]) => (
-              <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-            ))
-            */}
-          </div>
+          <LogoResizer
+            stampSrc={sOhm}
+            stampHeight={stampSize.height}
+            stampWidth={stampSize.width}
+            defaultSize={sOhmSize}
+            resizeStamp={resizeStamp}
+          />
         }
         
         {/* working on loader */}

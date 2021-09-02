@@ -13,7 +13,6 @@ import "./components/stake.scss";
 
 import CompositorV2 from './components/CompositorV2';
 import OhmieCardV2 from './components/OhmieCardV2';
-import LabelBottomNavigation from './components/BottomNav';
 
 import {
   Switch,
@@ -42,7 +41,6 @@ function App() {
           <OhmieCardV2 />
         </Route>
       </Switch>
-      <LabelBottomNavigation />
     </div>
     
   );

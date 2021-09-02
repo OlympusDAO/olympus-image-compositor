@@ -19,9 +19,6 @@ import {
 
 import React, {useState, useCallback} from 'react';
 
-import StampImage from "./StampImage.js"
-import SizeSlider from "./SizeSlider.js"
-
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -34,6 +31,8 @@ import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
 import { useEffect } from "react";
+
+import LogoResizer from "./LogoResizer";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
@@ -63,10 +62,12 @@ const dropContainerStyle = {
 
 function CompositorV2(props) {
 
+  const [stampFile, setStampFile] = useState(sOhm); 
   const sOhmSize = 60;
 
   const canvasRef = React.useRef(null);
   const finalCanvas = React.useRef(null);
+  const stampInputRef = React.useRef(null);
 
   const windowSize = useWindowSize();
 
@@ -123,7 +124,7 @@ function CompositorV2(props) {
       var ctx = canvasOnly.getContext('2d');
 
       var logo = new Image();
-      logo.src = sOhm;
+      logo.src = stampFile;
 
       // When true, moving the mouse draws on the canvas
       let isDrawing = false;
@@ -163,7 +164,7 @@ function CompositorV2(props) {
           isDrawing = false;
         }
       });
-    }, [stampSize.height, stampSize.width, fileCropped]
+    }, [stampSize.height, stampSize.width, fileCropped, stampFile]
   );
     
   const step1Direction = {row: ""};
@@ -391,6 +392,18 @@ function CompositorV2(props) {
     setStampSize({height: value, width: value});
   }
 
+  const onStampClick = () => {
+    console.log("onStampClick");
+    stampInputRef.current.click();
+  }
+
+  const uploadStamp = (e) => {
+    var files = stampInputRef.current.files;
+    if (files.length > 0) {
+      setStampFile(URL.createObjectURL(files[0]));
+    }
+  }
+
   const imageLoaded = () => {
     // this isn't quite working
     setIsLoading(false);
@@ -399,7 +412,7 @@ function CompositorV2(props) {
   useEffect(() => {
     // needs to run when stampSize changes
     setCanvasListeners();
-  }, [stampSize, setCanvasListeners, fileCropped]);
+  }, [stampSize, setCanvasListeners, fileCropped, stampFile]);
 
   return (
     <Zoom in={true}>
@@ -419,29 +432,23 @@ function CompositorV2(props) {
 
         {/* Logo Resizing */}
         {uiStep === 3 &&
-          <div style={{marginBottom: "0.75rem"}}>
-            <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
-            <StampImage
-              src={sOhm}
-              height={stampSize.height}
-              width={stampSize.width}
-              // resizeStamp={resizeStamp}
+          <div>
+            <LogoResizer
+              stampSrc={stampFile}
+              stampHeight={stampSize.height}
+              stampWidth={stampSize.width}
+              defaultSize={sOhmSize}
+              resizeStamp={resizeStamp}
+              onStampClick={onStampClick}
             />
-            <Grid container spacing={3} justifyContent="center">
-              <Grid item xs={12} sm={6}>
-                <SizeSlider
-                  valueLabelDisplay="auto"
-                  aria-label="size slider"
-                  defaultValue={sOhmSize}
-                  onChange={resizeStamp}
-                />
-              </Grid>
-            </Grid>
-            {/*
-              Object.entries(secondaryDirection).map(([key, value]) => (
-              <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-            ))
-            */}
+            <input
+              id="logoFile"
+              ref={stampInputRef}
+              type="file"
+              style={{display: "none"}}
+              accept="image/*"
+              onChange={uploadStamp}
+            />
           </div>
         }
         
