@@ -439,6 +439,8 @@ function CompositorV2(props) {
               stampWidth={stampSize.width}
               defaultSize={sOhmSize}
               resizeStamp={resizeStamp}
+              minSize={24}
+              maxSize={400}
               onStampClick={onStampClick}
             />
             <input

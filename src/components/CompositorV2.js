@@ -428,6 +428,8 @@ function CompositorV2(props) {
             stampHeight={stampSize.height}
             stampWidth={stampSize.width}
             defaultSize={sOhmSize}
+            minSize={24}
+            maxSize={200}
             resizeStamp={resizeStamp}
           />
         }

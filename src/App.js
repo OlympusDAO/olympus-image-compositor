@@ -31,10 +31,10 @@ function App() {
   return (
     <div id="stake-view" style={stakeStyle}>
       <Switch>
-        <Route path="/sohm">
+        <Route path="/pof">
           <CompositorV2 />
         </Route>
-        <Route path="/ohmie-card">
+        <Route path="/ohmiecard">
           <OhmieCardV2 />
         </Route>
         <Route exact path="/">
