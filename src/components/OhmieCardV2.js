@@ -561,7 +561,6 @@ function CompositorV2(props) {
             <p>{JSON.stringify(deviceDetect())}</p>
           </div>
           */}
-
         </div>
       </Paper>
     </Zoom>

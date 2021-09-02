@@ -13,7 +13,7 @@ import "./components/stake.scss";
 
 import CompositorV2 from './components/CompositorV2';
 import OhmieCardV2 from './components/OhmieCardV2';
-import MainNavLinks from './components/MainNavLinks';
+import LabelBottomNavigation from './components/BottomNav';
 
 import {
   Switch,
@@ -27,7 +27,7 @@ function App() {
   const stakeStyle = {
     justifyContent: "start",
     overflow: "auto",
-    height: windowSize.height
+    height: windowSize.height,
   }
   return (
     <div id="stake-view" style={stakeStyle}>
@@ -39,9 +39,10 @@ function App() {
           <OhmieCardV2 />
         </Route>
         <Route exact path="/">
-          <MainNavLinks />
+          <OhmieCardV2 />
         </Route>
       </Switch>
+      <LabelBottomNavigation />
     </div>
     
   );

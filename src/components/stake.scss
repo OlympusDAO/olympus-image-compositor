@@ -16,6 +16,13 @@
   @return mix(black, $color, $percentage);
 }
 
+// iconStyle shrinks the svg path to fit...
+.iconStyle {
+  & path {
+    transform: scale(0.9);
+  }
+}
+
 .dropContainer {
   display: flex;
   flex-wrap: wrap;
