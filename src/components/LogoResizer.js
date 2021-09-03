@@ -16,7 +16,7 @@ export default function LogoResizer(props) {
         src={props.stampSrc}
         height={props.stampHeight}
         width={props.stampWidth}
-        style={{cursor: "pointer"}}
+        style={props.imgStyle}
         alt="stamp"
         onClick={props.onStampClick}
       />
@@ -32,11 +32,6 @@ export default function LogoResizer(props) {
           />
         </Grid>
       </Grid>
-      {/*
-        Object.entries(secondaryDirection).map(([key, value]) => (
-        <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-      ))
-      */}
     </div>
   );
 }

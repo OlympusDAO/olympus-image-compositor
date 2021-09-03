@@ -431,6 +431,7 @@ function CompositorV2(props) {
             minSize={24}
             maxSize={200}
             resizeStamp={resizeStamp}
+            imgStyle={{}}
           />
         }
         

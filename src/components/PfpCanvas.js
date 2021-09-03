@@ -49,6 +49,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           minSize={24}
           maxSize={400}
           onStampClick={onStampClick}
+          imgStyle={{cursor: "pointer"}}
         />
         <input
           id="logoFile"
