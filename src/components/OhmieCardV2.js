@@ -24,7 +24,6 @@ import {
 import React, {useState, useCallback} from 'react';
 
 import {useDropzone} from 'react-dropzone';
-import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import BgCanvas from "./BgCanvas";
 
@@ -286,9 +285,6 @@ function CompositorV2(props) {
 
   // react-cropper
   const cropperRef = React.useRef(null);
-  const cropperCanvasSettings = {
-    imageSmoothingQuality: "high",
-  };
   // const onCrop = () => {
   //   const imageElement = cropperRef?.current;
   //   const cropper = imageElement?.cropper;

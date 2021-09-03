@@ -5,13 +5,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Grid,
+  // Grid,
   Box,
-  Paper,
+  // Paper,
   Typography,
-  Button,
-  CircularProgress,
-  Zoom,
+  // Button,
+  // CircularProgress,
+  // Zoom,
 } from "@material-ui/core";
 
 import LogoResizer from "./LogoResizer";
