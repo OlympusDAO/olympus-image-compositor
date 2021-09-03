@@ -4,20 +4,19 @@
 import React from 'react';
 
 import {
-  Grid,
+  // Grid,
   Box,
-  Paper,
-  Typography,
-  Button,
-  CircularProgress,
-  Zoom,
+  // Paper,
+  // Typography,
+  // Button,
+  // CircularProgress,
+  // Zoom,
 } from "@material-ui/core";
 
 export default function TextCanvas(props) {
 
   return (
     <Box>
-      <Typography>TextCanvas.js</Typography>
     </Box>
   );
 }

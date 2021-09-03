@@ -485,7 +485,7 @@ function CompositorV2(props) {
             imageLoaded={imageLoaded}
             setCroppedBg={setfileCropped}
             goBackOneStep={goBackOneStep}
-            goToStepThree={goToStepThree}
+            goToPfpStep={goToStepThree}
             fileImage={fileImage}
             outlineButtonStyle={outlineButton}
             containerButtonStyle={containerButton}

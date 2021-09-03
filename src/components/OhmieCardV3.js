@@ -35,6 +35,8 @@ import "./stake.scss";
 
 // import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
+// import whiteButton from '../assets/whiteButton.png';
+// import blackButton from '../assets/blackButton.png';
 import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
@@ -42,6 +44,7 @@ import { useEffect } from "react";
 
 import PfpCanvas from "./PfpCanvas";
 import BgCanvas from "./BgCanvas";
+import TextCanvas from "./TextCanvas";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
@@ -80,6 +83,7 @@ function CompositorV3(props) {
   const viewContainerRef = React.useRef(null);
   const bgCanvasRef = React.useRef(null);
   const pfpCanvasRef = React.useRef(null);
+  const textCanvasRef = React.useRef(null);
   const finalCanvasRef = React.useRef(null);
   const canvasContainerRef = React.useRef(null);
   const stampInputRef = React.useRef(null);
@@ -132,6 +136,7 @@ function CompositorV3(props) {
     height: sOhmSize,
     width: sOhmSize,
   });
+  const [textListenersApplied, setTextListenersApplied] = useState(false);
 
   const getViewWidth = () => {
     var element = viewContainerRef.current;
@@ -141,6 +146,7 @@ function CompositorV3(props) {
 
     return element.clientWidth - padding;
   }
+
   // allows detects clicking on canvas & places image
   // will need to pass in:
   // whichCanvas
@@ -170,6 +176,7 @@ function CompositorV3(props) {
       
       // Add the event listeners for mousedown, mousemove, and mouseup
       canvasOnly.addEventListener('mousedown', e => {
+        console.log("mousedown");
         isDrawing = true;
       });
 
@@ -196,6 +203,136 @@ function CompositorV3(props) {
       });
     }, [stampSize.height, stampSize.width, croppedBg, stampFile]
   );
+
+  // allows detects clicking on canvas & places image
+  // will need to pass in:
+  // whichCanvas
+  // which image is drawn...
+  const applyTextListeners = useCallback(
+    () => {
+      // if you already set the listeners... you can stop
+      if (textListenersApplied === true) return;
+
+      // var redHatFont = new FontFace("RedHatDisplay", "../assets/fonts/");
+      // redHatFont.load().then(function(font){
+      //   // with canvas, if this is ommited won't work
+      //   document.fonts.add(font);
+      //   console.log('Font loaded');
+      // });
+
+      var canvasOnly = textCanvasRef.current;
+      var ctx = canvasOnly.getContext('2d');
+
+      // When true, moving the mouse draws on the canvas
+      let isDrawing = false;
+      
+      //////////// HISTORY
+      // TODO (appleseed):
+      // 1. height & width are fixed aspect ratio now...
+      // 2. also won't want to redraw since this will apply to the pfpCanvas only. Just empty it
+      var history = {
+        restoreState: function() {
+          ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
+          // ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+        }
+      }
+      ///////////////
+      
+      let name = "[your name]";
+      let nameString = "Meet " + name;
+      
+      const textToApply = (e) => {
+        // let lineIndex = 0;
+        // 32 tall in total
+        ctx.fillStyle = "black";
+        ctx.font = '19px RedHatDisplay';
+        ctx.fillText(nameString, e.offsetX, e.offsetY);
+
+        // lineIndex 1 & 2 are 128 tall in total
+        // lineIndex = 1;
+        let linePosition = 52;
+        ctx.font = 'bold 38px RedHatDisplay';
+        ctx.fillText("They are earning", e.offsetX, e.offsetY+linePosition);
+        // lineIndex = 2;
+        linePosition = 52 + linePosition;
+        ctx.fillText("5,000+% APY.", e.offsetX, e.offsetY+linePosition);
+
+        // lineIndex 3 & 4 are 48 tall in total
+        // lineIndex = 3;
+        linePosition = 28 + linePosition;
+        ctx.font = '14px RedHatDisplay';
+        ctx.fillText("When you’re ready, we’re ready with your", e.offsetX, e.offsetY+linePosition);
+        // lineIndex = 4;
+        linePosition = 18 + linePosition;
+        ctx.fillText("Ohmie account. Earn rewards every 8 hours.", e.offsetX, e.offsetY+linePosition);
+
+        ///////////////////////////// BUTTON /////////////////////////////
+        // button -> top left corner @ linePosition
+        linePosition = 24 + linePosition;
+        // ctx.drawImage(button, e.offsetX, e.offsetY+linePosition)
+        let radius = 22;
+        let x = e.offsetX+radius;
+        let y = e.offsetY+linePosition+radius;
+        let length = 140;
+        
+        // left semi-circle
+        // ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
+        ctx.beginPath();
+        ctx.arc(x, y, radius, (Math.PI/2), (3*Math.PI/2), false)
+        ctx.fill();
+        ctx.closePath();
+
+        // rect in middle
+        ctx.beginPath();
+        ctx.moveTo(x, y-radius);
+        ctx.fillRect(x, y-radius, length, radius*2);
+        ctx.closePath();
+        
+        // right semi-circle
+        ctx.beginPath();
+        ctx.arc(x+length, y, radius, (Math.PI/2), (3*Math.PI/2), true)
+        ctx.fill();
+        ctx.closePath();
+
+        // letters in button
+        ctx.fillStyle = "white";
+        ctx.font = '15px RedHatDisplay';
+        ctx.fillText("olympusdao.finance", x, y+4);
+        ///////////////////////////// BUTTON /////////////////////////////
+      }
+
+      // Add the event listeners for mousedown, mousemove, and mouseup
+      canvasOnly.addEventListener('mousedown', e => {
+        console.log("text mousedown");
+        isDrawing = true;
+      });
+
+      // drawImage usage
+      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+      canvasOnly.addEventListener('mousemove', e => {
+        if (isDrawing === true) {
+
+          if (croppedBg) history.restoreState();
+          textToApply(e);
+          // ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+
+        }
+      });
+
+      window.addEventListener('mouseup', e => {
+        if (isDrawing === true) {
+
+          if (croppedBg) history.restoreState();
+
+          textToApply(e);
+
+          isDrawing = false;
+        }
+      });
+
+      setTextListenersApplied(true);
+    }, [croppedBg, textListenersApplied]
+  );
     
   const step1Direction = {row: ""};
   const [directionState, setdirectionState] = useState(step1Direction);
@@ -209,44 +346,45 @@ function CompositorV3(props) {
   // 4. Text setting
   // 5. download
 
-  const goToStepTwo = (image) => {
-    setfileImage(image);
+  const goToBgStep = (image) => {
+    if (image) setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
     setIsLoading(true);
-    canvasOrdering(2);
-    setuiStep(2);
+    canvasOrdering("bg");
+    setuiStep("bg");
   }
 
   const canvasOrdering = (stepNumber) => {
     switch (stepNumber) {
-      case 2:
+      case "bg":
         bgCanvasRef.current.style.zIndex=400;
         pfpCanvasRef.current.style.zIndex=300;
-        // textCanvasRef.current.style.zIndex=200;
+        textCanvasRef.current.style.zIndex=200;
         canvasContainerRef.current.style.display = "none";
         break;
-      case 3:
+      case "pfp":
         pfpCanvasRef.current.style.zIndex=400;
-        // textCanvasRef.current.style.zIndex=300;
+        textCanvasRef.current.style.zIndex=300;
         bgCanvasRef.current.style.zIndex=200;
         canvasContainerRef.current.style.display = "block";
         break;
-      case 4:
-        // textCanvasRef.current.style.zIndex=400;
+      case "long-press":
+      case "text":
+        textCanvasRef.current.style.zIndex=400;
         pfpCanvasRef.current.style.zIndex=300;
         bgCanvasRef.current.style.zIndex=200;
         canvasContainerRef.current.style.display = "block";
         break;
       default:
-        // texCanvasRef.current.style.zIndex=400;
+        textCanvasRef.current.style.zIndex=400;
         pfpCanvasRef.current.style.zIndex=300;
         bgCanvasRef.current.style.zIndex=200;
         canvasContainerRef.current.style.display = "block";
     }
   }
 
-  const goToStepThree = (sameCanvas) => {
+  const goToPfpStep = (sameCanvas) => {
     // setdirectionState({
     //   row: "Three steps here, fren:",
     //   row2: "1. Resize your logo w/ the slider",
@@ -254,46 +392,56 @@ function CompositorV3(props) {
     //   row4: "3. Click 'Download pfp' at the bottom",
     // });
     setdirectionState({
-      row: "Click to place your logo, then click 'Download pfp' at the bottom"
+      row: "Click to place your pfp, then click 'Next'"
     });
 
     // which canvas should be shown?
     // pfpCanvas on top textCanvas on top of BgCanvas
-    canvasOrdering(3);
+    canvasOrdering("pfp");
 
-    // clear the canvas...
+    // // clear the canvas...
     if (sameCanvas !== true) {
       clearTheCanvas();
       drawCroppedCanvas();
     }
-    setuiStep(3);
+    setuiStep("pfp");
+  }
+
+  const goToTextStep = () => {
+    setdirectionState({row: "Place your text, Incooohmer"});
+    applyTextListeners();
+    canvasOrdering("text");
+    setuiStep("text");
   }
 
   // this only happens for iOSMobile, non-Safari users
-  const goToStepFour = () => {
+  const goToLongPress = () => {
     setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     bgCanvasRef.current.style.display="none";
     pfpCanvasRef.current.style.display="none";
-    canvasOrdering(4);
-    setuiStep(4);
+    canvasOrdering("long-press");
+    setuiStep("long-press");
   }
 
   const goBackOneStep = () => {
-    if (uiStep === 3) {
+    if (uiStep === "text") {
+      goToPfpStep(true);
+    } else if (uiStep === "pfp") {
       // go to step 2
       clearTheCanvas();
-      goToStepTwo(fileImage);
-    } else if (uiStep === 2) {
+      goToBgStep();
+    } else if (uiStep === "bg") {
       clearTheCanvas();
       setdirectionState(step1Direction);
       setuiStep(1);
-    } else if (uiStep === 4) {
+    } else if (uiStep === "long-press") {
       // make the canvas show again
       bgCanvasRef.current.style.display="block";
       pfpCanvasRef.current.style.display="block";
-      goToStepThree(true);
+      // goToStepThree(true);
+      goToTextStep();
     }
   }
 
@@ -340,7 +488,7 @@ function CompositorV3(props) {
 
         }
         image = classifyImage(image, maxWdth, maxHt, mobile);
-        goToStepTwo(image);
+        goToBgStep(image);
 
       };
       image.src = previewUrl;
@@ -374,6 +522,10 @@ function CompositorV3(props) {
       pfpCanvasRef.current.style.width = bgCanvasRef.current.style.width;
       pfpCanvasRef.current.height = bgCanvasRef.current.height;
       pfpCanvasRef.current.width = bgCanvasRef.current.width;
+      textCanvasRef.current.style.height = bgCanvasRef.current.style.height;
+      textCanvasRef.current.style.width = bgCanvasRef.current.style.width;
+      textCanvasRef.current.height = bgCanvasRef.current.height;
+      textCanvasRef.current.width = bgCanvasRef.current.width;
       finalCanvasRef.current.style.height = bgCanvasRef.current.style.height;
       finalCanvasRef.current.style.width = bgCanvasRef.current.style.width;
       finalCanvasRef.current.height = bgCanvasRef.current.height;
@@ -458,7 +610,7 @@ function CompositorV3(props) {
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {
       // take us to uiStep(4)
-      goToStepFour();
+      goToLongPress();
     } else {
       // polyfill for browsers...
       // using blueimp-canvas-to-blob
@@ -499,18 +651,6 @@ function CompositorV3(props) {
         {Object.entries(directionState).map(([key, value]) => (
           <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
         ))}
-
-        {/* Logo Resizing */}
-        {uiStep === 3 &&
-          <PfpCanvas
-            ref={{stampInputRef: stampInputRef}}
-            setStampSize={setStampSize}
-            setStampFile={setStampFile}
-            stampFile={stampFile}
-            stampSize={stampSize}
-            sOhmSize={sOhmSize}
-          />
-        }
         
         {/* working on loader */}
         {isLoading &&
@@ -527,27 +667,46 @@ function CompositorV3(props) {
               
               <div style={{flexGrow: "0"}}>
                 <div style={{display: "flex", flexFlow: "column wrap"}}>
-                  <Typography variant="body1" style={{marginTop: "0.25rem"}}>Optimal Aspect Ratio: 1013/446 (width/height).</Typography>
-                  <Typography variant="body1" style={{margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: 1013/446 (width/height).</Typography>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
                 </div>
               </div>
             </div>
           </div>
         }
 
-        {uiStep === 2 && fileImage &&
+        {/* Background Cropper */}
+        {uiStep === "bg" && fileImage &&
           <BgCanvas
             ref={{cropperRef: cropperRef, cropperContainerRef: cropperContainerRef}}
             imageLoaded={imageLoaded}
             setCroppedBg={setCroppedBg}
             goBackOneStep={goBackOneStep}
-            goToStepThree={goToStepThree}
+            goToPfpStep={goToPfpStep}
             fileImage={fileImage}
             outlineButtonStyle={outlineButton}
             containerButtonStyle={containerButton}
             areaHt={areaHt}
             fileImageType={fileImageType}
             containerStyle={dropContainerStyle}
+          />
+        }
+
+        {/* Logo Resizing */}
+        {uiStep === "pfp" &&
+          <PfpCanvas
+            ref={{stampInputRef: stampInputRef}}
+            setStampSize={setStampSize}
+            setStampFile={setStampFile}
+            stampFile={stampFile}
+            stampSize={stampSize}
+            sOhmSize={sOhmSize}
+          />
+        }
+
+        {/* Logo Resizing */}
+        {uiStep === "text" &&
+          <TextCanvas
           />
         }
 
@@ -562,40 +721,50 @@ function CompositorV3(props) {
             id="bgCanvas"
             ref={bgCanvasRef}
             style={canvasStyle}
-            // className="canvasRendering"
-            // width={window.innerWidth-10}
             height="0"
           ></canvas>
           <canvas
             id="pfpCanvas"
             ref={pfpCanvasRef}
             style={canvasStyle}
-            // className="canvasRendering"
-            // width={window.innerWidth-10}
+            height="0"
+          ></canvas>
+          <canvas
+            id="textCanvas"
+            ref={textCanvasRef}
+            style={canvasStyle}
             height="0"
           ></canvas>
           <canvas
             id="canvas"
             ref={finalCanvasRef}
             style={canvasStyle}
-            // className="canvasRendering"
-            // width={window.innerWidth-10}
             height="0"
           ></canvas>
         </Box>
-        {uiStep === 3 && croppedBg &&
-          // {/*showCanvas && */}
+        {uiStep === "pfp" && croppedBg &&
+          <Box textAlign='center'>
+            <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+              Back
+            </Button>
+            <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
+              Next
+            </Button>
+          </Box>
+        }
+
+        {uiStep === "text" && 
           <Box textAlign='center'>
             <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
               Back
             </Button>
             <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
-              Download pfp
+              Download Ohmie Card
             </Button>
           </Box>
         }
 
-        {uiStep === 4 &&
+        {uiStep === "long-press" &&
           <div>
             <img
               alt="finalImage"
@@ -610,7 +779,7 @@ function CompositorV3(props) {
                 Back
               </Button>
               <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                Download pfp
+              Download Ohmie Card
               </Button>
             </Box>
           </div>

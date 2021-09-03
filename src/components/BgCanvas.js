@@ -8,7 +8,7 @@ import {
   // Grid,
   Box,
   // Paper,
-  Typography,
+  // Typography,
   Button,
   // CircularProgress,
   // Zoom,
@@ -47,7 +47,6 @@ const BgCanvas = React.forwardRef((props, ref) => {
 
   return (
     <Box style={props.containerStyle}>
-      <Typography>BgCanvas.js</Typography>
       <Box id="cropBoxContainer" ref={cropperContainerRef}>
         <Cropper
           src={fileImage.src}
@@ -66,7 +65,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
           <Button variant="outlined" color="primary" onClick={props.goBackOneStep} style={props.outlineButtonStyle}>
             Back
           </Button>
-          <Button variant="contained" color="primary" onClick={props.goToStepThree} style={props.containerButtonStyle}>
+          <Button variant="contained" color="primary" onClick={props.goToPfpStep} style={props.containerButtonStyle}>
             Crop pfp
           </Button>
         </Box>
@@ -80,7 +79,7 @@ BgCanvas.propTypes = {
   imageLoaded: PropTypes.func.isRequired,
   setCroppedBg: PropTypes.func.isRequired,
   goBackOneStep: PropTypes.func.isRequired,
-  goToStepThree: PropTypes.func.isRequired,
+  goToPfpStep: PropTypes.func.isRequired,
   fileImage: PropTypes.instanceOf(HTMLImageElement).isRequired,
   outlineButtonStyle: PropTypes.object.isRequired,
   containerButtonStyle: PropTypes.object.isRequired,

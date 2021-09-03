@@ -8,7 +8,7 @@ import {
   // Grid,
   Box,
   // Paper,
-  Typography,
+  // Typography,
   // Button,
   // CircularProgress,
   // Zoom,
@@ -37,7 +37,6 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   
   return (
     <Box>
-      <Typography>PfpCanvas.js</Typography>
       {/* Logo Resizing */}
       <Box>
         <LogoResizer

@@ -5,6 +5,21 @@ import SquareBoldWOFF from "../assets/fonts/EuclidSquare-Bold.woff";
 import SquareItalicWOFF from "../assets/fonts/EuclidSquare-Italic.woff";
 import SquareLightWOFF from "../assets/fonts/EuclidSquare-Light.woff";
 import SquareMediumWOFF from "../assets/fonts/EuclidSquare-Medium.woff";
+import RedHatDisplayWOFF from "../assets/fonts/red-hat-display-v4-latin-ext_latin-regular.woff";
+import RedHatDisplayTTF from "../assets/fonts/red-hat-display-v4-latin-ext_latin-regular.ttf";
+
+const redHatDisplay = {
+  fontFamily: 'RedHatDisplay',
+  fontStyle: "normal",
+  fontWeight: 400,
+  src: `
+		local(''),  
+		url(${RedHatDisplayWOFF}) format('woff'),
+		url(${RedHatDisplayTTF}) format('truetype')
+	`,
+  unicodeRange:
+    "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF",
+};
 
 const square = {
   fontFamily: "Square",
@@ -91,6 +106,6 @@ const squareItalic = {
     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF",
 };
 
-const fonts = [square, squareLight, squareMedium, squareBold, squareItalic];
+const fonts = [redHatDisplay, square, squareLight, squareMedium, squareBold, squareItalic];
 
 export default fonts;
