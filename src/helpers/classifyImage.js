@@ -14,8 +14,8 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
   image.portrait = portrait;
 
   // need to limit image & canvas height & width to parent
-  console.log('classifyimage');
-  console.log(portrait, parentWidth, parentHeight);
+  // console.log('classifyimage');
+  // console.log(portrait, parentWidth, parentHeight);
   var image_height = image.height;
   var image_width = image.width;
   console.log(image_width, image_height);

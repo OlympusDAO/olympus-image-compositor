@@ -381,7 +381,7 @@ function CompositorV2(props) {
         canvasRef.current.toBlob(function (blob) {
           console.log(blob);
           const anchor = document.createElement('a');
-          anchor.download = 'sOhm-pfp.jpg'; // optional, but you can give the file a name
+          anchor.download = 'sOhm-pfp'; // optional, but you can give the file a name
           anchor.href = URL.createObjectURL(blob);
           console.log(anchor);
           anchor.click();

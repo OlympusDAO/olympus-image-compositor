@@ -25,26 +25,26 @@ function OhmieCard(props) {
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <div className="card-header">
-              <Typography variant="h5">Welcome, Jawz</Typography>
+              <Typography variant="h5">Welcome, Incooohmer</Typography>
               <Typography variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>Pick an option</Typography>
             </div>
           </Grid>
           <Grid item>
             <Button
               component={NavLink}
-              to="/sohm"
+              to="/pof"
               variant="contained"
               color="primary"
               className="connect-button"
               activeClassName="connect-button"
             >
-              sOhm Stamper
+              Proof of Ohmie
             </Button>
           </Grid>
           <Grid item>
             <Button
               component={NavLink}
-              to="/ohmie-card"
+              to="/ohmiecard"
               variant="contained"
               color="primary"
               className="connect-button"

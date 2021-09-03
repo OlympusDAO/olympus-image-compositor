@@ -1,7 +1,13 @@
-// OhmieCardV2.js
+// OhmieCardV3.js
 //
-// this is the all-in-one implementation
-// it does not have text compositing...
+// OhmieCardV3 should be the compositor. Combines the three canvas layers:
+// 1. BgCanvas.js
+// 2. PfpCanvas.js
+// 3. TextCanvas.js
+//
+// should allow users to turn on/off each of the three layers
+// should allow users to switch back & forth to editing each of the three layers
+//   - editing should occur within each layer.js component
 import {
   Grid,
   Box,
@@ -24,10 +30,6 @@ import {
 import React, {useState, useCallback} from 'react';
 
 import {useDropzone} from 'react-dropzone';
-import Cropper from "react-cropper";
-import "cropperjs/dist/cropper.css";
-import BgCanvas from "./BgCanvas";
-
 
 import "./stake.scss";
 
@@ -38,7 +40,8 @@ import classifyImage from "../helpers/classifyImage";
 import useWindowSize from "../hooks/useWindowSize";
 import { useEffect } from "react";
 
-import LogoResizer from "./LogoResizer";
+import PfpCanvas from "./PfpCanvas";
+import BgCanvas from "./BgCanvas";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
@@ -51,12 +54,15 @@ const canvasContainer = {
   // flexWrap: 'wrap',
   // marginTop: 16,
   margin: 'auto',
-  width: "100%"
+  width: "100%",
+  position: "relative",
 };
 
 const canvasStyle = {
   margin: "auto",
-  display: "block"
+  position: "absolute",
+  top: 0,
+  left: 0,
 }
 
 const dropContainerStyle = {
@@ -66,13 +72,16 @@ const dropContainerStyle = {
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
 
-function CompositorV2(props) {
+function CompositorV3(props) {
 
   const [stampFile, setStampFile] = useState(sOhm); 
   const sOhmSize = 60;
 
-  const canvasRef = React.useRef(null);
-  const finalCanvas = React.useRef(null);
+  const viewContainerRef = React.useRef(null);
+  const bgCanvasRef = React.useRef(null);
+  const pfpCanvasRef = React.useRef(null);
+  const finalCanvasRef = React.useRef(null);
+  const canvasContainerRef = React.useRef(null);
   const stampInputRef = React.useRef(null);
 
   const windowSize = useWindowSize();
@@ -116,7 +125,7 @@ function CompositorV2(props) {
 
   const [fileImage, setfileImage] = useState(false);
   const [fileImageType, setfileImageType] = useState("image/png");
-  const [fileCropped, setfileCropped] = useState(false);
+  const [croppedBg, setCroppedBg] = useState(false);
   const [uiStep, setuiStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [stampSize, setStampSize] = useState({
@@ -124,9 +133,21 @@ function CompositorV2(props) {
     width: sOhmSize,
   });
 
+  const getViewWidth = () => {
+    var element = viewContainerRef.current;
+    var styles = window.getComputedStyle(element);
+    var padding = parseFloat(styles.paddingLeft) +
+                  parseFloat(styles.paddingRight);
+
+    return element.clientWidth - padding;
+  }
+  // allows detects clicking on canvas & places image
+  // will need to pass in:
+  // whichCanvas
+  // which image is drawn...
   const setCanvasListeners = useCallback(
     () => {
-      var canvasOnly = canvasRef.current;
+      var canvasOnly = pfpCanvasRef.current;
       var ctx = canvasOnly.getContext('2d');
 
       var logo = new Image();
@@ -136,10 +157,13 @@ function CompositorV2(props) {
       let isDrawing = false;
       
       //////////// HISTORY
+      // TODO (appleseed):
+      // 1. height & width are fixed aspect ratio now...
+      // 2. also won't want to redraw since this will apply to the pfpCanvas only. Just empty it
       var history = {
         restoreState: function() {
-          ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
-          ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);  
+          ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
+          // ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
         }
       }
       ///////////////
@@ -154,7 +178,7 @@ function CompositorV2(props) {
       canvasOnly.addEventListener('mousemove', e => {
         if (isDrawing === true) {
 
-          if (fileCropped) history.restoreState();
+          if (croppedBg) history.restoreState();
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
 
         }
@@ -163,14 +187,14 @@ function CompositorV2(props) {
       window.addEventListener('mouseup', e => {
         if (isDrawing === true) {
 
-          if (fileCropped) history.restoreState();
+          if (croppedBg) history.restoreState();
 
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
 
           isDrawing = false;
         }
       });
-    }, [stampSize.height, stampSize.width, fileCropped, stampFile]
+    }, [stampSize.height, stampSize.width, croppedBg, stampFile]
   );
     
   const step1Direction = {row: ""};
@@ -181,17 +205,48 @@ function CompositorV2(props) {
   // 1. Click to start
   // 2. take user's image to cropper
   // 3. take user's cropped image to stamper
+  // TODO fix these:
+  // 4. Text setting
+  // 5. download
 
   const goToStepTwo = (image) => {
     setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
     setIsLoading(true);
+    canvasOrdering(2);
     setuiStep(2);
   }
 
+  const canvasOrdering = (stepNumber) => {
+    switch (stepNumber) {
+      case 2:
+        bgCanvasRef.current.style.zIndex=400;
+        pfpCanvasRef.current.style.zIndex=300;
+        // textCanvasRef.current.style.zIndex=200;
+        canvasContainerRef.current.style.display = "none";
+        break;
+      case 3:
+        pfpCanvasRef.current.style.zIndex=400;
+        // textCanvasRef.current.style.zIndex=300;
+        bgCanvasRef.current.style.zIndex=200;
+        canvasContainerRef.current.style.display = "block";
+        break;
+      case 4:
+        // textCanvasRef.current.style.zIndex=400;
+        pfpCanvasRef.current.style.zIndex=300;
+        bgCanvasRef.current.style.zIndex=200;
+        canvasContainerRef.current.style.display = "block";
+        break;
+      default:
+        // texCanvasRef.current.style.zIndex=400;
+        pfpCanvasRef.current.style.zIndex=300;
+        bgCanvasRef.current.style.zIndex=200;
+        canvasContainerRef.current.style.display = "block";
+    }
+  }
+
   const goToStepThree = (sameCanvas) => {
-    // setTextPromptState("Back to Cropping");
     // setdirectionState({
     //   row: "Three steps here, fren:",
     //   row2: "1. Resize your logo w/ the slider",
@@ -200,8 +255,12 @@ function CompositorV2(props) {
     // });
     setdirectionState({
       row: "Click to place your logo, then click 'Download pfp' at the bottom"
-    })
-    // setSecondaryDirection({row: "2. Click to place your logo, then click 'Download pdf' at the bottom"});
+    });
+
+    // which canvas should be shown?
+    // pfpCanvas on top textCanvas on top of BgCanvas
+    canvasOrdering(3);
+
     // clear the canvas...
     if (sameCanvas !== true) {
       clearTheCanvas();
@@ -215,7 +274,9 @@ function CompositorV2(props) {
     setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
-    canvasRef.current.style.display="none";
+    bgCanvasRef.current.style.display="none";
+    pfpCanvasRef.current.style.display="none";
+    canvasOrdering(4);
     setuiStep(4);
   }
 
@@ -230,7 +291,8 @@ function CompositorV2(props) {
       setuiStep(1);
     } else if (uiStep === 4) {
       // make the canvas show again
-      canvasRef.current.style.display="block";
+      bgCanvasRef.current.style.display="block";
+      pfpCanvasRef.current.style.display="block";
       goToStepThree(true);
     }
   }
@@ -261,7 +323,8 @@ function CompositorV2(props) {
         // CROPPER IS very slow on MOBILE...
         // ... so we need to resize the image
         var maxHt = areaHt;
-        var maxWdth = finalCanvas.current.offsetWidth;
+        // var maxWdth = canvasContainerRef.current.offsetWidth;
+        var maxWdth = getViewWidth();
 
         var mobile = false;
         if (isIOS) {
@@ -286,91 +349,111 @@ function CompositorV2(props) {
 
   // react-cropper
   const cropperRef = React.useRef(null);
-  const cropperCanvasSettings = {
-    imageSmoothingQuality: "high",
-  };
-  // const onCrop = () => {
-  //   const imageElement = cropperRef?.current;
-  //   const cropper = imageElement?.cropper;
-  //   // console.log(cropper.getCroppedCanvas().toDataURL());
-  //   let image = new Image();
-  //   image.onload = () => {
-  //     image = classifyImage(image, finalCanvas.current.offsetWidth, areaHt, false);
-  //     setfileCropped(image);
-  //   };
-
-  //   image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(fileImageType, 1);
-  // };
-
-  const clearTheCanvas = () => {
-    var canvas = canvasRef.current;
-    var ctx = canvas.getContext('2d');
-    if (fileCropped) ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
-    canvas.height = 0;
-    canvas.style.height = 0;
-  }
-
+  const cropperContainerRef = React.useRef(null);
+  
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
   // You can increase a canvas' resolution by increasing the DOM size while keeping the CSS size...
   // fixed, and then using the .scale() method to scale all of your future draws to the new bigger size.
   // https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas/26047748
   const drawCroppedCanvas = useCallback( () => {
-    if (fileCropped) {
+
+    // set all Canvases to the backgrounds SIZE
+    const setCanvasDims = () => {
+      // set container height
+      canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
+
+      bgCanvasRef.current.style.height = croppedBg.governing_height + "px";
+      bgCanvasRef.current.style.width = croppedBg.governing_width + "px";
+      bgCanvasRef.current.height = croppedBg.governing_height;
+      bgCanvasRef.current.width = croppedBg.governing_width;
+      
+      
+      // set other canvas heights
+      pfpCanvasRef.current.style.height = bgCanvasRef.current.style.height;
+      pfpCanvasRef.current.style.width = bgCanvasRef.current.style.width;
+      pfpCanvasRef.current.height = bgCanvasRef.current.height;
+      pfpCanvasRef.current.width = bgCanvasRef.current.width;
+      finalCanvasRef.current.style.height = bgCanvasRef.current.style.height;
+      finalCanvasRef.current.style.width = bgCanvasRef.current.style.width;
+      finalCanvasRef.current.height = bgCanvasRef.current.height;
+      finalCanvasRef.current.width = bgCanvasRef.current.width;
+
+    }
+
+    if (croppedBg) {
       // console.log('drawCroppedCanvas', image);
       // handle the click event
-      var canvasOnly = canvasRef.current;
       // console.log(canvasOnly);
-      var ctx = canvasOnly.getContext('2d');
+      var ctx = bgCanvasRef.current.getContext('2d');
 
       // console.log(image.governing_width, image.governing_height)
       // set canvas dims based on classifyImage results
-      canvasOnly.style.height = fileCropped.governing_height + "px";
-      canvasOnly.style.width = fileCropped.governing_width + "px";
-      canvasOnly.height = fileCropped.governing_height;
-      canvasOnly.width = fileCropped.governing_width;
+      setCanvasDims();
 
-      ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);
+      ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
       setDPI();
       setCanvasListeners();
     }
     
-  }, [setCanvasListeners, fileCropped]);
+  }, [setCanvasListeners, croppedBg]);
 
+  // TODO (appleseed):
+  // I think we'll want to setDPI on pfpCanvasRef
+  // ... but size based on bgCanvasRef
   function setDPI() {
-    var canvas = canvasRef.current;
+    var pfpCanvas = pfpCanvasRef.current;
+    var bgCanvas = bgCanvasRef.current;
     // var dpi = 96*3;
     // var scaleFactor = dpi / 96;
     var scaleFactor = 3;
     
     // Set up CSS size.
-    canvas.style.width = canvas.style.width || canvas.width + 'px';
-    canvas.style.height = canvas.style.height || canvas.height + 'px';
+    pfpCanvas.style.width = bgCanvas.style.width || bgCanvas.width + 'px';
+    pfpCanvas.style.height = bgCanvas.style.height || bgCanvas.height + 'px';
 
     // console.log('setDpi', canvas.style.width, canvas.style.height);
     // Get size information.
-    var width = parseFloat(canvas.style.width);
-    var height = parseFloat(canvas.style.height);
+    var width = parseFloat(pfpCanvas.style.width);
+    var height = parseFloat(pfpCanvas.style.height);
 
     // Backup the canvas contents.
-    var oldScale = canvas.width / width;
+    var oldScale = pfpCanvas.width / width;
     var backupScale = scaleFactor / oldScale;
-    var backup = canvas.cloneNode(false);
-    backup.getContext('2d').drawImage(canvas, 0, 0);
+    var backup = pfpCanvas.cloneNode(false);
+    backup.getContext('2d').drawImage(pfpCanvas, 0, 0);
 
     // Resize the canvas.
-    var ctx = canvas.getContext('2d');
-    canvas.width = Math.ceil(width * scaleFactor);
-    canvas.height = Math.ceil(height * scaleFactor);
+    var ctx = pfpCanvas.getContext('2d');
+    pfpCanvas.width = Math.ceil(width * scaleFactor);
+    pfpCanvas.height = Math.ceil(height * scaleFactor);
 
     // Redraw the canvas image and scale future draws.
     ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
     ctx.drawImage(backup, 0, 0);
     ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
-}
+  }
+
+  // for bgCanvas
+  // or maybe multiple?
+  const clearTheCanvas = () => {
+    // var canvas = canvasRef.current;
+    var ctx = bgCanvasRef.current.getContext('2d');
+    if (croppedBg) ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    bgCanvasRef.current.height = 0;
+    bgCanvasRef.current.style.height = 0;
+  }
+
+  const drawFinalCanvas = () => {
+    var ctx = finalCanvasRef.current.getContext('2d');
+    ctx.drawImage(bgCanvasRef.current, 0, 0, finalCanvasRef.current.width, finalCanvasRef.current.height);
+    ctx.drawImage(pfpCanvasRef.current, 0, 0, finalCanvasRef.current.width, finalCanvasRef.current.height);
+    // draw Text
+  }
 
   const downloadImage = () => {
-    console.log("downloadImage");
+    // first combine the canvases onto finalCanvasRef
+    drawFinalCanvas();
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {
@@ -379,34 +462,15 @@ function CompositorV2(props) {
     } else {
       // polyfill for browsers...
       // using blueimp-canvas-to-blob
-      console.log(canvasRef.current.toBlob);
-      if (canvasRef.current.toBlob) {
-        canvasRef.current.toBlob(function (blob) {
-          console.log(blob);
+      if (finalCanvasRef.current.toBlob) {
+        finalCanvasRef.current.toBlob(function (blob) {
           const anchor = document.createElement('a');
-          anchor.download = 'ohmie-card.jpg'; // optional, but you can give the file a name
+          anchor.download = "ohmie-card"; // optional, but you can give the file a name
           anchor.href = URL.createObjectURL(blob);
-          console.log(anchor);
           anchor.click();
           URL.revokeObjectURL(anchor.href); // remove it from memory
         }, fileImageType, 1);
       }
-    }
-  }
-
-  const resizeStamp = (e, value) => {
-    setStampSize({height: value, width: value});
-  }
-
-  const onStampClick = () => {
-    console.log("onStampClick");
-    stampInputRef.current.click();
-  }
-
-  const uploadStamp = (e) => {
-    var files = stampInputRef.current.files;
-    if (files.length > 0) {
-      setStampFile(URL.createObjectURL(files[0]));
     }
   }
 
@@ -418,11 +482,11 @@ function CompositorV2(props) {
   useEffect(() => {
     // needs to run when stampSize changes
     setCanvasListeners();
-  }, [stampSize, setCanvasListeners, fileCropped, stampFile]);
+  }, [stampSize, setCanvasListeners, croppedBg, stampFile]);
 
   return (
     <Zoom in={true}>
-      <Paper className={`ohm-card`} elevation={3} style={compositorPaper}>
+      <Paper ref={viewContainerRef} className={`ohm-card`} elevation={3} style={compositorPaper}>
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <div className="card-header">
@@ -438,26 +502,14 @@ function CompositorV2(props) {
 
         {/* Logo Resizing */}
         {uiStep === 3 &&
-          <div>
-            <LogoResizer
-              stampSrc={stampFile}
-              stampHeight={stampSize.height}
-              stampWidth={stampSize.width}
-              defaultSize={sOhmSize}
-              resizeStamp={resizeStamp}
-              minSize={24}
-              maxSize={400}
-              onStampClick={onStampClick}
-            />
-            <input
-              id="logoFile"
-              ref={stampInputRef}
-              type="file"
-              style={{display: "none"}}
-              accept="image/*"
-              onChange={uploadStamp}
-            />
-          </div>
+          <PfpCanvas
+            ref={{stampInputRef: stampInputRef}}
+            setStampSize={setStampSize}
+            setStampFile={setStampFile}
+            stampFile={stampFile}
+            stampSize={stampSize}
+            sOhmSize={sOhmSize}
+          />
         }
         
         {/* working on loader */}
@@ -485,9 +537,9 @@ function CompositorV2(props) {
 
         {uiStep === 2 && fileImage &&
           <BgCanvas
-            ref={{cropperRef: cropperRef, cropperContainerRef: finalCanvas}}
+            ref={{cropperRef: cropperRef, cropperContainerRef: cropperContainerRef}}
             imageLoaded={imageLoaded}
-            setCroppedBg={setfileCropped}
+            setCroppedBg={setCroppedBg}
             goBackOneStep={goBackOneStep}
             goToStepThree={goToStepThree}
             fileImage={fileImage}
@@ -495,6 +547,7 @@ function CompositorV2(props) {
             containerButtonStyle={containerButton}
             areaHt={areaHt}
             fileImageType={fileImageType}
+            containerStyle={dropContainerStyle}
           />
         }
 
@@ -504,71 +557,67 @@ function CompositorV2(props) {
           1. canvas must ALWAYS be on screen
           2. when we don't want the CroppedCanvas to appear we change height to 0
         */}
-        <div style={canvasContainer} ref={finalCanvas}>
+        <Box style={canvasContainer} ref={canvasContainerRef}>
           <canvas
-            id="canvas"
-            ref={canvasRef}
+            id="bgCanvas"
+            ref={bgCanvasRef}
             style={canvasStyle}
             // className="canvasRendering"
             // width={window.innerWidth-10}
             height="0"
-          >
-          </canvas>
-          {uiStep === 3 && fileCropped &&
-            // {/*showCanvas && */}
-            <Box textAlign='center'>
+          ></canvas>
+          <canvas
+            id="pfpCanvas"
+            ref={pfpCanvasRef}
+            style={canvasStyle}
+            // className="canvasRendering"
+            // width={window.innerWidth-10}
+            height="0"
+          ></canvas>
+          <canvas
+            id="canvas"
+            ref={finalCanvasRef}
+            style={canvasStyle}
+            // className="canvasRendering"
+            // width={window.innerWidth-10}
+            height="0"
+          ></canvas>
+        </Box>
+        {uiStep === 3 && croppedBg &&
+          // {/*showCanvas && */}
+          <Box textAlign='center'>
+            <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+              Back
+            </Button>
+            <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
+              Download pfp
+            </Button>
+          </Box>
+        }
+
+        {uiStep === 4 &&
+          <div>
+            <img
+              alt="finalImage"
+              src={finalCanvasRef.current.toDataURL(fileImageType, 1)}
+              style={{
+                height: finalCanvasRef.current.style.height,
+                width: finalCanvasRef.current.style.width,
+              }}
+            />
+            <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
               <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
                 Back
               </Button>
-              <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
+              <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
                 Download pfp
               </Button>
             </Box>
-          }
-
-          {uiStep === 4 &&
-            <div>
-              <img
-                alt="finalImage"
-                src={canvasRef.current.toDataURL(fileImageType, 1)}
-                style={{
-                  height: canvasRef.current.style.height,
-                  width: canvasRef.current.style.width,
-                }}
-              />
-              <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                  Back
-                </Button>
-                <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                  Download pfp
-                </Button>
-              </Box>
-            </div>
-          }
-
-          {/* below is screen size notation for debugging */}
-          {/*<div>
-            {windowSize.width}px / {windowSize.height}px
-            {console.log(browser)}
-            {console.log(UA)}
-            {console.log(getUA)}
           </div>
-          <div>
-            <p>isIOS: {isIOS.toString()}</p>
-            <p>isMobile: {isMobile.toString()}</p>
-            <p>browserName: {browserName}</p>
-            <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
-          </div>
-          
-          <div style={{overflowWrap: "anywhere"}}>
-            <p>{JSON.stringify(deviceDetect())}</p>
-          </div>
-          */}
-        </div>
+        }
       </Paper>
     </Zoom>
   );
 }
 
-export default CompositorV2;
+export default CompositorV3;

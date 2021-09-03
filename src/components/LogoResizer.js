@@ -11,11 +11,12 @@ export default function LogoResizer(props) {
 
   return (
     <div style={{marginBottom: "0.75rem"}}>
-      <Typography gutterBottom color="textSecondary">Image Resizer</Typography>
+      <Typography gutterBottom color="textSecondary">Image Resizer, click to replace</Typography>
       <img
         src={props.stampSrc}
         height={props.stampHeight}
         width={props.stampWidth}
+        style={{cursor: "pointer"}}
         alt="stamp"
         onClick={props.onStampClick}
       />
@@ -25,8 +26,8 @@ export default function LogoResizer(props) {
             valueLabelDisplay="auto"
             aria-label="size slider"
             defaultValue={props.defaultSize}
-            min={24}
-            max={400}
+            min={props.minSize}
+            max={props.maxSize}
             onChange={props.resizeStamp}
           />
         </Grid>

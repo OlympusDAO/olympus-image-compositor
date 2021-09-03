@@ -12,7 +12,8 @@ import useWindowSize from "./hooks/useWindowSize";
 import "./components/stake.scss";
 
 import CompositorV2 from './components/CompositorV2';
-import OhmieCardV2 from './components/OhmieCardV2';
+import MainNavLinks from './components/MainNavLinks';
+import OhmieCardV3 from './components/OhmieCardV3';
 
 import {
   Switch,
@@ -35,10 +36,10 @@ function App() {
           <CompositorV2 />
         </Route>
         <Route path="/ohmiecard">
-          <OhmieCardV2 />
+          <OhmieCardV3 />
         </Route>
         <Route exact path="/">
-          <OhmieCardV2 />
+          <MainNavLinks />
         </Route>
       </Switch>
     </div>

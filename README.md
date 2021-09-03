@@ -8,14 +8,18 @@
 
 ## Quick Roadmap
 
-1. ~~Allow uploading custom image in lieu of Zeus placeholder (simple)~~
-  ~~A. Fix jumpy UI~~
-2. ~~Allow downloading composite image (simple, you can right-click save as right now)~~
-3. ~~Remove Jimp dependency (it's not currently used)~~
-4. ~~Allow resizing of sOhm Logo - working via image zoom~~
-5. Track sOhm logo with cursor before user clicks (nicer UI)
-6. ~~Styling~~
-7. ~~don't save multiple logos on multiple clicks~~
-8. ~~increase DPI~~
-9. ~~Square landscape images... crop them~~
-10. ~~fix padding so that screen is scrollable on mobile...~~
+1. place text on screen
+    - [your name]
+    - Change colour of fonts
+    - Change background image or colour
+    - text arrangement should be fixed
+2. nav
+    - Main - > Ohmie.olympusdao.finance
+    - Proof of Ohmie Ohmie.olympusdao.finance/pof
+    - Ohmie Card Ohmie.olympusdao.finance/ohmiecard
+3. colour droplet & filling background color: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas#getting_the_pixel_data_for_a_context
+4. limit locations of text box, require padding
+5. process completed in layers
+    - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas#use_multiple_layered_canvases_for_complex_scenes
+    - each layer is it's own canvas
+6. mouse-following: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations#mouse_following_animation
