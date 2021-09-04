@@ -137,6 +137,7 @@ function CompositorV3(props) {
     width: sOhmSize,
   });
   const [textListenersApplied, setTextListenersApplied] = useState(false);
+  const [userName, setUserName] = useState("[your name]");
 
   const getViewWidth = () => {
     var element = viewContainerRef.current;
@@ -208,7 +209,7 @@ function CompositorV3(props) {
   const applyTextListeners = useCallback(
     () => {
       // if you already set the listeners... you can stop
-      if (textListenersApplied === true) return;
+      // if (textListenersApplied === true) return;
 
       // scalingRatio for scaling text size on mobile...
       const scalingRatio = croppedBg.height/croppedBg.governing_height;
@@ -238,7 +239,7 @@ function CompositorV3(props) {
       }
       ///////////////
 
-      let name = "[your name]";
+      let name = userName;
       let nameString = "Meet " + name;
       
       const textToApply = (e) => {
@@ -309,14 +310,15 @@ function CompositorV3(props) {
       }
 
       // Add the event listeners for mousedown, mousemove, and mouseup
-      canvasOnly.addEventListener('mousedown', e => {
-        console.log("text mousedown");
+      const handleMouseDown = () => {
+        console.log("down");
         isDrawing = true;
-      });
+      }
+      // remove old listeners
+      canvasOnly.removeEventListener('mousedown', handleMouseDown);
+      canvasOnly.addEventListener('mousedown', handleMouseDown);
 
-      // drawImage usage
-      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-      canvasOnly.addEventListener('mousemove', e => {
+      const handleMouseMove = (e) => {
         if (isDrawing === true) {
 
           if (croppedBg) history.restoreState();
@@ -324,9 +326,15 @@ function CompositorV3(props) {
           // ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
 
         }
-      });
+      }
 
-      window.addEventListener('mouseup', e => {
+      // drawImage usage
+      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+      canvasOnly.removeEventListener('mousemove', handleMouseMove);
+      canvasOnly.addEventListener('mousemove', handleMouseMove);
+
+
+      const handleMouseUp = e => {
         if (isDrawing === true) {
 
           if (croppedBg) history.restoreState();
@@ -335,10 +343,12 @@ function CompositorV3(props) {
 
           isDrawing = false;
         }
-      });
+      }
+      canvasOnly.removeEventListener('mouseup', handleMouseUp);
+      canvasOnly.addEventListener('mouseup', handleMouseUp);
 
       setTextListenersApplied(true);
-    }, [croppedBg, textListenersApplied]
+    }, [croppedBg, userName]
   );
     
   const step1Direction = {row: ""};
@@ -415,9 +425,9 @@ function CompositorV3(props) {
   }
 
   const goToTextStep = () => {
-    setdirectionState({row: "Place your text, Incooohmer"});
-    setDPI(textCanvasRef);
-    applyTextListeners();
+    setdirectionState({row: "Enter your name, then place your text, Incooohmer"});
+    setDPI(textCanvasRef, "text");
+    // applyTextListeners();
     canvasOrdering("text");
     setuiStep("text");
   }
@@ -547,14 +557,15 @@ function CompositorV3(props) {
       // console.log('drawCroppedCanvas', image);
       // handle the click event
       // console.log(canvasOnly);
-      var ctx = bgCanvasRef.current.getContext('2d');
 
       // console.log(image.governing_width, image.governing_height)
       // set canvas dims based on classifyImage results
       setCanvasDims();
 
+      setDPI(bgCanvasRef, false);
+      var ctx = bgCanvasRef.current.getContext('2d');
       ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-      setDPI(pfpCanvasRef);
+      setDPI(pfpCanvasRef, false);
       setCanvasListeners();
     }
     
@@ -563,12 +574,19 @@ function CompositorV3(props) {
   // TODO (appleseed):
   // I think we'll want to setDPI on pfpCanvasRef
   // ... but size based on bgCanvasRef
-  function setDPI(thisCanvasRef) {
+  function setDPI(thisCanvasRef, type) {
     var thisCanvas = thisCanvasRef.current;
     var bgCanvas = bgCanvasRef.current;
     // var dpi = 96*3;
     // var scaleFactor = dpi / 96;
-    var scaleFactor = 3;
+    var scaleFactor;
+    if (type === "text") {
+      scaleFactor = 3;
+    } else if (type === "final") {
+      scaleFactor = 3;
+    } else {
+      scaleFactor = 3;
+    }
     
     // Set up CSS size.
     thisCanvas.style.width = bgCanvas.style.width || bgCanvas.width + 'px';
@@ -607,15 +625,19 @@ function CompositorV3(props) {
   }
 
   const drawFinalCanvas = () => {
-    setDPI(finalCanvasRef)
+    setDPI(finalCanvasRef, "final")
+
+    // ratio of screen height to original
     var scaleFactor = croppedBg.governing_height/croppedBg.height;
+
+    // setting back to original height & width
     finalCanvasRef.current.width = croppedBg.width;
     finalCanvasRef.current.height = croppedBg.height;
     var ctx = finalCanvasRef.current.getContext('2d');
-    ctx.drawImage(bgCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
-    ctx.drawImage(pfpCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
+    ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
+    ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
     // draw Text
-    ctx.drawImage(textCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
+    ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
     
     // ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
   }
@@ -647,6 +669,11 @@ function CompositorV3(props) {
     // this isn't quite working
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    // needs to run when stampSize changes
+    applyTextListeners();
+  }, [userName, applyTextListeners]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -724,6 +751,8 @@ function CompositorV3(props) {
         {/* Logo Resizing */}
         {uiStep === "text" &&
           <TextCanvas
+            setUserName={setUserName}
+            applyTextListeners={applyTextListeners}
           />
         }
 
