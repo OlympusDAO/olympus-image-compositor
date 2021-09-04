@@ -140,6 +140,7 @@ function CompositorV3(props) {
   });
   // const [textListenersApplied, setTextListenersApplied] = useState(false);
   const [userName, setUserName] = useState("[your name]");
+  const [blackText, setBlackText] = useState(true);
 
   const getViewWidth = () => {
     var element = viewContainerRef.current;
@@ -243,6 +244,12 @@ function CompositorV3(props) {
 
       let name = userName;
       let nameString = "Meet " + name;
+      let textColor = "black";
+      let buttonText = "white";
+      if (blackText === false) {
+        textColor = "white";
+        buttonText = "black";
+      }
       
       const textToApply = (e) => {
         // let lineIndex = 0;
@@ -253,7 +260,7 @@ function CompositorV3(props) {
         // let fontSize = 19;
 
         console.log(scalingRatio, "fontSize", fontSize);
-        ctx.fillStyle = "black";
+        ctx.fillStyle = textColor;
         ctx.font = fontSize+"px RedHatDisplay";
         ctx.fillText(nameString, e.offsetX, e.offsetY);
 
@@ -297,6 +304,16 @@ function CompositorV3(props) {
         ctx.moveTo(x, y-radius);
         ctx.fillRect(x, y-radius, length, radius*2);
         ctx.closePath();
+
+        // rect in gaps
+        ctx.beginPath();
+        ctx.moveTo(x-1, y-radius+1);
+        ctx.fillRect(x-1, y-radius+1, 2, radius*2-1);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.moveTo(x+length-1, y-radius+1);
+        ctx.fillRect(x+length-1, y-radius+1, 2, radius*2-1);
+        ctx.closePath();
         
         // right semi-circle
         ctx.beginPath();
@@ -305,7 +322,7 @@ function CompositorV3(props) {
         ctx.closePath();
 
         // letters in button
-        ctx.fillStyle = "white";
+        ctx.fillStyle = buttonText;
         ctx.font = 20/scalingRatio+"px RedHatDisplay";
         ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
@@ -350,7 +367,7 @@ function CompositorV3(props) {
       canvasOnly.addEventListener('mouseup', handleMouseUp);
 
       // setTextListenersApplied(true);
-    }, [croppedBg, userName]
+    }, [croppedBg, userName, blackText]
   );
     
   const step1Direction = {row: ""};
@@ -675,7 +692,7 @@ function CompositorV3(props) {
   useEffect(() => {
     // needs to run when stampSize changes
     applyTextListeners();
-  }, [userName, applyTextListeners]);
+  }, [userName, applyTextListeners, blackText]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -755,6 +772,8 @@ function CompositorV3(props) {
         {uiStep === "text" &&
           <TextCanvas
             setUserName={setUserName}
+            setBlackText={setBlackText}
+            blackText={blackText}
             applyTextListeners={applyTextListeners}
           />
         }
