@@ -7,7 +7,7 @@
 1. change out the useGoogleAnalytics TRACKING_ID
 
 ## Quick Roadmap
-
+<strike>
 1. place text on screen
     - [your name]
     - Change colour of fonts
@@ -23,3 +23,11 @@
     - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas#use_multiple_layered_canvases_for_complex_scenes
     - each layer is it's own canvas
 6. mouse-following: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations#mouse_following_animation
+</strike>
+
+Current Roadmap
+
+- [ ] color picker & fill for background
+- [ ] allow changing text & button color from black to white
+- [ ] allow setting of name
+- [ ] fix scaling on mobile

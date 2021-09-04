@@ -38,6 +38,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
       let image = new Image();
       image.onload = () => {
         image = classifyImage(image, cropperContainerRef.current.offsetWidth, props.areaHt, false);
+        console.log("cropped", image);
         props.setCroppedBg(image);
       };
 

@@ -204,14 +204,14 @@ function CompositorV3(props) {
     }, [stampSize.height, stampSize.width, croppedBg, stampFile]
   );
 
-  // allows detects clicking on canvas & places image
-  // will need to pass in:
-  // whichCanvas
-  // which image is drawn...
+  // allows detects clicking on canvas & places text
   const applyTextListeners = useCallback(
     () => {
       // if you already set the listeners... you can stop
       if (textListenersApplied === true) return;
+
+      // scalingRatio for scaling text size on mobile...
+      const scalingRatio = croppedBg.height/croppedBg.governing_height;
 
       // var redHatFont = new FontFace("RedHatDisplay", "../assets/fonts/");
       // redHatFont.load().then(function(font){
@@ -227,9 +227,9 @@ function CompositorV3(props) {
       let isDrawing = false;
       
       //////////// HISTORY
-      // TODO (appleseed):
+      // NOTE (appleseed):
       // 1. height & width are fixed aspect ratio now...
-      // 2. also won't want to redraw since this will apply to the pfpCanvas only. Just empty it
+      // 2. also won't want to redraw since this will apply to the textCanvas only. Just empty it
       var history = {
         restoreState: function() {
           ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
@@ -237,43 +237,50 @@ function CompositorV3(props) {
         }
       }
       ///////////////
-      
+
       let name = "[your name]";
       let nameString = "Meet " + name;
       
       const textToApply = (e) => {
         // let lineIndex = 0;
         // 32 tall in total
+        // let fontSize = (32/scalingRatio);
+        var fontSize;
+        fontSize = (29/scalingRatio);
+        // let fontSize = 19;
+
+        console.log(scalingRatio, "fontSize", fontSize);
         ctx.fillStyle = "black";
-        ctx.font = '19px RedHatDisplay';
+        ctx.font = fontSize+"px RedHatDisplay";
         ctx.fillText(nameString, e.offsetX, e.offsetY);
 
         // lineIndex 1 & 2 are 128 tall in total
         // lineIndex = 1;
-        let linePosition = 52;
-        ctx.font = 'bold 38px RedHatDisplay';
+        let linePosition = 64/scalingRatio;
+        fontSize = (48/scalingRatio);
+        ctx.font = "bold "+fontSize+"px RedHatDisplay";
         ctx.fillText("They are earning", e.offsetX, e.offsetY+linePosition);
         // lineIndex = 2;
-        linePosition = 52 + linePosition;
+        linePosition = 64/scalingRatio + linePosition;
         ctx.fillText("5,000+% APY.", e.offsetX, e.offsetY+linePosition);
 
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
-        linePosition = 28 + linePosition;
-        ctx.font = '14px RedHatDisplay';
+        linePosition = 36/scalingRatio + linePosition;
+        ctx.font = (21/scalingRatio)+"px RedHatDisplay";
         ctx.fillText("When you’re ready, we’re ready with your", e.offsetX, e.offsetY+linePosition);
         // lineIndex = 4;
-        linePosition = 18 + linePosition;
+        linePosition = 26/scalingRatio + linePosition;
         ctx.fillText("Ohmie account. Earn rewards every 8 hours.", e.offsetX, e.offsetY+linePosition);
 
         ///////////////////////////// BUTTON /////////////////////////////
         // button -> top left corner @ linePosition
-        linePosition = 24 + linePosition;
+        linePosition = 31/scalingRatio + linePosition;
         // ctx.drawImage(button, e.offsetX, e.offsetY+linePosition)
-        let radius = 22;
+        let radius = 28/scalingRatio;
         let x = e.offsetX+radius;
         let y = e.offsetY+linePosition+radius;
-        let length = 140;
+        let length = 182/scalingRatio;
         
         // left semi-circle
         // ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
@@ -296,8 +303,8 @@ function CompositorV3(props) {
 
         // letters in button
         ctx.fillStyle = "white";
-        ctx.font = '15px RedHatDisplay';
-        ctx.fillText("olympusdao.finance", x, y+4);
+        ctx.font = 20/scalingRatio+"px RedHatDisplay";
+        ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
       }
 
@@ -515,7 +522,6 @@ function CompositorV3(props) {
       bgCanvasRef.current.style.width = croppedBg.governing_width + "px";
       bgCanvasRef.current.height = croppedBg.governing_height;
       bgCanvasRef.current.width = croppedBg.governing_width;
-      
       
       // set other canvas heights
       pfpCanvasRef.current.style.height = bgCanvasRef.current.style.height;
