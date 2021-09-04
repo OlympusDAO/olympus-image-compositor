@@ -53,7 +53,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
           src={fileImage.src}
           style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
           // Cropper.js options
-          aspectRatio={1013/446}
+          aspectRatio={props.aspectRatio}
           cropBoxResizable={false}
           dragMode={"crop"}
           guides={false}
@@ -87,6 +87,7 @@ BgCanvas.propTypes = {
   areaHt: PropTypes.number.isRequired,
   fileImageType: PropTypes.string.isRequired,
   containerStyle: PropTypes.object.isRequired,
+  aspectRatio: PropTypes.number.isRequired
 };
 
 export default BgCanvas

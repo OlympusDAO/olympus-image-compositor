@@ -79,6 +79,8 @@ function CompositorV3(props) {
 
   const [stampFile, setStampFile] = useState(sOhm); 
   const sOhmSize = 60;
+  const fixedWidth = 1013;
+  const fixedHeight = 446;
 
   const viewContainerRef = React.useRef(null);
   const bgCanvasRef = React.useRef(null);
@@ -212,7 +214,7 @@ function CompositorV3(props) {
       // if (textListenersApplied === true) return;
 
       // scalingRatio for scaling text size on mobile...
-      const scalingRatio = croppedBg.height/croppedBg.governing_height;
+      const scalingRatio = fixedHeight/croppedBg.governing_height;
 
       // var redHatFont = new FontFace("RedHatDisplay", "../assets/fonts/");
       // redHatFont.load().then(function(font){
@@ -711,7 +713,7 @@ function CompositorV3(props) {
               
               <div style={{flexGrow: "0"}}>
                 <div style={{display: "flex", flexFlow: "column wrap"}}>
-                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: 1013/446 (width/height).</Typography>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
                   <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
                 </div>
               </div>
@@ -733,6 +735,7 @@ function CompositorV3(props) {
             areaHt={areaHt}
             fileImageType={fileImageType}
             containerStyle={dropContainerStyle}
+            aspectRatio={fixedWidth/fixedHeight}
           />
         }
 
