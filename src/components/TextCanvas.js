@@ -1,7 +1,7 @@
 // TextCanvas = Background Canvas
 //
 // Allows user to upload & position a background onto a canvas
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import {
   // Grid,

@@ -29,5 +29,5 @@ Current Roadmap
 
 - [ ] color picker & fill for background
 - [ ] allow changing text & button color from black to white
-- [ ] allow setting of name
+- [x] allow setting of name
 - [x] fix scaling on mobile *still not in love w it*

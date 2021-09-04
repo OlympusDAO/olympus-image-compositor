@@ -136,7 +136,7 @@ function CompositorV3(props) {
     height: sOhmSize,
     width: sOhmSize,
   });
-  const [textListenersApplied, setTextListenersApplied] = useState(false);
+  // const [textListenersApplied, setTextListenersApplied] = useState(false);
   const [userName, setUserName] = useState("[your name]");
 
   const getViewWidth = () => {
@@ -347,7 +347,7 @@ function CompositorV3(props) {
       canvasOnly.removeEventListener('mouseup', handleMouseUp);
       canvasOnly.addEventListener('mouseup', handleMouseUp);
 
-      setTextListenersApplied(true);
+      // setTextListenersApplied(true);
     }, [croppedBg, userName]
   );
     
