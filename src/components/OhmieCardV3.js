@@ -416,6 +416,7 @@ function CompositorV3(props) {
 
   const goToTextStep = () => {
     setdirectionState({row: "Place your text, Incooohmer"});
+    setDPI(textCanvasRef);
     applyTextListeners();
     canvasOrdering("text");
     setuiStep("text");
@@ -532,8 +533,11 @@ function CompositorV3(props) {
       textCanvasRef.current.style.width = bgCanvasRef.current.style.width;
       textCanvasRef.current.height = bgCanvasRef.current.height;
       textCanvasRef.current.width = bgCanvasRef.current.width;
-      finalCanvasRef.current.style.height = bgCanvasRef.current.style.height;
-      finalCanvasRef.current.style.width = bgCanvasRef.current.style.width;
+
+      // finalCanvasRef.current.style.height = bgCanvasRef.current.style.height;
+      // finalCanvasRef.current.style.width = bgCanvasRef.current.style.width;
+      finalCanvasRef.current.style.height = croppedBg.height + "px";
+      finalCanvasRef.current.style.width = croppedBg.width + "px";
       finalCanvasRef.current.height = bgCanvasRef.current.height;
       finalCanvasRef.current.width = bgCanvasRef.current.width;
 
@@ -550,7 +554,7 @@ function CompositorV3(props) {
       setCanvasDims();
 
       ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-      setDPI();
+      setDPI(pfpCanvasRef);
       setCanvasListeners();
     }
     
@@ -559,32 +563,32 @@ function CompositorV3(props) {
   // TODO (appleseed):
   // I think we'll want to setDPI on pfpCanvasRef
   // ... but size based on bgCanvasRef
-  function setDPI() {
-    var pfpCanvas = pfpCanvasRef.current;
+  function setDPI(thisCanvasRef) {
+    var thisCanvas = thisCanvasRef.current;
     var bgCanvas = bgCanvasRef.current;
     // var dpi = 96*3;
     // var scaleFactor = dpi / 96;
     var scaleFactor = 3;
     
     // Set up CSS size.
-    pfpCanvas.style.width = bgCanvas.style.width || bgCanvas.width + 'px';
-    pfpCanvas.style.height = bgCanvas.style.height || bgCanvas.height + 'px';
+    thisCanvas.style.width = bgCanvas.style.width || bgCanvas.width + 'px';
+    thisCanvas.style.height = bgCanvas.style.height || bgCanvas.height + 'px';
 
     // console.log('setDpi', canvas.style.width, canvas.style.height);
     // Get size information.
-    var width = parseFloat(pfpCanvas.style.width);
-    var height = parseFloat(pfpCanvas.style.height);
+    var width = parseFloat(thisCanvas.style.width);
+    var height = parseFloat(thisCanvas.style.height);
 
     // Backup the canvas contents.
-    var oldScale = pfpCanvas.width / width;
+    var oldScale = thisCanvas.width / width;
     var backupScale = scaleFactor / oldScale;
-    var backup = pfpCanvas.cloneNode(false);
-    backup.getContext('2d').drawImage(pfpCanvas, 0, 0);
+    var backup = thisCanvas.cloneNode(false);
+    backup.getContext('2d').drawImage(thisCanvas, 0, 0);
 
     // Resize the canvas.
-    var ctx = pfpCanvas.getContext('2d');
-    pfpCanvas.width = Math.ceil(width * scaleFactor);
-    pfpCanvas.height = Math.ceil(height * scaleFactor);
+    var ctx = thisCanvas.getContext('2d');
+    thisCanvas.width = Math.ceil(width * scaleFactor);
+    thisCanvas.height = Math.ceil(height * scaleFactor);
 
     // Redraw the canvas image and scale future draws.
     ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
@@ -603,10 +607,17 @@ function CompositorV3(props) {
   }
 
   const drawFinalCanvas = () => {
+    setDPI(finalCanvasRef)
+    var scaleFactor = croppedBg.governing_height/croppedBg.height;
+    finalCanvasRef.current.width = croppedBg.width;
+    finalCanvasRef.current.height = croppedBg.height;
     var ctx = finalCanvasRef.current.getContext('2d');
-    ctx.drawImage(bgCanvasRef.current, 0, 0, finalCanvasRef.current.width, finalCanvasRef.current.height);
-    ctx.drawImage(pfpCanvasRef.current, 0, 0, finalCanvasRef.current.width, finalCanvasRef.current.height);
+    ctx.drawImage(bgCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
+    ctx.drawImage(pfpCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
     // draw Text
+    ctx.drawImage(textCanvasRef.current, 0, 0, bgCanvasRef.current.width/scaleFactor, bgCanvasRef.current.height/scaleFactor);
+    
+    // ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
   }
 
   const downloadImage = () => {
