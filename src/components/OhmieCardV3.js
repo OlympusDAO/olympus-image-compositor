@@ -27,7 +27,7 @@ import {
   // browserName
 } from "react-device-detect";
 
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import {useDropzone} from 'react-dropzone';
 
@@ -40,7 +40,6 @@ import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
 import useWindowSize from "../hooks/useWindowSize";
-import { useEffect } from "react";
 
 import PfpCanvas from "./PfpCanvas";
 import BgCanvas from "./BgCanvas";
@@ -140,7 +139,16 @@ function CompositorV3(props) {
   });
   // const [textListenersApplied, setTextListenersApplied] = useState(false);
   const [userName, setUserName] = useState("[your name]");
-  const [blackText, setBlackText] = useState(true);
+  const [textColor, setTextColor] = useState({
+    hex: "#000000",
+    rgb: {r: 0, g: 0, b: 0, a: 100},
+  });
+  // default white
+  const [buttonColor, setButtonColor] = useState({
+    hex: "#FFFFFF",
+    rgb: {r: 255, g: 255, b: 255, a: 100},
+  });
+  const [lastTextEvent, setLastTextEvent] = useState(null);
 
   const getViewWidth = () => {
     var element = viewContainerRef.current;
@@ -188,20 +196,15 @@ function CompositorV3(props) {
       // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
       canvasOnly.addEventListener('mousemove', e => {
         if (isDrawing === true) {
-
           if (croppedBg) history.restoreState();
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
-
         }
       });
 
       window.addEventListener('mouseup', e => {
         if (isDrawing === true) {
-
           if (croppedBg) history.restoreState();
-
           ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
-
           isDrawing = false;
         }
       });
@@ -244,12 +247,8 @@ function CompositorV3(props) {
 
       let name = userName;
       let nameString = "Meet " + name;
-      let textColor = "black";
-      let buttonText = "white";
-      if (blackText === false) {
-        textColor = "white";
-        buttonText = "black";
-      }
+      let useTextColor = textColor.hex;
+      let useButtonColor = buttonColor.hex;
       
       const textToApply = (e) => {
         // let lineIndex = 0;
@@ -260,7 +259,7 @@ function CompositorV3(props) {
         // let fontSize = 19;
 
         console.log(scalingRatio, "fontSize", fontSize);
-        ctx.fillStyle = textColor;
+        ctx.fillStyle = useTextColor;
         ctx.font = fontSize+"px RedHatDisplay";
         ctx.fillText(nameString, e.offsetX, e.offsetY);
 
@@ -322,10 +321,11 @@ function CompositorV3(props) {
         ctx.closePath();
 
         // letters in button
-        ctx.fillStyle = buttonText;
+        ctx.fillStyle = useButtonColor;
         ctx.font = 20/scalingRatio+"px RedHatDisplay";
         ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
+        setLastTextEvent(e);
       }
 
       // Add the event listeners for mousedown, mousemove, and mouseup
@@ -352,7 +352,6 @@ function CompositorV3(props) {
       canvasOnly.removeEventListener('mousemove', handleMouseMove);
       canvasOnly.addEventListener('mousemove', handleMouseMove);
 
-
       const handleMouseUp = e => {
         if (isDrawing === true) {
 
@@ -367,7 +366,11 @@ function CompositorV3(props) {
       canvasOnly.addEventListener('mouseup', handleMouseUp);
 
       // setTextListenersApplied(true);
-    }, [croppedBg, userName, blackText]
+      if (lastTextEvent) {
+        if (croppedBg) history.restoreState();
+        textToApply(lastTextEvent);
+      }
+    }, [croppedBg, userName, textColor, buttonColor, lastTextEvent]
   );
     
   const step1Direction = {row: ""};
@@ -394,28 +397,28 @@ function CompositorV3(props) {
   const canvasOrdering = (stepNumber) => {
     switch (stepNumber) {
       case "bg":
-        bgCanvasRef.current.style.zIndex=400;
-        pfpCanvasRef.current.style.zIndex=300;
-        textCanvasRef.current.style.zIndex=200;
+        bgCanvasRef.current.style.zIndex=1;
+        pfpCanvasRef.current.style.zIndex=0;
+        textCanvasRef.current.style.zIndex=-1;
         canvasContainerRef.current.style.display = "none";
         break;
       case "pfp":
-        pfpCanvasRef.current.style.zIndex=400;
-        textCanvasRef.current.style.zIndex=300;
-        bgCanvasRef.current.style.zIndex=200;
+        pfpCanvasRef.current.style.zIndex=1;
+        textCanvasRef.current.style.zIndex=0;
+        bgCanvasRef.current.style.zIndex=-1;
         canvasContainerRef.current.style.display = "block";
         break;
       case "long-press":
       case "text":
-        textCanvasRef.current.style.zIndex=400;
-        pfpCanvasRef.current.style.zIndex=300;
-        bgCanvasRef.current.style.zIndex=200;
+        textCanvasRef.current.style.zIndex=1;
+        pfpCanvasRef.current.style.zIndex=0;
+        bgCanvasRef.current.style.zIndex=-1;
         canvasContainerRef.current.style.display = "block";
         break;
       default:
-        textCanvasRef.current.style.zIndex=400;
-        pfpCanvasRef.current.style.zIndex=300;
-        bgCanvasRef.current.style.zIndex=200;
+        textCanvasRef.current.style.zIndex=1;
+        pfpCanvasRef.current.style.zIndex=0;
+        bgCanvasRef.current.style.zIndex=-1;
         canvasContainerRef.current.style.display = "block";
     }
   }
@@ -682,17 +685,21 @@ function CompositorV3(props) {
         }, fileImageType, 1);
       }
     }
-  }
+  };
 
   const imageLoaded = () => {
     // this isn't quite working
     setIsLoading(false);
-  }
+  };
+
+  // const changeUserName = (v) => {
+  //   setUserName(v);
+  // }
 
   useEffect(() => {
     // needs to run when stampSize changes
     applyTextListeners();
-  }, [userName, applyTextListeners, blackText]);
+  }, [userName, applyTextListeners, textColor, buttonColor]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -772,9 +779,11 @@ function CompositorV3(props) {
         {uiStep === "text" &&
           <TextCanvas
             setUserName={setUserName}
-            setBlackText={setBlackText}
-            blackText={blackText}
-            applyTextListeners={applyTextListeners}
+            // applyTextListeners={applyTextListeners}
+            textColor={textColor}
+            setTextColor={setTextColor}
+            buttonColor={buttonColor}
+            setButtonColor={setButtonColor}
           />
         }
 
