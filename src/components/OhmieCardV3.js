@@ -605,7 +605,7 @@ function CompositorV3(props) {
     if (type === "text") {
       scaleFactor = 3;
     } else if (type === "final") {
-      scaleFactor = 3;
+      scaleFactor = 12;
     } else {
       scaleFactor = 3;
     }
@@ -636,6 +636,19 @@ function CompositorV3(props) {
     ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
   }
 
+  const resizeAndExport = () => {
+    var thisCanvas = finalCanvasRef.current;
+    if (thisCanvas.width !== fixedWidth) {
+      var backup = thisCanvas.cloneNode(false);
+      backup.getContext('2d').drawImage(thisCanvas, 0, 0);
+
+      thisCanvas.width = fixedWidth;
+      thisCanvas.height = fixedHeight;
+
+      thisCanvas.getContext('2d').drawImage(backup, 0,0,backup.width, backup.height, 0,0,fixedWidth, fixedHeight);
+    }
+  }
+
   // for bgCanvas
   // or maybe multiple?
   const clearTheCanvas = () => {
@@ -649,19 +662,29 @@ function CompositorV3(props) {
   const drawFinalCanvas = () => {
     setDPI(finalCanvasRef, "final")
 
-    // ratio of screen height to original
-    var scaleFactor = croppedBg.governing_height/croppedBg.height;
+    // // ratio of screen height to original
+    // var scaleFactor = croppedBg.governing_height/croppedBg.height;
+
+    // // setting back to original height & width
+    // finalCanvasRef.current.width = croppedBg.width;
+    // finalCanvasRef.current.height = croppedBg.height;
+    // var ctx = finalCanvasRef.current.getContext('2d');
+    // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
+    // ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
+    // // draw Text
+    // ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
+    
+    var ctx = finalCanvasRef.current.getContext('2d');
+    ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    // draw Text
+    ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
 
     // setting back to original height & width
-    finalCanvasRef.current.width = croppedBg.width;
-    finalCanvasRef.current.height = croppedBg.height;
-    var ctx = finalCanvasRef.current.getContext('2d');
-    ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    // draw Text
-    ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    
-    // ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
+    // finalCanvasRef.current.width = croppedBg.width;
+    // finalCanvasRef.current.height = croppedBg.height;
+    // finalDPI(finalCanvasRef);
+    resizeAndExport();
   }
 
   const downloadImage = () => {
