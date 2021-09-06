@@ -15,13 +15,16 @@ import {
 } from "@material-ui/core";
 
 import LogoResizer from "./LogoResizer";
-
+import classifyImage from "../helpers/classifyImage";
 
 const PfpCanvas = React.forwardRef((props, ref) => {
   const { stampInputRef } = ref;
 
   const resizeStamp = (e, value) => {
-    props.setStampSize({height: value, width: value});
+    props.setStampSize({
+      width: value*props.stampFile.aspectRatio,
+      height: value,
+    });
   }
 
   const onStampClick = () => {
@@ -31,7 +34,22 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   const uploadStamp = (e) => {
     var files = stampInputRef.current.files;
     if (files.length > 0) {
-      props.setStampFile(URL.createObjectURL(files[0]));
+      console.log("files", files[0]);
+      let image = new Image();
+      const maxWdth = 400;
+      const mobile = false;
+      image.onload = () => {
+        image = classifyImage(image, maxWdth, props.maxHt, mobile);
+        console.log(image);
+
+        // set to whatever size == height = max canvas height
+        props.setStampSize({
+          width: props.maxHt*image.aspectRatio,
+          height: props.maxHt
+        });
+      }
+      image.src = URL.createObjectURL(files[0]);
+      props.setStampFile(image);
     }
   }
   
@@ -40,13 +58,12 @@ const PfpCanvas = React.forwardRef((props, ref) => {
       {/* Logo Resizing */}
       <Box>
         <LogoResizer
-          stampSrc={props.stampFile}
+          stampSrc={props.stampFile.src}
           stampHeight={props.stampSize.height}
           stampWidth={props.stampSize.width}
-          defaultSize={props.sOhmSize}
           resizeStamp={resizeStamp}
           minSize={24}
-          maxSize={400}
+          maxSize={props.maxHt*1.25}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
         />

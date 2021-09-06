@@ -75,8 +75,10 @@ const dropContainerStyle = {
 }
 
 function CompositorV3(props) {
-
-  const [stampFile, setStampFile] = useState(sOhm); 
+  var sOhmImg = new Image();
+  sOhmImg.src = sOhm;
+  sOhmImg = classifyImage(sOhmImg);
+  const [stampFile, setStampFile] = useState(sOhmImg); 
   const sOhmSize = 60;
   const fixedWidth = 1013;
   const fixedHeight = 446;
@@ -169,7 +171,7 @@ function CompositorV3(props) {
       var ctx = canvasOnly.getContext('2d');
 
       var logo = new Image();
-      logo.src = stampFile;
+      logo.src = stampFile.src;
 
       // When true, moving the mouse draws on the canvas
       let isDrawing = false;
@@ -794,7 +796,7 @@ function CompositorV3(props) {
             setStampFile={setStampFile}
             stampFile={stampFile}
             stampSize={stampSize}
-            sOhmSize={sOhmSize}
+            maxHt = {parseFloat(bgCanvasRef.current.style.height)}
           />
         }
 
