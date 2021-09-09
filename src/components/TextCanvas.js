@@ -127,7 +127,7 @@ export default function TextCanvas(props) {
           </Box>
         </Grid> 
         <Grid item>
-        <Typography>Button Color</Typography>
+        <Typography>Button Text</Typography>
           <Box style={ swatchStyle } onClick={ clickButtonSwatch }>
             <Box style={ colorStyle("button") } />
           </Box>

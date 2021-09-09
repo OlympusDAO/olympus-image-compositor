@@ -17,6 +17,7 @@ import {
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import classifyImage from "../helpers/classifyImage";
+import EyeDropper from './EyeDropper';
 
 
 const BgCanvas = React.forwardRef((props, ref) => {
@@ -49,6 +50,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
   return (
     <Box style={props.containerStyle}>
       <Box id="cropBoxContainer" ref={cropperContainerRef}>
+        <EyeDropper />
         <Cropper
           src={fileImage.src}
           style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
@@ -67,7 +69,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
             Back
           </Button>
           <Button variant="contained" color="primary" onClick={props.goToPfpStep} style={props.containerButtonStyle}>
-            Crop pfp
+            Crop
           </Button>
         </Box>
       </Box>

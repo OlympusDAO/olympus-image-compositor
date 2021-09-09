@@ -390,7 +390,7 @@ function CompositorV3(props) {
   const goToBgStep = (image) => {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
+    setdirectionState({row: "Crop your image, then click 'Crop' at the bottom"});
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
@@ -852,7 +852,14 @@ function CompositorV3(props) {
             <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
               Next
             </Button>
+            <div style={{flexGrow: "0"}}>
+                <div style={{display: "flex", flexFlow: "column wrap"}}>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Don't like your background?</Typography>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can bucket fill it on next step.</Typography>
+                </div>
+              </div>
           </Box>
+          
         }
 
         {uiStep === "text" && 
