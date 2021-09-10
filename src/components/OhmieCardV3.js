@@ -38,6 +38,7 @@ import sOhm from '../assets/token_sOHM.png';
 // import whiteButton from '../assets/whiteButton.png';
 // import blackButton from '../assets/blackButton.png';
 import classifyImage from "../helpers/classifyImage";
+import RGB2Hex from "../helpers/RGB2Hex";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -149,6 +150,19 @@ function CompositorV3(props) {
   const [buttonColor, setButtonColor] = useState({
     hex: "#FFFFFF",
     rgb: {r: 255, g: 255, b: 255, a: 100},
+  });
+
+  /**
+   * backgroundColor has two keys, denoted as params below
+   * @param {*} fill: true if we want to fill the background
+   * @param {*} color: the color to be used with react-color
+  */
+  const [backgroundColor, setBackgroundColor] = useState({
+    fill: false,
+    color: {
+      hex: "#FFFFFF",
+      rgb: {r: 255, g: 255, b: 255, a: 100},
+    },
   });
   const [lastTextEvent, setLastTextEvent] = useState(null);
 
@@ -636,7 +650,7 @@ function CompositorV3(props) {
     ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
     ctx.drawImage(backup, 0, 0);
     ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
-  }
+  };
 
   const resizeAndExport = () => {
     var thisCanvas = finalCanvasRef.current;
@@ -647,9 +661,9 @@ function CompositorV3(props) {
       thisCanvas.width = fixedWidth;
       thisCanvas.height = fixedHeight;
 
-      thisCanvas.getContext('2d').drawImage(backup, 0,0,backup.width, backup.height, 0,0,fixedWidth, fixedHeight);
+      thisCanvas.getContext('2d').drawImage(backup, 0,0, backup.width, backup.height, 0, 0, fixedWidth, fixedHeight);
     }
-  }
+  };
 
   // for bgCanvas
   // or maybe multiple?
@@ -659,6 +673,106 @@ function CompositorV3(props) {
     if (croppedBg) ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
     bgCanvasRef.current.height = 0;
     bgCanvasRef.current.style.height = 0;
+  };
+
+  function pick(event) {
+    var x = event.layerX;
+    var y = event.layerY;
+    var pixel = finalCanvasRef.current.getContext("2d").getImageData(x, y, 1, 1);
+    var data = pixel.data;
+  
+    const rgba = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
+    // destination.style.background = rgba;
+    // destination.textContent = rgba;
+    console.log(rgba);
+    const hex = RGB2Hex(data[0], data[1], data[2]);
+    console.log(hex);
+    const colorHash = {
+      hex: hex,
+      rgb: {r: data[0], g: data[1], b: data[2], a: 100},
+    }
+    return colorHash;
+  };
+
+  const getCanvasColor = (e) => {
+    console.log("mouse", e);
+    finalCanvasRef.current.style.zIndex = -3;
+    var colorHash = pick(e);
+    console.log(colorHash);
+    return colorHash;
+  };
+
+  /**
+   * TextMouseUp, ButtonMouseUp, BackgroundMouseUp are repeated 3 times bc we couldn't find a way to pass "whichColor"
+   * through the eventListener properly
+   */
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const textMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', textMouseUp);
+    setTextColor(colorHash);
+  };
+
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const buttonMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', buttonMouseUp);
+    setButtonColor(colorHash);
+  };
+
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const backgroundMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', backgroundMouseUp);
+    setBackgroundColor({fill: true, color: colorHash});
+  };
+
+  /**
+   * 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const previewFinalCanvas = (whichColor) => {
+    // 1A. draw pickerCanvas (background + pfp) set z-index = 2
+    // 1B. set cursor: "crosshair"
+    // 2. addEventListener "click" (to picker canvas)
+
+    drawFinalCanvas();
+    // setDPI(finalCanvasRef, false);
+    // var ctx = finalCanvasRef.current.getContext('2d');
+    // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    // ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    // // draw Text
+    // ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+
+    finalCanvasRef.current.style.zIndex = 3;
+    finalCanvasRef.current.style.cursor = "crosshair";
+
+    console.log(whichColor);  
+    switch (whichColor) {
+      case "text":
+        finalCanvasRef.current.addEventListener('mouseup', textMouseUp);
+        break;
+      case "button":
+        finalCanvasRef.current.addEventListener('mouseup', buttonMouseUp);
+        break;
+      case "background":
+        finalCanvasRef.current.addEventListener('mouseup', backgroundMouseUp);
+        break;
+      default:
+        console.warn("You MUST pass a whichColor param");
+    }
   }
 
   const drawFinalCanvas = () => {
@@ -687,7 +801,7 @@ function CompositorV3(props) {
     // finalCanvasRef.current.height = croppedBg.height;
     // finalDPI(finalCanvasRef);
     resizeAndExport();
-  }
+  };
 
   const downloadImage = () => {
     // first combine the canvases onto finalCanvasRef
@@ -717,14 +831,21 @@ function CompositorV3(props) {
     setIsLoading(false);
   };
 
-  // const changeUserName = (v) => {
-  //   setUserName(v);
-  // }
-
   useEffect(() => {
     // needs to run when stampSize changes
     applyTextListeners();
   }, [userName, applyTextListeners, textColor, buttonColor]);
+
+  useEffect(() => {
+    // needs to run when stampSize changes
+    if (backgroundColor.fill === true) {
+      console.log(backgroundColor);
+      var ctx = bgCanvasRef.current.getContext('2d')
+      ctx.fillStyle = backgroundColor.color.hex;
+      ctx.rect(0, 0, bgCanvasRef.current.width, bgCanvasRef.current.height);
+      ctx.fill();
+    }
+  }, [backgroundColor]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -809,6 +930,9 @@ function CompositorV3(props) {
             setTextColor={setTextColor}
             buttonColor={buttonColor}
             setButtonColor={setButtonColor}
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+            previewFinalCanvas={previewFinalCanvas}
           />
         }
 

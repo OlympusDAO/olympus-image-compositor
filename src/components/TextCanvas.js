@@ -1,10 +1,9 @@
 // TextCanvas = Background Canvas
 //
 // Allows user to upload & position a background onto a canvas
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
-  Grid,
   Box,
   TextField,
   Typography,
@@ -14,16 +13,21 @@ import {
   // CircularProgress,
   // Zoom,
 } from "@material-ui/core";
-import { SketchPicker } from 'react-color';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import { SketchPicker } from "react-color";
+import EyeDropper from "./EyeDropper";
 
 export default function TextCanvas(props) {
-
+  // const small = useMediaQuery('(min-width:600px)');
   const buttonColorRef = React.useRef(null);
   const textColorRef = React.useRef(null);
+  const backgroundColorRef = React.useRef(null);
   // const textColorString = props.textColor;
   // const buttonColorString = props.buttonColor;
   const [displayTextPicker, setDisplayTextPicker] = useState(false);
   const [displayButtonPicker, setDisplayButtonPicker] = useState(false);
+  const [displayBackgroundPicker, setDisplayBackgroundPicker] = useState(false);
 
   const handleChange = (e) => {
     var t;
@@ -32,6 +36,13 @@ export default function TextCanvas(props) {
       console.log("handleChange", e.target.value);
       props.setUserName(e.target.value);
     }, 300);
+  };
+
+  const handleBackgroundColor = (color) => {
+    console.log("backgroundColor", color);
+    // buttonColorRef.current.value = color;
+    // TODO figure this out
+    props.setBackgroundColor({fill: true, color: color});
   };
 
   const handleButtonColor = (color) => {
@@ -53,14 +64,24 @@ export default function TextCanvas(props) {
       borderRadius: '2px',
     };
     var backgroundStyles;
-    if (whichSwatch === "text") {
-      backgroundStyles = {
-        background: `rgba(${ props.textColor.rgb.r }, ${ props.textColor.rgb.g }, ${ props.textColor.rgb.b }, ${ props.textColor.rgb.a })`,
-      };
-    } else {
-      backgroundStyles = {
-        background: `rgba(${ props.buttonColor.rgb.r }, ${ props.buttonColor.rgb.g }, ${ props.buttonColor.rgb.b }, ${ props.buttonColor.rgb.a })`,
-      };
+    switch (whichSwatch) {
+      case "text":
+        backgroundStyles = {
+          background: `rgba(${ props.textColor.rgb.r }, ${ props.textColor.rgb.g }, ${ props.textColor.rgb.b }, ${ props.textColor.rgb.a })`,
+        };
+        break;
+      case "button":
+        backgroundStyles = {
+          background: `rgba(${ props.buttonColor.rgb.r }, ${ props.buttonColor.rgb.g }, ${ props.buttonColor.rgb.b }, ${ props.buttonColor.rgb.a })`,
+        };
+        break;
+      case "background":
+        backgroundStyles = {
+          background: `rgba(${ props.backgroundColor.color.rgb.r }, ${ props.backgroundColor.color.rgb.g }, ${ props.backgroundColor.color.rgb.b }, ${ props.backgroundColor.color.rgb.a })`,
+        };
+        break;
+      default:
+        console.warn("you MUST set a whichSwatch");
     }
 
     return {
@@ -111,6 +132,44 @@ export default function TextCanvas(props) {
     setDisplayButtonPicker(false);
   };
 
+  const clickBackgroundSwatch = () => {
+    console.log('clicked');
+    setDisplayBackgroundPicker(true);
+  };
+  
+  const closeBackgroundSwatch = () => {
+    console.log('clicked');
+    setDisplayBackgroundPicker(false);
+  };
+
+  const eyeDropperClick = (which, e) => {
+    if (which === "text") {
+      closeTextSwatch();
+    } else if (which === "button") {
+      console.log('eyeDropperClick');
+      closeButtonSwatch();
+      // 1A. draw pickerCanvas (background + pfp) set z-index = 2
+      // 1B. set cursor: "crosshair"
+      // 2. addEventListener "click" (to picker canvas)
+      // 3. pull color from canvas
+      // 4. hide pickerCanvas
+      // 5. re-open swatch
+      // 6. set color in swatch & on text or button or background
+    } else {
+      closeBackgroundSwatch();
+    }
+    props.previewFinalCanvas(which);
+  };
+
+  useEffect(() => {
+    if (displayTextPicker) {
+      // add element
+      // textColorRef.current.
+    } else if (displayButtonPicker) {
+      // add Element
+    }
+  }, [displayButtonPicker, displayTextPicker])
+
   return (
     <Box style={{marginBottom: "1em"}}>
       <TextField
@@ -119,25 +178,36 @@ export default function TextCanvas(props) {
         variant="filled"
         onChange={handleChange} />
 
-      <Grid component="label" container justifyContent="center" alignItems="center" spacing={1}>
-        <Grid item>
-          <Typography>Text Color</Typography>
+      <Box display="flex" justifyContent="space-evenly" alignItems="center" style={{maxWidth: "600px", margin: "auto"}}>
+        <Box item>
+          <Typography>Text</Typography>
           <Box style={ swatchStyle } onClick={ clickTextSwatch }>
             <Box style={ colorStyle("text") } />
           </Box>
-        </Grid> 
-        <Grid item>
-        <Typography>Button Text</Typography>
+        </Box> 
+        <Box item>
+          <Typography>Button Text</Typography>
           <Box style={ swatchStyle } onClick={ clickButtonSwatch }>
             <Box style={ colorStyle("button") } />
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+        <Box item>
+          <Typography>Background</Typography>
+          <Box style={ swatchStyle } onClick={ clickBackgroundSwatch }>
+            <Box style={ colorStyle("background") } />
+          </Box>
+        </Box>
+      </Box>
+
+      {/* <Box>
+        <CustomColorPicker colors={["#000000", "#FFFFFF"]}/>
+      </Box> */}
   
       <Box>
         { displayTextPicker ? (
             <div style={ popoverStyle }>
-              <div style={ coverStyle } onClick={ closeTextSwatch }/>
+              <div id="textcover" style={ coverStyle } onClick={ closeTextSwatch }/>
+              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("text", e)} />
               <SketchPicker
                 id="text-color"
                 ref={textColorRef}
@@ -151,7 +221,8 @@ export default function TextCanvas(props) {
         }
         { displayButtonPicker ? (
             <div style={ popoverStyle }>
-              <div style={ coverStyle } onClick={ closeButtonSwatch }/>
+              <div id="buttonCover" style={ coverStyle } onClick={ closeButtonSwatch }/>
+              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("button", e)} />
               <SketchPicker
                 id="button-color"
                 ref={buttonColorRef}
@@ -163,6 +234,21 @@ export default function TextCanvas(props) {
             </div>
           ) : (null)
         }
+        { displayBackgroundPicker ? (
+          <div style={ popoverStyle }>
+            <div id="buttonCover" style={ coverStyle } onClick={ closeBackgroundSwatch }/>
+            <EyeDropper eyeDropperClick={(e) => eyeDropperClick("background", e)} />
+            <SketchPicker
+              id="button-color"
+              ref={backgroundColorRef}
+              name='color'
+              // defaultValue={backgroundColorString}
+              color={props.backgroundColor}
+              onChangeComplete={handleBackgroundColor}
+            />
+          </div>
+        ) : (null)
+      }
       </Box>
     </Box>
   );
