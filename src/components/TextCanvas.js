@@ -142,19 +142,27 @@ export default function TextCanvas(props) {
     setDisplayBackgroundPicker(false);
   };
 
+  /**
+   * creates a Preview Canvas to allow color Picker to work its magic
+   * 
+   * Process:
+   *    1. draw pickerCanvas (background + pfp) set z-index = 2
+   *    2. set cursor: "crosshair"
+   *    3. addEventListener "click" (to picker canvas)
+   *    4. pull color from canvas
+   *    5. hide pickerCanvas
+   *    6. re-open swatch
+   *    7. set color in swatch & on text or button or background
+   * 
+   * @param {*} which string === "text", "button", OR "background"
+   * @param {*} e event, not required
+   */
   const eyeDropperClick = (which, e) => {
     if (which === "text") {
       closeTextSwatch();
     } else if (which === "button") {
       console.log('eyeDropperClick');
       closeButtonSwatch();
-      // 1A. draw pickerCanvas (background + pfp) set z-index = 2
-      // 1B. set cursor: "crosshair"
-      // 2. addEventListener "click" (to picker canvas)
-      // 3. pull color from canvas
-      // 4. hide pickerCanvas
-      // 5. re-open swatch
-      // 6. set color in swatch & on text or button or background
     } else {
       closeBackgroundSwatch();
     }
@@ -178,7 +186,7 @@ export default function TextCanvas(props) {
         variant="filled"
         onChange={handleChange} />
 
-      <Box display="flex" justifyContent="space-evenly" alignItems="center" style={{maxWidth: "600px", margin: "auto"}}>
+      <Box display="flex" justifyContent="space-evenly" alignItems="center" style={{maxWidth: "600px", margin: "auto", paddingTop: "6px"}}>
         <Box item>
           <Typography>Text</Typography>
           <Box style={ swatchStyle } onClick={ clickTextSwatch }>
