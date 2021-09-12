@@ -15,7 +15,7 @@ export default function EyeDropper(props) {
     zIndex: '3',
     top: "0",
     right: "0",
-    // width: "220px",
+    width: "220px",
     // paddingLeft: "20px",
     // paddingRight: "20px",
     height: "24px",
@@ -40,15 +40,15 @@ export default function EyeDropper(props) {
 
   const iconStyle = {
     // fontSize: "5.1875rem",
-    height: "100%",
-    width: "100%",
+    height: "24px",
+    // width: "220px",
     color: "black",
     flexDirection: "row-reverse",
   };
 
   return (
     <div style={ eyeDropperStyle } onClick={ props.eyeDropperClick }>
-      <Box style={containerStyle}>
+      <Box style={containerStyle} alignContent="center">
         <Box>
           <Icon
             viewBox="0 0 25 25"
