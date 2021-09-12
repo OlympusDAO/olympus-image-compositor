@@ -518,6 +518,9 @@ function CompositorV3(props) {
     // height 0 doesn't allow the image to be created...
     bgCanvasRef.current.style.display="none";
     pfpCanvasRef.current.style.display="none";
+    textCanvasRef.current.style.display="none";
+    finalCanvasRef.current.style.display="none";
+    canvasContainerRef.current.style.height = 0;
     canvasOrdering("long-press");
     setuiStep("long-press");
   }
@@ -537,6 +540,9 @@ function CompositorV3(props) {
       // make the canvas show again
       bgCanvasRef.current.style.display="block";
       pfpCanvasRef.current.style.display="block";
+      textCanvasRef.current.style.display="block";
+      finalCanvasRef.current.style.display="block";
+      canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
       // goToStepThree(true);
       goToTextStep();
     }
@@ -864,6 +870,7 @@ function CompositorV3(props) {
     drawFinalCanvas();
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
+
     if (isIOS && isMobile && !isMobileSafari) {
       // take us to uiStep(4)
       goToLongPress();
