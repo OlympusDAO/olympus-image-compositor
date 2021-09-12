@@ -645,6 +645,8 @@ function CompositorV3(props) {
       var ctx = bgCanvasRef.current.getContext('2d');
       ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
       setDPI(pfpCanvasRef, false);
+      setDPI(textCanvasRef, false);
+      setDPI(finalCanvasRef, false);
       setCanvasListeners();
     }
     
