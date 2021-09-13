@@ -4,7 +4,8 @@
 
 ## Current Roadmap
 
-- [ ] color picker & fill for background
+- [x] color picker & fill for background
 - [x] allow changing text & button color from black to white
 - [x] allow setting of name
-- [x] fix scaling on mobile *still not in love w it*
+- [x] fix scaling on mobile
+- [ ] add stock backgrounds

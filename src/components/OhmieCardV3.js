@@ -38,6 +38,7 @@ import sOhm from '../assets/token_sOHM.png';
 // import whiteButton from '../assets/whiteButton.png';
 // import blackButton from '../assets/blackButton.png';
 import classifyImage from "../helpers/classifyImage";
+import RGB2Hex from "../helpers/RGB2Hex";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -150,6 +151,19 @@ function CompositorV3(props) {
     hex: "#FFFFFF",
     rgb: {r: 255, g: 255, b: 255, a: 100},
   });
+
+  /**
+   * backgroundColor has two keys, denoted as params below
+   * @param {*} fill: true if we want to fill the background
+   * @param {*} color: the color to be used with react-color
+  */
+  const [backgroundColor, setBackgroundColor] = useState({
+    fill: false,
+    color: {
+      hex: "#FFFFFF",
+      rgb: {r: 255, g: 255, b: 255, a: 100},
+    },
+  });
   const [lastTextEvent, setLastTextEvent] = useState(null);
 
   const getViewWidth = () => {
@@ -190,7 +204,7 @@ function CompositorV3(props) {
       
       // Add the event listeners for mousedown, mousemove, and mouseup
       canvasOnly.addEventListener('mousedown', e => {
-        console.log("mousedown");
+        // console.log("mousedown");
         isDrawing = true;
       });
 
@@ -247,50 +261,91 @@ function CompositorV3(props) {
       }
       ///////////////
 
+      /**
+       * used in conjunction with `canvasOnly.width to determine whether user clicked on left half or right half
+       * @param {integer} offsetX position where user clicked
+       * @param {float} fontSize used to determine ht of 1st row
+       * @returns {array} x position, y position
+       */
+      const setTextLeftOrRight = (offsetX, fontSize) => {
+        // newY should be scaled based on canvasOnly.height
+        // const newY = 67 + fontSize;
+        var newY = 75/950 * canvasOnly.height;
+        var newX;
+        console.log("offsetX", offsetX, parseFloat(canvasOnly.style.width)/2, canvasOnly.style.width);
+        if ( offsetX < parseFloat(canvasOnly.style.width)/2 ) {
+          console.log("l");
+          // left
+          // newX = 67;
+          newX = 67/2154 * canvasOnly.width;
+
+        } else {
+          console.log("r");
+
+          // right
+          // desired: [x, y] = [375, 75] on [w, h] = [2154, 950]
+          // x/w === 375/2154
+          // y/h === 75/950
+          newX = 375/2154 * canvasOnly.width;
+          // newX = canvasOnly.width - 67;
+
+        }
+        console.log("return");
+
+        return [newX, newY];
+      }
+
       let name = userName;
       let nameString = "Meet " + name;
       let useTextColor = textColor.hex;
       let useButtonColor = buttonColor.hex;
       
       const textToApply = (e) => {
+        var fontSize;
+        fontSize = (29/scalingRatio);
+        console.log("offsetX", e.offsetX, e.offsetY);
+        var [newX, newY] = setTextLeftOrRight(e.offsetX, fontSize);
+        console.log("r", newX, newY, e.offsetX, e.offsetY);
+        // return undefined;
+        // var [newX, newY] = [e.offsetX, e.offsetY];
+
         // let lineIndex = 0;
         // 32 tall in total
         // let fontSize = (32/scalingRatio);
-        var fontSize;
-        fontSize = (29/scalingRatio);
+        
         // let fontSize = 19;
 
-        console.log(scalingRatio, "fontSize", fontSize);
+        // console.log(scalingRatio, "fontSize", fontSize);
         ctx.fillStyle = useTextColor;
         ctx.font = fontSize+"px RedHatDisplay";
-        ctx.fillText(nameString, e.offsetX, e.offsetY);
+        ctx.fillText(nameString, newX, newY);
 
         // lineIndex 1 & 2 are 128 tall in total
         // lineIndex = 1;
         let linePosition = 64/scalingRatio;
         fontSize = (48/scalingRatio);
         ctx.font = "bold "+fontSize+"px RedHatDisplay";
-        ctx.fillText("They are earning", e.offsetX, e.offsetY+linePosition);
+        ctx.fillText("They are earning", newX, newY+linePosition);
         // lineIndex = 2;
         linePosition = 64/scalingRatio + linePosition;
-        ctx.fillText("5,000+% APY.", e.offsetX, e.offsetY+linePosition);
+        ctx.fillText("5,000+% APY.", newX, newY+linePosition);
 
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
         linePosition = 36/scalingRatio + linePosition;
         ctx.font = (21/scalingRatio)+"px RedHatDisplay";
-        ctx.fillText("When you’re ready, we’re ready with your", e.offsetX, e.offsetY+linePosition);
+        ctx.fillText("When you’re ready, we’re ready with your", newX, newY+linePosition);
         // lineIndex = 4;
         linePosition = 26/scalingRatio + linePosition;
-        ctx.fillText("Ohmie account. Earn rewards every 8 hours.", e.offsetX, e.offsetY+linePosition);
+        ctx.fillText("Ohmie account. Earn rewards every 8 hours.", newX, newY+linePosition);
 
         ///////////////////////////// BUTTON /////////////////////////////
         // button -> top left corner @ linePosition
         linePosition = 31/scalingRatio + linePosition;
-        // ctx.drawImage(button, e.offsetX, e.offsetY+linePosition)
+        // ctx.drawImage(button, newX, newY+linePosition)
         let radius = 28/scalingRatio;
-        let x = e.offsetX+radius;
-        let y = e.offsetY+linePosition+radius;
+        let x = newX+radius;
+        let y = newY+linePosition+radius;
         let length = 182/scalingRatio;
         
         // left semi-circle
@@ -390,7 +445,7 @@ function CompositorV3(props) {
   const goToBgStep = (image) => {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
+    setdirectionState({row: "Crop your image, then click 'Crop' at the bottom"});
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
@@ -463,6 +518,9 @@ function CompositorV3(props) {
     // height 0 doesn't allow the image to be created...
     bgCanvasRef.current.style.display="none";
     pfpCanvasRef.current.style.display="none";
+    textCanvasRef.current.style.display="none";
+    finalCanvasRef.current.style.display="none";
+    canvasContainerRef.current.style.height = 0;
     canvasOrdering("long-press");
     setuiStep("long-press");
   }
@@ -482,6 +540,9 @@ function CompositorV3(props) {
       // make the canvas show again
       bgCanvasRef.current.style.display="block";
       pfpCanvasRef.current.style.display="block";
+      textCanvasRef.current.style.display="block";
+      finalCanvasRef.current.style.display="block";
+      canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
       // goToStepThree(true);
       goToTextStep();
     }
@@ -590,6 +651,8 @@ function CompositorV3(props) {
       var ctx = bgCanvasRef.current.getContext('2d');
       ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
       setDPI(pfpCanvasRef, false);
+      setDPI(textCanvasRef, false);
+      setDPI(finalCanvasRef, false);
       setCanvasListeners();
     }
     
@@ -636,20 +699,27 @@ function CompositorV3(props) {
     ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
     ctx.drawImage(backup, 0, 0);
     ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
-  }
+  };
 
-  const resizeAndExport = () => {
+  const resizeAndExport = (preview) => {
     var thisCanvas = finalCanvasRef.current;
     if (thisCanvas.width !== fixedWidth) {
       var backup = thisCanvas.cloneNode(false);
       backup.getContext('2d').drawImage(thisCanvas, 0, 0);
 
-      thisCanvas.width = fixedWidth;
-      thisCanvas.height = fixedHeight;
-
-      thisCanvas.getContext('2d').drawImage(backup, 0,0,backup.width, backup.height, 0,0,fixedWidth, fixedHeight);
+      if (preview) {
+        thisCanvas.width = croppedBg.governing_width;
+        thisCanvas.height = croppedBg.governing_height;
+  
+        thisCanvas.getContext('2d').drawImage(backup, 0,0, croppedBg.governing_width, croppedBg.governing_height);  
+      } else {
+        thisCanvas.width = fixedWidth;
+        thisCanvas.height = fixedHeight;
+  
+        thisCanvas.getContext('2d').drawImage(backup, 0,0, backup.width, backup.height, 0, 0, fixedWidth, fixedHeight);  
+      }
     }
-  }
+  };
 
   // for bgCanvas
   // or maybe multiple?
@@ -659,10 +729,116 @@ function CompositorV3(props) {
     if (croppedBg) ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
     bgCanvasRef.current.height = 0;
     bgCanvasRef.current.style.height = 0;
+  };
+
+  function pick(event) {
+    var x = event.layerX;
+    var y = event.layerY;
+    var pixel = finalCanvasRef.current.getContext("2d").getImageData(x, y, 1, 1);
+    var data = pixel.data;
+  
+    // const rgba = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
+    // destination.style.background = rgba;
+    // destination.textContent = rgba;
+    // console.log(rgba);
+    const hex = RGB2Hex(data[0], data[1], data[2]);
+    // console.log(hex);
+    const colorHash = {
+      hex: hex,
+      rgb: {r: data[0], g: data[1], b: data[2], a: 100},
+    }
+    return colorHash;
+  };
+
+  const getCanvasColor = (e) => {
+    // console.log("mouse", e);
+    finalCanvasRef.current.style.zIndex = -3;
+    var colorHash = pick(e);
+    // console.log(colorHash);
+    return colorHash;
+  };
+
+  /**
+   * TextMouseUp, ButtonMouseUp, BackgroundMouseUp are repeated 3 times bc we couldn't find a way to pass "whichColor"
+   * through the eventListener properly
+   */
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const textMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', textMouseUp);
+    setTextColor(colorHash);
+  };
+
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const buttonMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', buttonMouseUp);
+    setButtonColor(colorHash);
+  };
+
+  /**
+   * 
+   * @param {*} e 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const backgroundMouseUp = (e) => {
+    var colorHash = getCanvasColor(e);
+    finalCanvasRef.current.removeEventListener('mouseup', backgroundMouseUp);
+    setBackgroundColor({fill: true, color: colorHash});
+  };
+
+  /**
+   * 
+   * @param {String} whichColor "text", "button", or "background", denoting which color we are picking for
+   */
+  const previewFinalCanvas = (whichColor) => {
+    // 1A. draw pickerCanvas (background + pfp) set z-index = 2
+    // 1B. set cursor: "crosshair"
+    // 2. addEventListener "click" (to picker canvas)
+
+    drawFinalCanvas(true);
+    // setDPI(finalCanvasRef, false);
+    // var ctx = finalCanvasRef.current.getContext('2d');
+    // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    // ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+    // // draw Text
+    // ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
+
+    finalCanvasRef.current.style.zIndex = 3;
+    finalCanvasRef.current.style.cursor = "crosshair";
+
+    // console.log(whichColor);
+    switch (whichColor) {
+      case "text":
+        finalCanvasRef.current.addEventListener('mouseup', textMouseUp);
+        break;
+      case "button":
+        finalCanvasRef.current.addEventListener('mouseup', buttonMouseUp);
+        break;
+      case "background":
+        finalCanvasRef.current.addEventListener('mouseup', backgroundMouseUp);
+        break;
+      default:
+        console.warn("You MUST pass a whichColor param");
+    }
   }
 
-  const drawFinalCanvas = () => {
-    setDPI(finalCanvasRef, "final")
+  /**
+   * 
+   * @param {bool} preview is optional
+   */
+  const drawFinalCanvas = (preview) => {
+    var dpiType = "final";
+    // if (preview) dpiType = "preview";
+    setDPI(finalCanvasRef, dpiType);
 
     // // ratio of screen height to original
     // var scaleFactor = croppedBg.governing_height/croppedBg.height;
@@ -686,14 +862,15 @@ function CompositorV3(props) {
     // finalCanvasRef.current.width = croppedBg.width;
     // finalCanvasRef.current.height = croppedBg.height;
     // finalDPI(finalCanvasRef);
-    resizeAndExport();
-  }
+    resizeAndExport(preview);
+  };
 
   const downloadImage = () => {
     // first combine the canvases onto finalCanvasRef
     drawFinalCanvas();
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
+
     if (isIOS && isMobile && !isMobileSafari) {
       // take us to uiStep(4)
       goToLongPress();
@@ -717,14 +894,21 @@ function CompositorV3(props) {
     setIsLoading(false);
   };
 
-  // const changeUserName = (v) => {
-  //   setUserName(v);
-  // }
-
   useEffect(() => {
     // needs to run when stampSize changes
     applyTextListeners();
   }, [userName, applyTextListeners, textColor, buttonColor]);
+
+  useEffect(() => {
+    // needs to run when stampSize changes
+    if (backgroundColor.fill === true) {
+      // console.log(backgroundColor);
+      var ctx = bgCanvasRef.current.getContext('2d')
+      ctx.fillStyle = backgroundColor.color.hex;
+      ctx.rect(0, 0, bgCanvasRef.current.width, bgCanvasRef.current.height);
+      ctx.fill();
+    }
+  }, [backgroundColor]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -809,6 +993,9 @@ function CompositorV3(props) {
             setTextColor={setTextColor}
             buttonColor={buttonColor}
             setButtonColor={setButtonColor}
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+            previewFinalCanvas={previewFinalCanvas}
           />
         }
 
@@ -852,7 +1039,14 @@ function CompositorV3(props) {
             <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
               Next
             </Button>
+            <div style={{flexGrow: "0"}}>
+                <div style={{display: "flex", flexFlow: "column wrap"}}>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Don't like your background?</Typography>
+                  <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can bucket fill it on next step.</Typography>
+                </div>
+              </div>
           </Box>
+          
         }
 
         {uiStep === "text" && 
