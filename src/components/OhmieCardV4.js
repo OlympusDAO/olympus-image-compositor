@@ -10,11 +10,10 @@
 //   - editing should occur within each layer.js component
 import {
   Box,
-  Paper,
   Typography,
   Button,
   CircularProgress,
-  Zoom,
+  Fade
 } from "@material-ui/core";
 import {
   isIOS,
@@ -25,8 +24,11 @@ import {
   // deviceDetect,
   // browserName
 } from "react-device-detect";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CloudUploadIcon from "./CloudUploadIcon.js";
 
 import React, {useState, useEffect, useCallback} from 'react';
+import { useHistory } from "react-router-dom";
 
 import {useDropzone} from 'react-dropzone';
 
@@ -52,16 +54,6 @@ import WelcomeHeadline from "./WelcomeHeadline";
 
 // import { dark } from "../themes/dark";
 
-const canvasContainer = {
-  // display: 'flex',
-  // flexDirection: 'row',
-  // flexWrap: 'wrap',
-  // marginTop: 16,
-  margin: 'auto',
-  width: "100%",
-  position: "relative",
-};
-
 const canvasStyle = {
   margin: "auto",
   position: "absolute",
@@ -76,7 +68,13 @@ const dropContainerStyle = {
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
 
-function CompositorV3(props) {
+function OhmieCardV4(props) {
+  let history = useHistory();
+
+  const medScreen = useMediaQuery('(min-width:900px)');
+  const [fadeTransition, setFadeTransition] = useState(true);  
+  const fadeOutMs = 666;
+
   var sOhmImg = new Image();
   sOhmImg.src = sOhm;
   sOhmImg = classifyImage(sOhmImg);
@@ -96,20 +94,64 @@ function CompositorV3(props) {
   const windowSize = useWindowSize();
 
   const areaHt = (windowSize.height*0.7 ) || 0;
+  // TODO (appleseed): fix areaWd;
+  const areaWd = windowSize.width*0.8;
+  const areaMaxWd = 1100;
 
-  const compositorPaper = {
-    padding: "15px",
-    textAlign: "center",
-    // marginBottom: "20px",
-  }
+  const objectFromScreenWidth = () => {
+    if (medScreen) {
+      return 0;
+    } else {
+      return areaWd-20;
+    }
+  };
+  
+  const objectFromScreenHeight = () => {
+    if (medScreen) {
+      return areaHt-20;
+    } else {
+      return 0;
+    }
+  };
 
+  // const dropContainerStyleR1 = {
+  //   display: "flex",
+  //   flexFlow: "column wrap",
+  //   justifyContent: "center",
+  //   // width: objectFromScreenWidth(),
+  //   width: "100%",
+  // }
+
+  const canvasContainer = {
+    // display: 'flex',
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // marginTop: 16,
+    // margin: 'auto',
+    // width: "100%",
+    // position: "relative",
+  };
+
+  // const dropZoneReg = {
+  //   display: "flex",
+  //   flexFlow: "column wrap",
+  //   alignItems: "center",
+  //   cursor: "pointer",
+  //   height: areaHt
+  // }
   const dropZoneReg = {
     display: "flex",
     flexFlow: "column wrap",
-    alignItems: "center",
+    justifyContent: "center",
     cursor: "pointer",
-    height: areaHt
-  }
+    maxHeight: "450px",
+    height: areaHt,
+    width: areaWd,
+    // TODO (appleseed): this width needs to be capped on mobile
+    // ... also should handle border correctly
+    maxWidth: areaMaxWd,
+    alignItems: "center",
+  };
 
   const outlineButton = {
     height: "33px",
@@ -895,6 +937,14 @@ function CompositorV3(props) {
     setIsLoading(false);
   };
 
+  const goBackToRoot = () => {
+    setFadeTransition(false);
+    setTimeout(() => {
+      // setFadeTransition(true);
+      history.push("/");
+    }, fadeOutMs*0.75);
+  };
+
   useEffect(() => {
     // needs to run when stampSize changes
     applyTextListeners();
@@ -917,168 +967,230 @@ function CompositorV3(props) {
   }, [stampSize, setCanvasListeners, croppedBg, stampFile]);
 
   return (
-    <Box>
-      <WelcomeHeadline />
-      <Zoom in={true}>
-        <Paper ref={viewContainerRef} className={`ohm-card`} elevation={3} style={compositorPaper}>
-          {/* direction text */}
-          {Object.entries(directionState).map(([key, value]) => (
-            <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-          ))}
-          
-          {/* working on loader */}
-          {isLoading &&
-            <CircularProgress />
-          }
+    <Fade ref={viewContainerRef} in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>
+      <Box>
+        <WelcomeHeadline headline={"Ohmie Card"} subText={"Personalized card to show off your gains."}/>
+        {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
+        <Box id="outer-wrap" className="module-border-wrap">
+          {/*<Box display="flex" alignItems="center" className="module">*/}
+          <Box display="flex" alignItems="center" className="module">
+            <Box className="rectangle-1-backdrop pof-box">
+              <Box className="inner-module-border-wrap" style={{margin: "10px"}}>
+                <Box className="inner-module">
+                  <Box
+                    className="inner-pof-box rectangle-2-backdrop"
+                    style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}
+                  >
+                    {/* direction text */}
+                    {Object.entries(directionState).map(([key, value]) => (
+                      <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
+                    ))}
+                    
+                    {/* working on loader */}
+                    {isLoading &&
+                      <CircularProgress />
+                    }
 
-          {uiStep === 1 &&
-            <div className="dropContainer" style={dropContainerStyle}>
-              <div {...getRootProps({style: dropZoneReg})}>
-                <input {...getInputProps()} />
-                <div  style={{flexGrow: "1", display: "flex", alignItems: "center"}}>
-                  <Typography variant="h5" color="textSecondary">Upload your background. Click to Start.</Typography>
-                </div>
-                
-                <div style={{flexGrow: "0"}}>
-                  <div style={{display: "flex", flexFlow: "column wrap"}}>
-                    <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
-                    <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
+                    {uiStep === 1 &&
+                      <div className="dropContainer" style={dropContainerStyle}>
+                        <div {...getRootProps({style: dropZoneReg})}>
+                          <input {...getInputProps()} />
+                          <Box className="dropzone-interior-container vertical-centered-flex">
+                            <Box><CloudUploadIcon viewBox="0 0 102 48"/></Box>
+                            <Box className="vertical-centered-flex">
+                              <Typography className="pof-dropbox-text">Drag and Drop here</Typography>
+                              <Typography className="pof-dropbox-text">or</Typography>
+                            </Box>
+                            <Button
+                              id="upload-pfp-button"
+                              variant="contained"
+                              className="ohmie-button"
+                            >
+                              <Typography className="btn-text">Upload file</Typography>
+                            </Button>
+                          </Box>
+                          
+                          <div style={{flexGrow: "0"}}>
+                            <div style={{display: "flex", flexFlow: "column wrap"}}>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
 
-          {/* Background Cropper */}
-          {uiStep === "bg" && fileImage &&
-            <BgCanvas
-              ref={{cropperRef: cropperRef, cropperContainerRef: cropperContainerRef}}
-              imageLoaded={imageLoaded}
-              setCroppedBg={setCroppedBg}
-              goBackOneStep={goBackOneStep}
-              goToPfpStep={goToPfpStep}
-              fileImage={fileImage}
-              outlineButtonStyle={outlineButton}
-              containerButtonStyle={containerButton}
-              areaHt={areaHt}
-              fileImageType={fileImageType}
-              containerStyle={dropContainerStyle}
-              aspectRatio={fixedWidth/fixedHeight}
-            />
-          }
+                    {/* Background Cropper */}
+                    {uiStep === "bg" && fileImage &&
+                      <BgCanvas
+                        ref={{cropperRef: cropperRef, cropperContainerRef: cropperContainerRef}}
+                        imageLoaded={imageLoaded}
+                        setCroppedBg={setCroppedBg}
+                        goBackOneStep={goBackOneStep}
+                        goToPfpStep={goToPfpStep}
+                        fileImage={fileImage}
+                        outlineButtonStyle={outlineButton}
+                        containerButtonStyle={containerButton}
+                        areaHt={areaHt}
+                        fileImageType={fileImageType}
+                        containerStyle={dropContainerStyle}
+                        aspectRatio={fixedWidth/fixedHeight}
+                      />
+                    }
 
-          {/* Logo Resizing */}
-          {uiStep === "pfp" &&
-            <PfpCanvas
-              ref={{stampInputRef: stampInputRef}}
-              setStampSize={setStampSize}
-              setStampFile={setStampFile}
-              stampFile={stampFile}
-              stampSize={stampSize}
-              maxHt = {parseFloat(bgCanvasRef.current.style.height)}
-            />
-          }
+                    {/* Logo Resizing */}
+                    {uiStep === "pfp" &&
+                      <PfpCanvas
+                        ref={{stampInputRef: stampInputRef}}
+                        setStampSize={setStampSize}
+                        setStampFile={setStampFile}
+                        stampFile={stampFile}
+                        stampSize={stampSize}
+                        maxHt = {parseFloat(bgCanvasRef.current.style.height)}
+                      />
+                    }
 
-          {/* Logo Resizing */}
-          {uiStep === "text" &&
-            <TextCanvas
-              setUserName={setUserName}
-              // applyTextListeners={applyTextListeners}
-              textColor={textColor}
-              setTextColor={setTextColor}
-              buttonColor={buttonColor}
-              setButtonColor={setButtonColor}
-              backgroundColor={backgroundColor}
-              setBackgroundColor={setBackgroundColor}
-              previewFinalCanvas={previewFinalCanvas}
-            />
-          }
+                    {/* Logo Resizing */}
+                    {uiStep === "text" &&
+                      <TextCanvas
+                        setUserName={setUserName}
+                        // applyTextListeners={applyTextListeners}
+                        textColor={textColor}
+                        setTextColor={setTextColor}
+                        buttonColor={buttonColor}
+                        setButtonColor={setButtonColor}
+                        backgroundColor={backgroundColor}
+                        setBackgroundColor={setBackgroundColor}
+                        previewFinalCanvas={previewFinalCanvas}
+                      />
+                    }
 
-          {/* Image Resizer was here... but didn't look right */}  
-          {/* 
-            Notes for below (Step 3): 
-            1. canvas must ALWAYS be on screen
-            2. when we don't want the CroppedCanvas to appear we change height to 0
-          */}
-          <Box style={canvasContainer} ref={canvasContainerRef}>
-            <canvas
-              id="bgCanvas"
-              ref={bgCanvasRef}
-              style={canvasStyle}
-              height="0"
-            ></canvas>
-            <canvas
-              id="pfpCanvas"
-              ref={pfpCanvasRef}
-              style={canvasStyle}
-              height="0"
-            ></canvas>
-            <canvas
-              id="textCanvas"
-              ref={textCanvasRef}
-              style={canvasStyle}
-              height="0"
-            ></canvas>
-            <canvas
-              id="canvas"
-              ref={finalCanvasRef}
-              style={canvasStyle}
-              height="0"
-            ></canvas>
-          </Box>
-          {uiStep === "pfp" && croppedBg &&
-            <Box textAlign='center'>
-              <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
-                Next
-              </Button>
-              <div style={{flexGrow: "0"}}>
-                  <div style={{display: "flex", flexFlow: "column wrap"}}>
-                    <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Don't like your background?</Typography>
-                    <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can bucket fill it on next step.</Typography>
-                  </div>
-                </div>
-            </Box>
-            
-          }
+                    {/* Image Resizer was here... but didn't look right */}  
+                    {/* 
+                      Notes for below (Step 3): 
+                      1. canvas must ALWAYS be on screen
+                      2. when we don't want the CroppedCanvas to appear we change height to 0
+                    */}
+                    <Box style={canvasContainer} ref={canvasContainerRef}>
+                      <canvas
+                        id="bgCanvas"
+                        ref={bgCanvasRef}
+                        style={canvasStyle}
+                        width={objectFromScreenWidth()}
+                        height={objectFromScreenHeight()}
+                      ></canvas>
+                      <canvas
+                        id="pfpCanvas"
+                        ref={pfpCanvasRef}
+                        style={canvasStyle}
+                        width={objectFromScreenWidth()}
+                        height={objectFromScreenHeight()}
+                      ></canvas>
+                      <canvas
+                        id="textCanvas"
+                        ref={textCanvasRef}
+                        style={canvasStyle}
+                        width={objectFromScreenWidth()}
+                        height={objectFromScreenHeight()}
+                      ></canvas>
+                      <canvas
+                        id="canvas"
+                        ref={finalCanvasRef}
+                        style={canvasStyle}
+                        width={objectFromScreenWidth()}
+                        height={objectFromScreenHeight()}
+                      ></canvas>
+                    </Box>
+                    {uiStep === "pfp" && croppedBg &&
+                      <Box textAlign='center'>
+                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                          Back
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
+                          Next
+                        </Button>
+                        <div style={{flexGrow: "0"}}>
+                            <div style={{display: "flex", flexFlow: "column wrap"}}>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Don't like your background?</Typography>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can bucket fill it on next step.</Typography>
+                            </div>
+                          </div>
+                      </Box>
+                      
+                    }
 
-          {uiStep === "text" && 
-            <Box textAlign='center'>
-              <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
-                Download Ohmie Card
-              </Button>
-            </Box>
-          }
+                    {uiStep === "text" && 
+                      <Box textAlign='center'>
+                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                          Back
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
+                          Download Ohmie Card
+                        </Button>
+                      </Box>
+                    }
 
-          {uiStep === "long-press" &&
-            <div>
-              <img
-                alt="finalImage"
-                src={finalCanvasRef.current.toDataURL(fileImageType, 1)}
-                style={{
-                  height: finalCanvasRef.current.style.height,
-                  width: finalCanvasRef.current.style.width,
-                }}
-              />
-              <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                  Back
-                </Button>
-                <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                Download Ohmie Card
-                </Button>
+                    {uiStep === "long-press" &&
+                      <div>
+                        <img
+                          alt="finalImage"
+                          src={finalCanvasRef.current.toDataURL(fileImageType, 1)}
+                          style={{
+                            height: finalCanvasRef.current.style.height,
+                            width: finalCanvasRef.current.style.width,
+                          }}
+                        />
+                        <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
+                          <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                            Back
+                          </Button>
+                          <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
+                          Download Ohmie Card
+                          </Button>
+                        </Box>
+                      </div>
+                    }
+                  </Box>
+                </Box>
               </Box>
-            </div>
-          }
-        </Paper>
-      </Zoom>
-    </Box>
+            </Box>
+          </Box>
+        </Box>
+        {uiStep === 1 &&
+          <Box className="two-btns-horizontal">
+            <Button
+              id="upload-pfp-button"
+              variant="contained"
+              className="ohmie-button"
+              onClick={goBackToRoot}
+            >
+              <Typography className="btn-text">Take Me Back Ser</Typography>
+            </Button>
+          </Box>
+        }
+        {uiStep === "bg" && fileImage &&
+          <Box className="two-btns-horizontal">
+            <Button
+              id="upload-pfp-button"
+              variant="contained"
+              className="ohmie-button"
+              onClick={goBackOneStep}
+            >
+              <Typography className="btn-text">Take Me Back Ser</Typography>
+            </Button>
+            <Button
+              id="upload-pfp-button"
+              variant="contained"
+              className="ohmie-button"
+              onClick={goToPfpStep}
+            >
+              <Typography className="btn-text">Confirm</Typography>
+            </Button>
+          </Box>
+        }
+      </Box>
+    </Fade>
   );
 }
 
-export default CompositorV3;
+export default OhmieCardV4;

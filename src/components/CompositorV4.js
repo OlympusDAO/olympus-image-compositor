@@ -3,7 +3,7 @@ import {
   Typography,
   Button,
   CircularProgress,
-  Grow,
+  Fade,
 } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
@@ -71,9 +71,14 @@ function CompositorV2(props) {
   const windowSize = useWindowSize();
 
   const areaHt = (windowSize.height*0.6 ) || 0;
-  // TODO (appleseed): fix areaWd;
-  const areaWd = areaHt;
-  const areaMaxWd = windowSize.width*0.7;
+  const areaMaxWd = windowSize.width*0.8;
+  var areaWd;
+  if (medScreen) {
+    areaWd = areaHt;
+  } else {
+    areaWd = areaMaxWd;
+  }
+  
 
   const canvasContainer = {
     // display: 'flex',
@@ -458,12 +463,12 @@ function CompositorV2(props) {
   }, [stampSize, setCanvasListeners, fileCropped]);
 
   return (
-    <Grow in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>
+    <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>
       <Box>
         <WelcomeHeadline headline={"Proof of Ohmie"} subText={"Show everyone that you're staked (3,3)."}/>
         
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
-        <Box id="pof-card-trigger" className="module-border-wrap">
+        <Box id="outer-wrap" className="module-border-wrap">
           <Box display="flex" alignItems="center" className="module">
             <Box className="rectangle-1-backdrop pof-box">
               <Box className="inner-module-border-wrap" style={{margin: "10px"}}>
@@ -641,7 +646,7 @@ function CompositorV2(props) {
           </Box>
         }
       </Box>
-    </Grow>
+    </Fade>
   );
 }
 

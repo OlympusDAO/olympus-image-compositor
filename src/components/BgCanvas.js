@@ -9,7 +9,7 @@ import {
   Box,
   // Paper,
   // Typography,
-  Button,
+  // Button,
   // CircularProgress,
   // Zoom,
 } from "@material-ui/core";
@@ -61,14 +61,6 @@ const BgCanvas = React.forwardRef((props, ref) => {
           ready={props.imageLoaded}
           ref={cropperRef}
         />
-        <Box textAlign='center'>
-          <Button variant="outlined" color="primary" onClick={props.goBackOneStep} style={props.outlineButtonStyle}>
-            Back
-          </Button>
-          <Button variant="contained" color="primary" onClick={props.goToPfpStep} style={props.containerButtonStyle}>
-            Crop
-          </Button>
-        </Box>
       </Box>
     </Box>
     

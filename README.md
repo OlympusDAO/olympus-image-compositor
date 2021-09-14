@@ -9,10 +9,14 @@
 - [x] allow setting of name
 - [x] fix scaling on mobile
 - [ ] add stock backgrounds
+- [ ] fix text weight on Ohmie cards
+- [ ] add API to APY
+- [ ] Test on various image sizes, portrait, landscape, etc.
+- [ ] change the url preview
 
 ## Stying Updates
 
-- [ ] figure out vertical & horiztonal placement of WelcomeHeadline
+- [ ] figure out vertical & horizontal placement of WelcomeHeadline
 - [ ] take another look at the BoxHomepage Card borders...
 
 WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/commit/948949371dac4beefde40e539be44fe23fb78ca1):

@@ -81,11 +81,14 @@ function BoxHomepage() {
     opacity: "0.8",
   };
 
-  const clickCardTrigger = () => {
+  /**
+   * @param {String} toPath should be "/pof" or "/ohmiecard"
+   */
+  const clickCardTrigger = (toPath) => {
     setFadeTransition(false);
     setTimeout(() => {
       // setFadeTransition(true);
-      history.push("/pof");
+      history.push(toPath);
     }, fadeOutMs*0.75);
   };
 
@@ -97,7 +100,7 @@ function BoxHomepage() {
             Card Box (below)
             // TODO: should have click handlers & hover
           */}
-          <Box id="pof-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={clickCardTrigger}>
+          <Box id="pof-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/pof")}}>
             <Box display="flex" alignItems="center" className="module">
               <Box className="rectangle-1-backdrop card-nav">
                 <Box style={textContainerStyles}>
@@ -122,7 +125,7 @@ function BoxHomepage() {
             Card Box (below)
             // TODO: should have click handlers & hover
           */}
-          <Box id="ohmie-card-trigger" class="homepage-box-trigger module-border-wrap" onClick={clickCardTrigger}>
+          <Box id="ohmie-card-trigger" class="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/ohmiecard")}}>
             <Box display="flex" alignItems="center" className="module">
               <Box className="rectangle-1-backdrop card-nav">
                 <Box style={textContainerStyles}>
