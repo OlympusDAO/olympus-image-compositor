@@ -9,3 +9,8 @@
 - [x] allow setting of name
 - [x] fix scaling on mobile
 - [ ] add stock backgrounds
+
+## Stying Updates
+
+- [ ] figure out vertical & horiztonal placement of WelcomeHeadline
+- [ ] take another look at the BoxHomepage Card borders...

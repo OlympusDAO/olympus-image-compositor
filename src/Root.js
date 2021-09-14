@@ -2,8 +2,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 // import useGoogleAnalytics from "./hooks/useGoogleAnalytics";
 
-import { dark as darkTheme } from "./themes/dark.js"
-// import { light as lightTheme } from "./themes/light.js";
+// import { dark as darkTheme } from "./themes/dark.js"
+import { figma as figmaTheme } from "./themes/figma.js";
 import "./style.scss";
 
 import App from "./App";
@@ -14,7 +14,7 @@ import {
 
 function Root() {
   // useGoogleAnalytics();
-  let themeMode = darkTheme;
+  let themeMode = figmaTheme;
   return (
     <BrowserRouter basename={"/#"}>
       <ThemeProvider theme={themeMode}>
