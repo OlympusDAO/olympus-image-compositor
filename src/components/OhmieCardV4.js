@@ -481,7 +481,7 @@ function OhmieCardV4(props) {
   );
     
   const step1Direction = {row: ""};
-  const [setdirectionState] = useState(step1Direction);
+  const [directionState, setdirectionState] = useState(step1Direction);
   // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
   // uiSteps
@@ -496,6 +496,7 @@ function OhmieCardV4(props) {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
     setdirectionState({row: ""});
+    console.log(directionState);
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
