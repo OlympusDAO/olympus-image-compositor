@@ -59,6 +59,7 @@ const canvasStyle = {
   position: "absolute",
   top: 0,
   left: 0,
+  borderRadius: "16px",
 }
 
 const dropContainerStyle = {
@@ -122,14 +123,20 @@ function OhmieCardV4(props) {
   //   width: "100%",
   // }
 
-  const canvasContainer = {
-    // display: 'flex',
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // marginTop: 16,
-    // margin: 'auto',
-    // width: "100%",
-    // position: "relative",
+  // const canvasContainer = {
+  //   // display: 'flex',
+  //   // flexDirection: 'row',
+  //   // flexWrap: 'wrap',
+  //   // marginTop: 16,
+  //   // margin: 'auto',
+  //   // width: "100%",
+  //   // position: "relative",
+  // };
+
+  const cropperCanvasContainer = {
+    width: (areaWd+20),
+    margin: "10px",
+    borderRadius: "16px",
   };
 
   // const dropZoneReg = {
@@ -144,7 +151,7 @@ function OhmieCardV4(props) {
     flexFlow: "column wrap",
     justifyContent: "center",
     cursor: "pointer",
-    maxHeight: "450px",
+    // maxHeight: "450px",
     height: areaHt,
     width: areaWd,
     // TODO (appleseed): this width needs to be capped on mobile
@@ -474,7 +481,7 @@ function OhmieCardV4(props) {
   );
     
   const step1Direction = {row: ""};
-  const [directionState, setdirectionState] = useState(step1Direction);
+  const [setdirectionState] = useState(step1Direction);
   // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
   // uiSteps
@@ -488,7 +495,7 @@ function OhmieCardV4(props) {
   const goToBgStep = (image) => {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: "Crop your image, then click 'Crop' at the bottom"});
+    setdirectionState({row: ""});
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
@@ -531,7 +538,7 @@ function OhmieCardV4(props) {
     //   row4: "3. Click 'Download pfp' at the bottom",
     // });
     setdirectionState({
-      row: "Click to place your pfp, then click 'Next'"
+      row: ""
     });
 
     // which canvas should be shown?
@@ -656,6 +663,7 @@ function OhmieCardV4(props) {
     const setCanvasDims = () => {
       // set container height
       canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
+      canvasContainerRef.current.style.width = croppedBg.governing_width + "px";
 
       bgCanvasRef.current.style.height = croppedBg.governing_height + "px";
       bgCanvasRef.current.style.width = croppedBg.governing_width + "px";
@@ -979,13 +987,16 @@ function OhmieCardV4(props) {
                 <Box className="inner-module">
                   <Box
                     className="inner-pof-box rectangle-2-backdrop"
-                    style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}
+                    style={{
+                      flexFlow: "column",
+                      justifyContent: "space-between",
+                      // height: areaHt,
+                      // width: areaWd,
+                      // // TODO (appleseed): this width needs to be capped on mobile
+                      // // ... also should handle border correctly
+                      // maxWidth: areaMaxWd,
+                    }}
                   >
-                    {/* direction text */}
-                    {Object.entries(directionState).map(([key, value]) => (
-                      <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-                    ))}
-                    
                     {/* working on loader */}
                     {isLoading &&
                       <CircularProgress />
@@ -1019,7 +1030,7 @@ function OhmieCardV4(props) {
                         </div>
                       </div>
                     }
-
+                    {/*<Box id="mainContainer">*/}
                     {/* Background Cropper */}
                     {uiStep === "bg" && fileImage &&
                       <BgCanvas
@@ -1031,37 +1042,11 @@ function OhmieCardV4(props) {
                         fileImage={fileImage}
                         outlineButtonStyle={outlineButton}
                         containerButtonStyle={containerButton}
+                        cropperContainerStyle={cropperCanvasContainer}
                         areaHt={areaHt}
                         fileImageType={fileImageType}
                         containerStyle={dropContainerStyle}
                         aspectRatio={fixedWidth/fixedHeight}
-                      />
-                    }
-
-                    {/* Logo Resizing */}
-                    {uiStep === "pfp" &&
-                      <PfpCanvas
-                        ref={{stampInputRef: stampInputRef}}
-                        setStampSize={setStampSize}
-                        setStampFile={setStampFile}
-                        stampFile={stampFile}
-                        stampSize={stampSize}
-                        maxHt = {parseFloat(bgCanvasRef.current.style.height)}
-                      />
-                    }
-
-                    {/* Logo Resizing */}
-                    {uiStep === "text" &&
-                      <TextCanvas
-                        setUserName={setUserName}
-                        // applyTextListeners={applyTextListeners}
-                        textColor={textColor}
-                        setTextColor={setTextColor}
-                        buttonColor={buttonColor}
-                        setButtonColor={setButtonColor}
-                        backgroundColor={backgroundColor}
-                        setBackgroundColor={setBackgroundColor}
-                        previewFinalCanvas={previewFinalCanvas}
                       />
                     }
 
@@ -1071,7 +1056,8 @@ function OhmieCardV4(props) {
                       1. canvas must ALWAYS be on screen
                       2. when we don't want the CroppedCanvas to appear we change height to 0
                     */}
-                    <Box style={canvasContainer} ref={canvasContainerRef}>
+                    {/*<Box style={canvasContainer} ref={canvasContainerRef}>*/}
+                    <Box ref={canvasContainerRef}>
                       <canvas
                         id="bgCanvas"
                         ref={bgCanvasRef}
@@ -1101,6 +1087,38 @@ function OhmieCardV4(props) {
                         height={objectFromScreenHeight()}
                       ></canvas>
                     </Box>
+
+                    
+                    {/* Logo Resizing */}
+                    {(uiStep === "pfp" || uiStep === "text") &&
+                      <Box id="editable-features" display="flex" style={{flexFlow: "row wrap", width: "100%"}}>
+                        <Box style={{width: "50%"}}>
+                          <TextCanvas
+                            setUserName={setUserName}
+                            // applyTextListeners={applyTextListeners}
+                            textColor={textColor}
+                            setTextColor={setTextColor}
+                            buttonColor={buttonColor}
+                            setButtonColor={setButtonColor}
+                            backgroundColor={backgroundColor}
+                            setBackgroundColor={setBackgroundColor}
+                            previewFinalCanvas={previewFinalCanvas}
+                          />
+                        </Box>
+                        <Box style={{width: "50%"}}>
+                          <PfpCanvas
+                            ref={{stampInputRef: stampInputRef}}
+                            setStampSize={setStampSize}
+                            setStampFile={setStampFile}
+                            stampFile={stampFile}
+                            stampSize={stampSize}
+                            maxHt = {parseFloat(bgCanvasRef.current.style.height)}
+                          />
+                        </Box>
+                      </Box>
+                    }
+                    
+
                     {uiStep === "pfp" && croppedBg &&
                       <Box textAlign='center'>
                         <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
@@ -1109,14 +1127,7 @@ function OhmieCardV4(props) {
                         <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
                           Next
                         </Button>
-                        <div style={{flexGrow: "0"}}>
-                            <div style={{display: "flex", flexFlow: "column wrap"}}>
-                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Don't like your background?</Typography>
-                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can bucket fill it on next step.</Typography>
-                            </div>
-                          </div>
                       </Box>
-                      
                     }
 
                     {uiStep === "text" && 

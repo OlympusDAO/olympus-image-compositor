@@ -50,7 +50,8 @@ const BgCanvas = React.forwardRef((props, ref) => {
       <Box id="cropBoxContainer" ref={cropperContainerRef}>
         <Cropper
           src={fileImage.src}
-          style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
+          style={{ margin: "20px", height: fileImage.governing_height, width: fileImage.governing_width }}
+          // style={props.cropperContainerStyle}
           // Cropper.js options
           aspectRatio={props.aspectRatio}
           cropBoxResizable={false}
@@ -75,6 +76,7 @@ BgCanvas.propTypes = {
   fileImage: PropTypes.instanceOf(HTMLImageElement).isRequired,
   outlineButtonStyle: PropTypes.object.isRequired,
   containerButtonStyle: PropTypes.object.isRequired,
+  cropperContainerStyle: PropTypes.object.isRequired,
   areaHt: PropTypes.number.isRequired,
   fileImageType: PropTypes.string.isRequired,
   containerStyle: PropTypes.object.isRequired,
