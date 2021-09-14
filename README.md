@@ -14,3 +14,9 @@
 
 - [ ] figure out vertical & horiztonal placement of WelcomeHeadline
 - [ ] take another look at the BoxHomepage Card borders...
+
+WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/commit/948949371dac4beefde40e539be44fe23fb78ca1):
+
+- [ ] optimize for mobile
+- [ ] fix layout bugs on small screens (bottom of screen cutoff)
+- [ ] fix any TODO messages
