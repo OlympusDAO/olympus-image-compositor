@@ -9,10 +9,15 @@
     number = 0;
   }
   const array = number.toString().split(".");
-  if (array.length === 1) return number.toString();
-  if (precision === 0) return array[0].toString();
+  if (array.length === 1) return numberWithCommas(number.toString());
+  if (precision === 0) return numberWithCommas(array[0].toString());
 
   array.push(array.pop().substring(0, precision));
-  const trimmedNumber = array.join(".");
+  const trimmedNumber = numberWithCommas(array.join("."));
+  
   return trimmedNumber;
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

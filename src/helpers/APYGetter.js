@@ -46,7 +46,7 @@ export const getStakingAPY = async () => {
   const stakingReward = epoch.distribute;
   const stakingRebase = stakingReward / circ;
   const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
-  const trimmedStakingAPY = trim(stakingAPY * 100, 1);
+  const trimmedStakingAPY = trim(stakingAPY * 100, 0);
   return {raw: stakingAPY, formatted: trimmedStakingAPY};  
 };
 
