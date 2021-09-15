@@ -190,4 +190,8 @@
   margin-left: 24px;
   padding: 5px 25px 5px 8px !important;
   cursor: pointer !important;
+
+  &.noML {
+    margin-left: 0px;
+  }
 }

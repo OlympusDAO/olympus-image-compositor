@@ -318,7 +318,7 @@ export default function TextCanvas(props) {
         </Box>
       </Box>
       <Box style={{alignSelf: "flex-start"}}>
-        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickButtonSwatch } style={{marginLeft: "0px !important"}}>
+        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox noML" onClick={ clickButtonSwatch }>
           <span style={{marginRight: "10px"}}>Button Color</span>
           <Box style={ swatchStyle }>
             <Box style={ colorStyle("button") } />
