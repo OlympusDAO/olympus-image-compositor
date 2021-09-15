@@ -26,3 +26,6 @@ WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/
 
 - [X] center image resizer above slider
 - [ ] after download ohmie card, canvas is empty, skewed
+
+- [ ] start over button back to 1st step
+- [ ] go to last step

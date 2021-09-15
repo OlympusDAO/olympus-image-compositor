@@ -1031,8 +1031,6 @@ function OhmieCardV4(props) {
                             <div style={{display: "flex", flexFlow: "column wrap"}}>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
-                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "500", position: "absolute", top: "-100px"}}>Test</Typography>
-                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
                             </div>
                           </div>
                         </div>
@@ -1188,10 +1186,13 @@ function OhmieCardV4(props) {
             </Button>
           </Box>
         }
-        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "normal", position: "absolute", top: "-100px"}}>Test</Typography>
-        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "500", position: "absolute", top: "-100px"}}>Test</Typography>
-        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
 
+        {/* hiding text so that it is preloaded for canvas */}
+        <Box style={{overflow: "hidden", position: "relative"}}>
+          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "normal", position: "absolute", bottom: "-100px"}}>Test</Typography>
+          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "500", position: "absolute", bottom: "-100px"}}>Test</Typography>
+          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", bottom: "-100px"}}>Test</Typography>
+        </Box>
       </Box>
     </Fade>
   );

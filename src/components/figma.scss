@@ -118,9 +118,9 @@
 .ohmie-button {
   background-color: #FFFFFF !important;
   border-radius: 8px;
-  width: 160px;
-  height: 40px;
-  margin-top: 15px;
+  width: 200px;
+  height: 50px !important;
+  max-height: 50px !important;
 
   .btn-text {
     font-family: Open Sans;
@@ -136,6 +136,10 @@
   &:hover {
     // background-color: #e5e5e5 !important;
     background-color: #8FA3F1 !important;
+
+    .btn-text {
+      color: #FFFFFF !important;
+    }
   }
 }
 
@@ -143,9 +147,9 @@
   // background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #FFFFFF;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.8) !important;
-  width: 160px;
-  height: 40px;
-  margin-top: 15px;
+  width: 200px;
+  height: 50px !important;
+  max-height: 50px !important;
 
   .btn-text {
     font-family: Open Sans;
