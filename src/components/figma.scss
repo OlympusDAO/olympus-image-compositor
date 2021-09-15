@@ -194,4 +194,8 @@
   &.noML {
     margin-left: 0px;
   }
+
+  &.swatchBox-disabled {
+    cursor: not-allowed !important;
+  }
 }

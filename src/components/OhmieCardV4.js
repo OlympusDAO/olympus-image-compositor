@@ -963,13 +963,15 @@ function OhmieCardV4(props) {
   // }, [userName, applyTextListeners, textColor, buttonColor]);
 
   useEffect(() => {
-    // needs to run when stampSize changes
     if (backgroundColor.fill === true) {
       // console.log(backgroundColor);
       var ctx = bgCanvasRef.current.getContext('2d')
       ctx.fillStyle = backgroundColor.color.hex;
       ctx.rect(0, 0, bgCanvasRef.current.width, bgCanvasRef.current.height);
       ctx.fill();
+    } else {
+      // restore to image
+      drawCroppedCanvas();
     }
   }, [backgroundColor]);
 

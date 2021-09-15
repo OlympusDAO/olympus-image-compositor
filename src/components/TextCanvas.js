@@ -30,6 +30,7 @@ export default function TextCanvas(props) {
   const [displayButtonPicker, setDisplayButtonPicker] = useState(false);
   const [displayBackgroundPicker, setDisplayBackgroundPicker] = useState(false);
   const [textPosition, setTextPosition] = useState("left");
+  const [backgroundType, setBackgroundType] = useState("image");
 
   const handleChange = (e) => {
     var t;
@@ -151,6 +152,9 @@ export default function TextCanvas(props) {
   };
 
   const clickBackgroundSwatch = () => {
+    if (backgroundType === "image") {
+      return;
+    }
     console.log('clicked');
     setDisplayBackgroundPicker(true);
   };
@@ -164,6 +168,24 @@ export default function TextCanvas(props) {
     console.log(e.target.value);
     // props.applyTextLocation(e.target.value);
     setTextPosition(e.target.value);
+  };
+
+  const handleBackgroundSelectChange = (e) => {
+    // if e.target.value === "image"
+    // then display user's uploaded image
+    // else
+    // then display user's selected color
+
+    // also
+    // if "image" then cursor: "not-allowed !important" on background color
+    // && don't respond to click event
+    setBackgroundType(e.target.value);
+    if (e.target.value === "image") {
+      props.setBackgroundColor(prev => ({fill: false, color: prev.color}));
+    } else {
+      props.setBackgroundColor(prev => ({fill: true, color: prev.color}));
+    }
+    
   };
 
   useEffect(() => {
@@ -269,7 +291,7 @@ export default function TextCanvas(props) {
           select
           label="Background"
           defaultValue="image"
-          // onChange={handleChange}
+          onChange={handleBackgroundSelectChange}
           variant="outlined"
           style={{flexGrow: "2"}}
         >
@@ -280,7 +302,11 @@ export default function TextCanvas(props) {
             Solid
           </MenuItem>
         </TextField>
-        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickBackgroundSwatch }>
+        <Box className={backgroundType === "image" ? (
+            "MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox swatchBox-disabled"
+          ) : (
+            "MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox"
+          )} onClick={ clickBackgroundSwatch }>
           <span style={{marginRight: "10px"}}>Background Color</span>
           <Box style={ swatchStyle }>
             <Box style={ colorStyle("background") } />
