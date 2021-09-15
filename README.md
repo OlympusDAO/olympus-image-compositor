@@ -8,7 +8,7 @@
 - [x] allow changing text & button color from black to white
 - [x] allow setting of name
 - [x] fix scaling on mobile
-- [ ] fix text weight on Ohmie cards
+- [X] fix text weight on Ohmie cards
 - [ ] add API to APY
 - [ ] Test on various image sizes, portrait, landscape, etc.
 - [ ] change the url preview
@@ -27,6 +27,6 @@
 - [ ] after download ohmie card, canvas is empty, skewed
 
 - [ ] start over button back to 1st step
-- [ ] go to last step
+- [ ] go to last step (disable background image picker)
 
 - [ ] share on twitter button

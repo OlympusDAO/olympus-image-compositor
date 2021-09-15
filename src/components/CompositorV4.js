@@ -105,8 +105,8 @@ function CompositorV2(props) {
     cursor: "pointer",
     // maxHeight: "450px",
     height: areaHt,
-    width: "100%",
-    // width: areaWd,
+    // width: "100%",
+    width: areaWd,
     // TODO (appleseed): this width needs to be capped on mobile
     // ... also should handle border correctly
     // maxWidth: areaMaxWd,
