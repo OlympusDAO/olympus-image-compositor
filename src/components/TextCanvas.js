@@ -94,14 +94,14 @@ export default function TextCanvas(props) {
 
   const swatchStyle = {
     // marginLeft: "3px",
-    padding: '2px',
+    // padding: '2px',
     // background: '#fff',
     borderRadius: '5px',
     boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
     display: 'inline-block',
     cursor: 'pointer',
-    width: "36px",
-    height: "36px",
+    width: "32px",
+    height: "32px",
   };
 
   const popoverStyle = () => {
@@ -255,7 +255,7 @@ export default function TextCanvas(props) {
         ) : (null)
       }
     </Box>
-    <Box style={{display: "flex", flexFlow: "column wrap", gap: "6px"}}>
+    <Box style={{display: "flex", flexFlow: "column wrap", gap: "12px"}}>
       <TextField
         id="name-input"
         label="Your Name"
@@ -271,7 +271,7 @@ export default function TextCanvas(props) {
           defaultValue="image"
           // onChange={handleChange}
           variant="outlined"
-          style={{flexGrow: "3"}}
+          style={{flexGrow: "2"}}
         >
           <MenuItem value={"image"}>
             Image
@@ -281,6 +281,7 @@ export default function TextCanvas(props) {
           </MenuItem>
         </TextField>
         <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickBackgroundSwatch }>
+          <span style={{marginRight: "10px"}}>Background Color</span>
           <Box style={ swatchStyle }>
             <Box style={ colorStyle("background") } />
           </Box>
@@ -297,7 +298,7 @@ export default function TextCanvas(props) {
           value={textPosition}
           onChange={handleBodyPositionChange}
           variant="outlined"
-          style={{flexGrow: "3"}}
+          style={{flexGrow: "2"}}
         >
           <MenuItem value={"left"}>
             Left
@@ -307,6 +308,7 @@ export default function TextCanvas(props) {
           </MenuItem>
         </TextField>
         <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickTextSwatch }>
+          <span style={{marginRight: "10px"}}>Text Color</span>
           <Box style={ swatchStyle }>
             <Box style={ colorStyle("text") } />
           </Box>
@@ -315,13 +317,16 @@ export default function TextCanvas(props) {
           </svg>
         </Box>
       </Box>
-      <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickButtonSwatch }>
-        <Box style={ swatchStyle }>
-          <Box style={ colorStyle("button") } />
+      <Box style={{alignSelf: "flex-start"}}>
+        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickButtonSwatch } style={{marginLeft: "0px !important"}}>
+          <span style={{marginRight: "10px"}}>Button Color</span>
+          <Box style={ swatchStyle }>
+            <Box style={ colorStyle("button") } />
+          </Box>
+          <svg className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 20 20" color="#FCFCFC" aria-hidden="true">
+            <path d="M7 10l5 5 5-5z"></path>
+          </svg>
         </Box>
-        <svg className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 20 20" color="#FCFCFC" aria-hidden="true">
-          <path d="M7 10l5 5 5-5z"></path>
-        </svg>
       </Box>
       {/* <Box>
         <CustomColorPicker colors={["#000000", "#FFFFFF"]}/>
