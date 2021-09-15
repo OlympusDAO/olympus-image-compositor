@@ -1114,34 +1114,14 @@ function OhmieCardV4(props) {
                             stampFile={stampFile}
                             stampSize={stampSize}
                             maxHt = {parseFloat(bgCanvasRef.current.style.height)}
+                            downloadText={"Download Card"}
+                            downloadImage={downloadImage}
+                            goBackOneStep={goBackOneStep}
                           />
                         </Box>
                       </Box>
                     }
                     
-
-                    {uiStep === "pfp" && croppedBg &&
-                      <Box textAlign='center'>
-                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                          Back
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={goToTextStep} style={containerButton}>
-                          Next
-                        </Button>
-                      </Box>
-                    }
-
-                    {uiStep === "text" && 
-                      <Box textAlign='center'>
-                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                          Back
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={downloadImage} style={containerButton}>
-                          Download Ohmie Card
-                        </Button>
-                      </Box>
-                    }
-
                     {uiStep === "long-press" &&
                       <div>
                         <img

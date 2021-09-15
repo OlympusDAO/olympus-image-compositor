@@ -25,4 +25,5 @@ WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/
 - [ ] fix layout bugs on small screens (bottom of screen cutoff)
 - [ ] fix any TODO messages
 
-- [ ] center image resizer above slider
+- [X] center image resizer above slider
+- [ ] after download ohmie card, canvas is empty, skewed

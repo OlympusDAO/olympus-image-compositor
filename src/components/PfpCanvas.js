@@ -66,6 +66,9 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           maxSize={props.maxHt*1.25}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
+          goBackOneStep={props.goBackOneStep}
+          downloadImage={props.downloadImage}
+          downloadText={props.downloadText}
         />
         <input
           id="logoFile"
@@ -84,6 +87,9 @@ const PfpCanvas = React.forwardRef((props, ref) => {
 PfpCanvas.propTypes = {
   setStampSize: PropTypes.func.isRequired,
   setStampFile: PropTypes.func.isRequired,
+  goBackOneStep: PropTypes.func.isRequired,
+  downloadImage: PropTypes.func.isRequired,
+  downloadText: PropTypes.string.isRequired,
   stampFile: PropTypes.string.isRequired,
   stampSize: PropTypes.object.isRequired,
   sOhmSize: PropTypes.number.isRequired,

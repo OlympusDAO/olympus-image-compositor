@@ -44,7 +44,7 @@ export default function LogoResizer(props) {
             className="ohmie-button"
             onClick={props.downloadImage}
           >
-            <Typography className="btn-text">Download pfp</Typography>
+            <Typography className="btn-text">{props.downloadText}</Typography>
           </Button>
         </Box>
         <Box>

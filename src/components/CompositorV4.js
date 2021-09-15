@@ -497,6 +497,7 @@ function CompositorV2(props) {
                         goBackOneStep={goBackOneStep}
                         outlineButton={outlineButton}
                         downloadImage={downloadImage}
+                        downloadText={"Download PFP"}
                         containerButton={containerButton}
                         containerHeight={objectFromScreenHeight()*0.80}
                       />
