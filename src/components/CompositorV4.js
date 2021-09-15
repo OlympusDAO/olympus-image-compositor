@@ -208,6 +208,12 @@ function CompositorV2(props) {
   const [directionState, setdirectionState] = useState(step1Direction);
   // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
+  // react-cropper
+  const cropperRef = React.useRef(null);
+  const cropperCanvasSettings = {
+    imageSmoothingQuality: "high",
+  };
+
   // uiSteps
   // 1. Click to start
   // 2. take user's image to cropper
@@ -316,11 +322,6 @@ function CompositorV2(props) {
     }
   });
 
-  // react-cropper
-  const cropperRef = React.useRef(null);
-  const cropperCanvasSettings = {
-    imageSmoothingQuality: "high",
-  };
   const onCrop = () => {
     const imageElement = cropperRef?.current;
     const cropper = imageElement?.cropper;
@@ -333,6 +334,7 @@ function CompositorV2(props) {
     };
 
     image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(fileImageType, 1);
+    // console.log("now zoom");
   };
 
   const clearTheCanvas = () => {
@@ -440,6 +442,9 @@ function CompositorV2(props) {
 
   const imageLoaded = () => {
     // this isn't quite working
+    const imageElement = cropperRef?.current;
+    const cropper = imageElement?.cropper;
+    cropper.zoom(0.1);
     setIsLoading(false);
   };
 
@@ -485,12 +490,15 @@ function CompositorV2(props) {
     setCanvasListeners();
   }, [stampSize, setCanvasListeners, fileCropped]);
 
-  useEffect(() => {
-    function handleResize() {
-      if (uiStep === 3) drawCroppedCanvas();
+  useEffect(() => {    
+    if (uiStep === 3) {
+      function handleResize() {
+        drawCroppedCanvas();
+      }
+      window.addEventListener('resize', handleResize);
     }
-    window.addEventListener('resize', handleResize);
-  });
+  }, [drawCroppedCanvas, uiStep]);
+
 
   return (
     <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>

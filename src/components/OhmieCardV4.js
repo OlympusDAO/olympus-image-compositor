@@ -199,6 +199,7 @@ function OhmieCardV4(props) {
     hex: "#000000",
     rgb: {r: 0, g: 0, b: 0, a: 100},
   });
+  const [textPosition, setTextPosition] = useState("left");
   // default white
   const [buttonColor, setButtonColor] = useState({
     hex: "#FFFFFF",
@@ -277,7 +278,7 @@ function OhmieCardV4(props) {
           isDrawing = false;
         }
       });
-    }, [stampSize.height, stampSize.width, croppedBg, stampFile]
+    }, [stampSize, croppedBg, stampFile]
   );
 
   /**
@@ -440,50 +441,9 @@ function OhmieCardV4(props) {
         // setLastTextEvent(e);
       }
 
-      // Add the event listeners for mousedown, mousemove, and mouseup
-      // const handleMouseDown = () => {
-      //   console.log("down");
-      //   isDrawing = true;
-      // }
-      // // remove old listeners
-      // canvasOnly.removeEventListener('mousedown', handleMouseDown);
-      // canvasOnly.addEventListener('mousedown', handleMouseDown);
-
-      // const handleMouseMove = (e) => {
-      //   if (isDrawing === true) {
-
-      //     if (croppedBg) history.restoreState();
-      //     textToApply(e);
-      //     // ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
-
-      //   }
-      // }
-
-      // // drawImage usage
-      // // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-      // canvasOnly.removeEventListener('mousemove', handleMouseMove);
-      // canvasOnly.addEventListener('mousemove', handleMouseMove);
-
-      // const handleMouseUp = e => {
-      //   if (isDrawing === true) {
-
-      //     if (croppedBg) history.restoreState();
-
-      //     textToApply(e);
-
-      //     isDrawing = false;
-      //   }
-      // }
-      // canvasOnly.removeEventListener('mouseup', handleMouseUp);
-      // canvasOnly.addEventListener('mouseup', handleMouseUp);
-
-      // setTextListenersApplied(true);
-      // if (lastTextEvent) {
-      //   if (croppedBg) history.restoreState();
-      //   textToApply(lastTextEvent);
-      // }
       history.restoreState();
       textToApply(leftRight);
+      console.log("text to apply");
     }, [croppedBg, userName, textColor, buttonColor, currentAPY]
   );
     
@@ -901,8 +861,10 @@ function OhmieCardV4(props) {
 
   useEffect(() => {
     // needs to run when stampSize changes
+    // drawCroppedCanvas();
     setCanvasListeners();
-  }, [stampSize, setCanvasListeners, croppedBg, stampFile]);
+    applyTextLocation(textPosition);
+  }, [stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition]);
 
   useEffect(() => {
     function handleResize() {
@@ -1039,6 +1001,8 @@ function OhmieCardV4(props) {
                         previewFinalCanvas={previewFinalCanvas}
                         applyTextLocation={applyTextLocation}
                         setCurrentAPY={setCurrentAPY}
+                        textPosition={textPosition}
+                        setTextPosition={setTextPosition}
                       />
                     </Box>
                     <Box style={{width: "50%", padding: "10px"}}>

@@ -25,6 +25,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
       width: value*props.stampFile.aspectRatio,
       height: value,
     });
+    
   }
 
   const onStampClick = () => {
@@ -88,12 +89,12 @@ const PfpCanvas = React.forwardRef((props, ref) => {
 PfpCanvas.propTypes = {
   setStampSize: PropTypes.func.isRequired,
   setStampFile: PropTypes.func.isRequired,
-  goBackOneStep: PropTypes.func.isRequired,
+  goBackToStart: PropTypes.func.isRequired,
   downloadImage: PropTypes.func.isRequired,
   downloadText: PropTypes.string.isRequired,
-  stampFile: PropTypes.string.isRequired,
+  stampFile: PropTypes.any.isRequired,
   stampSize: PropTypes.object.isRequired,
-  sOhmSize: PropTypes.number.isRequired,
+  // sOhmSize: PropTypes.number.isRequired,
 
 };
 

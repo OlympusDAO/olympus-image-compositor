@@ -31,8 +31,10 @@ export default function TextCanvas(props) {
   const [displayTextPicker, setDisplayTextPicker] = useState(false);
   const [displayButtonPicker, setDisplayButtonPicker] = useState(false);
   const [displayBackgroundPicker, setDisplayBackgroundPicker] = useState(false);
-  const [textPosition, setTextPosition] = useState("left");
   const [backgroundType, setBackgroundType] = useState("image");
+  const [hasCurrentAPY, setHasCurrentAPY] = useState(false);
+
+  const textPosition = props.textPosition;
 
   const handleChange = (e) => {
     var t;
@@ -169,7 +171,7 @@ export default function TextCanvas(props) {
   const handleBodyPositionChange = (e) => {
     console.log(e.target.value);
     // props.applyTextLocation(e.target.value);
-    setTextPosition(e.target.value);
+    props.setTextPosition(e.target.value);
   };
 
   const handleBackgroundSelectChange = (e) => {
@@ -190,9 +192,11 @@ export default function TextCanvas(props) {
     
   };
 
+  const applyTextLocation = props.applyTextLocation;
   useEffect(() => {
-    if (textPosition) props.applyTextLocation(textPosition);
-  }, [props, textPosition]);
+    console.log('text position use effect');
+    if (textPosition) applyTextLocation(textPosition);
+  }, [applyTextLocation, textPosition]);
 
   /**
    * creates a Preview Canvas to allow color Picker to work its magic
@@ -231,9 +235,14 @@ export default function TextCanvas(props) {
   }, [displayButtonPicker, displayTextPicker]);
 
   useEffect(() => {
-    console.log("staking useeffect");
-    getStakingAPY().then(value => props.setCurrentAPY(value.formatted));
-  });
+    if (hasCurrentAPY === false) {
+      console.log("staking useeffect");
+      getStakingAPY().then(value => {
+        props.setCurrentAPY(value.formatted);
+        setHasCurrentAPY(true);
+      });
+    }
+  }, [hasCurrentAPY, props]);
 
 
   return (
