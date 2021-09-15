@@ -26,9 +26,9 @@ const figmaTheme = {
   activeLinkColor: "#F5DDB4",
   activeLinkSvgColor:
     "brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(307%) hue-rotate(326deg) brightness(106%) contrast(92%)",
-  primaryButtonColor: "#333333",
-  primaryButtonBG: "#F4D092",
-  primaryButtonHoverBG: "#EDD8B4",
+  primaryButtonColor: "#000000",
+  primaryButtonBG: "#fff",
+  primaryButtonHoverBG: "#e5e5e5",
   secondaryButtonHoverBG: "rgba(45, 60, 120, 1)",
   outlinedPrimaryButtonHoverBG: "#F8CC82",
   outlinedPrimaryButtonHoverColor: "#333333",
