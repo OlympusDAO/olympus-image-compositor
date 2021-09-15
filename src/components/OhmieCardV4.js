@@ -555,7 +555,7 @@ function OhmieCardV4(props) {
 
     // // clear the canvas...
     if (sameCanvas !== true) {
-      clearTheCanvas();
+      clearTheCanvas(bgCanvasRef);
       drawCroppedCanvas();
     }
     setuiStep("pfp");
@@ -588,10 +588,10 @@ function OhmieCardV4(props) {
       goToPfpStep(true);
     } else if (uiStep === "pfp") {
       // go to step 2
-      clearTheCanvas();
+      clearTheCanvas(pfpCanvasRef);
       goToBgStep();
     } else if (uiStep === "bg") {
-      clearTheCanvas();
+      clearTheCanvas(bgCanvasRef);
       setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === "long-press") {
@@ -719,12 +719,14 @@ function OhmieCardV4(props) {
 
   // for bgCanvas
   // or maybe multiple?
-  const clearTheCanvas = () => {
+  const clearTheCanvas = (thisCanvas) => {
+    console.log("clearTheCanvas");
     // var canvas = canvasRef.current;
-    var ctx = bgCanvasRef.current.getContext('2d');
+    var ctx = thisCanvas.current.getContext('2d');
     if (croppedBg) ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
-    bgCanvasRef.current.height = 0;
-    bgCanvasRef.current.style.height = 0;
+    thisCanvas.current.height = 0;
+    thisCanvas.current.style.height = 0;
+    drawCroppedCanvas();
   };
 
   function pick(event) {
@@ -851,6 +853,9 @@ function OhmieCardV4(props) {
           anchor.click();
           URL.revokeObjectURL(anchor.href); // remove it from memory
         }, fileImageType, 1);
+        // clearTheCanvas(finalCanvasRef);
+        // canvasOrdering("pfp");
+        goToPfpStep();
       }
     }
   };
@@ -898,6 +903,13 @@ function OhmieCardV4(props) {
     // needs to run when stampSize changes
     setCanvasListeners();
   }, [stampSize, setCanvasListeners, croppedBg, stampFile]);
+
+  useEffect(() => {
+    function handleResize() {
+      drawCroppedCanvas();
+    }
+    window.addEventListener('resize', handleResize);
+  });
 
   return (
     <Fade ref={viewContainerRef} in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} >

@@ -24,11 +24,14 @@
 - [ ] fix any TODO messages
 
 - [X] center image resizer above slider
-- [ ] after download ohmie card, canvas is empty, skewed
+- [X] after download ohmie card, canvas is empty, skewed
 
-- [ ] start over button back to 1st step
+- [X] start over button back to 1st step
 - [ ] go to last step (disable background image picker)
 
 - [X] share on twitter button
 
 - [ ] text canvas v4 is actually v1 & vice versa... doh
+
+- [ ] on resize, canvas is empty skewed
+- [ ] clear finalCanvas after download
