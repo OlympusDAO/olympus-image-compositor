@@ -14,7 +14,7 @@
 - [ ] Test on various image sizes, portrait, landscape, etc.
 - [ ] change the url preview
 
-## Stying Updates
+## Styling Updates
 
 - [ ] figure out vertical & horizontal placement of WelcomeHeadline
 - [ ] take another look at the BoxHomepage Card borders...
@@ -24,3 +24,5 @@ WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/
 - [ ] optimize for mobile
 - [ ] fix layout bugs on small screens (bottom of screen cutoff)
 - [ ] fix any TODO messages
+
+- [ ] center image resizer above slider

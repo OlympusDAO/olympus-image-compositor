@@ -1092,7 +1092,7 @@ function OhmieCardV4(props) {
                     
                     {/* Logo Resizing */}
                     {(uiStep === "pfp" || uiStep === "text") &&
-                      <Box id="editable-features" display="flex" style={{flexFlow: "row wrap", width: "100%"}}>
+                      <Box id="editable-features" display="flex" style={{flexFlow: "row wrap", width: "100%", padding: "33px"}}>
                         <Box style={{width: "50%"}}>
                           <TextCanvas
                             setUserName={setUserName}

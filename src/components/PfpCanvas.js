@@ -14,7 +14,7 @@ import {
   // Zoom,
 } from "@material-ui/core";
 
-import LogoResizer from "./LogoResizer";
+import LogoResizerV4 from "./LogoResizerV4";
 import classifyImage from "../helpers/classifyImage";
 
 const PfpCanvas = React.forwardRef((props, ref) => {
@@ -57,7 +57,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     <Box>
       {/* Logo Resizing */}
       <Box>
-        <LogoResizer
+        <LogoResizerV4
           stampSrc={props.stampFile.src}
           stampHeight={props.stampSize.height}
           stampWidth={props.stampSize.width}
