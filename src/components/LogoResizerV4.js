@@ -52,7 +52,7 @@ export default function LogoResizer(props) {
             id="back-button"
             variant="outlined"
             className="outlined-ohmie-button"
-            onClick={props.goBackOneStep}
+            onClick={props.goBackToStart}
           >
             <Typography className="btn-text">Start Over</Typography>
           </Button>

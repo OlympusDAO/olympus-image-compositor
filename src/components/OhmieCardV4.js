@@ -868,6 +868,14 @@ function OhmieCardV4(props) {
     }, fadeOutMs*0.75);
   };
 
+  const goBackToStart = () => {
+    setFadeTransition(false);
+    setTimeout(() => {
+      // setFadeTransition(true);
+      window.location.reload();
+    }, fadeOutMs*0.33);
+  };
+
   // useEffect(() => {
   //   // needs to run when stampSize changes
   //   applyTextListeners();
@@ -1031,7 +1039,7 @@ function OhmieCardV4(props) {
                         maxHt = {parseFloat(bgCanvasRef.current.style.height)}
                         downloadText={"Download Card"}
                         downloadImage={downloadImage}
-                        goBackOneStep={goBackOneStep}
+                        goBackToStart={goBackToStart}
                       />
                     </Box>
                   </Box>
@@ -1066,8 +1074,8 @@ function OhmieCardV4(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="outlined"
-              className="outlined-ohmie-button"
+              variant="contained"
+              className="ohmie-button"
               onClick={goBackToRoot}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>
@@ -1078,8 +1086,8 @@ function OhmieCardV4(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="outlined"
-              className="outlined-ohmie-button"
+              variant="contained"
+              className="ohmie-button"
               onClick={goBackOneStep}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>

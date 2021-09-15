@@ -472,6 +472,14 @@ function CompositorV2(props) {
     }, fadeOutMs*0.75);
   };
 
+  const goBackToStart = () => {
+    setFadeTransition(false);
+    setTimeout(() => {
+      // setFadeTransition(true);
+      window.location.reload();
+    }, fadeOutMs*0.33);
+  };
+
   useEffect(() => {
     // needs to run when stampSize changes
     setCanvasListeners();
@@ -508,7 +516,7 @@ function CompositorV2(props) {
                       resizeStamp={resizeStamp}
                       medScreen={medScreen}
                       directionText={"Resize and place your sOHM"}
-                      goBackOneStep={goBackOneStep}
+                      goBackToStart={goBackToStart}
                       outlineButton={outlineButton}
                       downloadImage={downloadImage}
                       downloadText={"Download PFP"}
@@ -632,8 +640,8 @@ function CompositorV2(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="outlined"
-              className="outlined-ohmie-button"
+              variant="contained"
+              className="ohmie-button"
               onClick={goBackToRoot}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>
@@ -644,8 +652,8 @@ function CompositorV2(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="outlined"
-              className="outlined-ohmie-button"
+              variant="contained"
+              className="ohmie-button"
               onClick={goBackOneStep}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>

@@ -66,7 +66,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           maxSize={props.maxHt*1.25}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
-          goBackOneStep={props.goBackOneStep}
+          goBackToStart={props.goBackToStart}
           downloadImage={props.downloadImage}
           downloadText={props.downloadText}
           buttonsContainerStyle={{flexFlow: "row wrap", justifyContent: "space-around", width: "100%"}}
