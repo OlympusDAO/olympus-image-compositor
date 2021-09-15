@@ -203,6 +203,7 @@ function OhmieCardV4(props) {
     hex: "#FFFFFF",
     rgb: {r: 255, g: 255, b: 255, a: 100},
   });
+  const [currentAPY, setCurrentAPY] = useState("5,000");
 
   /**
    * backgroundColor has two keys, denoted as params below
@@ -381,7 +382,7 @@ function OhmieCardV4(props) {
         ctx.fillText("They are earning", newX, newY+linePosition);
         // lineIndex = 2;
         linePosition = 64/scalingRatio + linePosition;
-        ctx.fillText("5,000+% APY.", newX, newY+linePosition);
+        ctx.fillText(currentAPY+"% APY.", newX, newY+linePosition);
 
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
@@ -482,7 +483,7 @@ function OhmieCardV4(props) {
       // }
       history.restoreState();
       textToApply(leftRight);
-    }, [croppedBg, userName, textColor, buttonColor]
+    }, [croppedBg, userName, textColor, buttonColor, currentAPY]
   );
     
   const step1Direction = {row: ""};
@@ -1016,6 +1017,7 @@ function OhmieCardV4(props) {
                         setBackgroundColor={setBackgroundColor}
                         previewFinalCanvas={previewFinalCanvas}
                         applyTextLocation={applyTextLocation}
+                        setCurrentAPY={setCurrentAPY}
                       />
                     </Box>
                     <Box style={{width: "50%", padding: "10px"}}>

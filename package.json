@@ -9,6 +9,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "blueimp-canvas-to-blob": "^3.28.0",
+    "dotenv": "^10.0.0",
+    "ethers": "^5.4.6",
     "react": "^17.0.2",
     "react-color": "^2.19.3",
     "react-cropper": "^2.1.8",

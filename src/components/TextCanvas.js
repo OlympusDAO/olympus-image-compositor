@@ -19,6 +19,8 @@ import {
 import { SketchPicker } from "react-color";
 import EyeDropper from "./EyeDropper";
 
+import { getStakingAPY } from "../helpers/APYGetter.js";
+
 export default function TextCanvas(props) {
   // const small = useMediaQuery('(min-width:600px)');
   const buttonColorRef = React.useRef(null);
@@ -226,7 +228,13 @@ export default function TextCanvas(props) {
     } else if (displayButtonPicker) {
       // add Element
     }
-  }, [displayButtonPicker, displayTextPicker])
+  }, [displayButtonPicker, displayTextPicker]);
+
+  useEffect(() => {
+    console.log("staking useeffect");
+    getStakingAPY().then(value => props.setCurrentAPY(value.formatted));
+  });
+
 
   return (
     <Box id="text-canvas-fields-container">

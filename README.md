@@ -30,3 +30,5 @@
 - [ ] go to last step (disable background image picker)
 
 - [ ] share on twitter button
+
+- [ ] text canvas v4 is actually v1 & vice versa... doh
