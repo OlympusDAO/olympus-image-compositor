@@ -7,7 +7,7 @@ function BoxHomepage() {
   let history = useHistory();
 
   const [fadeTransition, setFadeTransition] = useState(true);
-  const fadeOutMs = 666;
+  const fadeOutMs = 333;
 
   const containerStyle = {
     display: "flex",

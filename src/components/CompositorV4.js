@@ -62,7 +62,7 @@ function CompositorV2(props) {
   const medScreen = useMediaQuery('(min-width:800px)');
 
   const [fadeTransition, setFadeTransition] = useState(true);  
-  const fadeOutMs = 666;
+  const fadeOutMs = 333;
   const sOhmSize = 60;
 
   const canvasRef = React.useRef(null);
