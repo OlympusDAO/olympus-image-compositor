@@ -100,6 +100,7 @@ export default function TextCanvas(props) {
     display: 'inline-block',
     cursor: 'pointer',
     width: "43px",
+    height: "43px",
   };
 
   const popoverStyle = {
