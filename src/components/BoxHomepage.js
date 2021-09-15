@@ -34,6 +34,8 @@ function BoxHomepage() {
     flexDirection: "column",
     alignItems: "flex-start",
     padding: "40px",
+    height: "100%",
+    justifyContent: "space-between",
     // width: "333px",
     // height: "217px",
   }
@@ -64,7 +66,7 @@ function BoxHomepage() {
     left: "0px",
     top: "132px",
 
-    marginTop: "20px",
+    // marginTop: "20px",
 
     fontFamily: "Open Sans",
     fontStyle: "normal",
