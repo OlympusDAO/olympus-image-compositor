@@ -93,20 +93,33 @@ export default function TextCanvas(props) {
   };
 
   const swatchStyle = {
-    marginLeft: "3px",
+    // marginLeft: "3px",
     padding: '2px',
-    background: '#fff',
+    // background: '#fff',
     borderRadius: '5px',
     boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
     display: 'inline-block',
     cursor: 'pointer',
-    width: "43px",
-    height: "43px",
+    width: "36px",
+    height: "36px",
   };
 
-  const popoverStyle = {
-    position: 'absolute',
-    zIndex: '2',
+  const popoverStyle = () => {
+    if (textPosition === "left") {
+      return {
+        position: 'absolute',
+        zIndex: '2',
+        top: 0,
+        right: 0,
+      }
+    } else {
+      return {
+        position: 'absolute',
+        zIndex: '2',
+        top: 0,
+        left: 0,
+      }
+    }
   };
 
   const coverStyle = {
@@ -194,6 +207,54 @@ export default function TextCanvas(props) {
   }, [displayButtonPicker, displayTextPicker])
 
   return (
+    <Box id="text-canvas-fields-container">
+      <Box id="color-pickers-box">
+        { displayTextPicker ? (
+            <div style={ popoverStyle() }>
+              <div id="textcover" style={ coverStyle } onClick={ closeTextSwatch }/>
+              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("text", e)} />
+              <SketchPicker
+                id="text-color"
+                ref={textColorRef}
+                name='color'
+                color={props.textColor}
+                // value={textColorString}
+                onChangeComplete={handleTextColor}
+              />
+            </div>
+          ) : (null)
+        }
+        { displayButtonPicker ? (
+            <div style={ popoverStyle() }>
+              <div id="buttonCover" style={ coverStyle } onClick={ closeButtonSwatch }/>
+              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("button", e)} />
+              <SketchPicker
+                id="button-color"
+                ref={buttonColorRef}
+                name='color'
+                // defaultValue={buttonColorString}
+                color={props.buttonColor}
+                onChangeComplete={handleButtonColor}
+              />
+            </div>
+          ) : (null)
+        }
+        { displayBackgroundPicker ? (
+          <div style={ popoverStyle() }>
+            <div id="buttonCover" style={ coverStyle } onClick={ closeBackgroundSwatch }/>
+            <EyeDropper eyeDropperClick={(e) => eyeDropperClick("background", e)} />
+            <SketchPicker
+              id="button-color"
+              ref={backgroundColorRef}
+              name='color'
+              // defaultValue={backgroundColorString}
+              color={props.backgroundColor}
+              onChangeComplete={handleBackgroundColor}
+            />
+          </div>
+        ) : (null)
+      }
+    </Box>
     <Box style={{display: "flex", flexFlow: "column wrap", gap: "6px"}}>
       <TextField
         id="name-input"
@@ -219,8 +280,13 @@ export default function TextCanvas(props) {
             Solid
           </MenuItem>
         </TextField>
-        <Box style={ swatchStyle } onClick={ clickBackgroundSwatch }>
-          <Box style={ colorStyle("background") } />
+        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickBackgroundSwatch }>
+          <Box style={ swatchStyle }>
+            <Box style={ colorStyle("background") } />
+          </Box>
+          <svg className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 20 20" color="#FCFCFC" aria-hidden="true">
+            <path d="M7 10l5 5 5-5z"></path>
+          </svg>
         </Box>
       </Box>
       <Box id="body-inputs" display="flex" justifyContent="space-between">
@@ -240,65 +306,27 @@ export default function TextCanvas(props) {
             Right
           </MenuItem>
         </TextField>
-        <Box style={ swatchStyle } onClick={ clickTextSwatch }>
-          <Box style={ colorStyle("text") } />
+        <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickTextSwatch }>
+          <Box style={ swatchStyle }>
+            <Box style={ colorStyle("text") } />
+          </Box>
+          <svg className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 20 20" color="#FCFCFC" aria-hidden="true">
+            <path d="M7 10l5 5 5-5z"></path>
+          </svg>
         </Box>
       </Box>
-      <Box>
-        <Box style={ swatchStyle } onClick={ clickButtonSwatch }>
+      <Box className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl swatchBox" onClick={ clickButtonSwatch }>
+        <Box style={ swatchStyle }>
           <Box style={ colorStyle("button") } />
         </Box>
+        <svg className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 20 20" color="#FCFCFC" aria-hidden="true">
+          <path d="M7 10l5 5 5-5z"></path>
+        </svg>
       </Box>
       {/* <Box>
         <CustomColorPicker colors={["#000000", "#FFFFFF"]}/>
       </Box> */}
-      <Box>
-        { displayTextPicker ? (
-            <div style={ popoverStyle }>
-              <div id="textcover" style={ coverStyle } onClick={ closeTextSwatch }/>
-              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("text", e)} />
-              <SketchPicker
-                id="text-color"
-                ref={textColorRef}
-                name='color'
-                color={props.textColor}
-                // value={textColorString}
-                onChangeComplete={handleTextColor}
-              />
-            </div>
-          ) : (null)
-        }
-        { displayButtonPicker ? (
-            <div style={ popoverStyle }>
-              <div id="buttonCover" style={ coverStyle } onClick={ closeButtonSwatch }/>
-              <EyeDropper eyeDropperClick={(e) => eyeDropperClick("button", e)} />
-              <SketchPicker
-                id="button-color"
-                ref={buttonColorRef}
-                name='color'
-                // defaultValue={buttonColorString}
-                color={props.buttonColor}
-                onChangeComplete={handleButtonColor}
-              />
-            </div>
-          ) : (null)
-        }
-        { displayBackgroundPicker ? (
-          <div style={ popoverStyle }>
-            <div id="buttonCover" style={ coverStyle } onClick={ closeBackgroundSwatch }/>
-            <EyeDropper eyeDropperClick={(e) => eyeDropperClick("background", e)} />
-            <SketchPicker
-              id="button-color"
-              ref={backgroundColorRef}
-              name='color'
-              // defaultValue={backgroundColorString}
-              color={props.backgroundColor}
-              onChangeComplete={handleBackgroundColor}
-            />
-          </div>
-        ) : (null)
-      }
-      </Box>
     </Box>
+  </Box>
   );
 }
