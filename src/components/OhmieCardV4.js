@@ -94,7 +94,7 @@ function OhmieCardV4(props) {
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.7 ) || 0;
+  const areaHt = (windowSize.height*0.6 ) || 0;
   // TODO (appleseed): fix areaWd;
   const areaWd = windowSize.width*0.8;
   const areaMaxWd = 1100;
