@@ -29,6 +29,7 @@ export default function TextCanvas(props) {
   const [displayTextPicker, setDisplayTextPicker] = useState(false);
   const [displayButtonPicker, setDisplayButtonPicker] = useState(false);
   const [displayBackgroundPicker, setDisplayBackgroundPicker] = useState(false);
+  const [textPosition, setTextPosition] = useState("left");
 
   const handleChange = (e) => {
     var t;
@@ -146,6 +147,16 @@ export default function TextCanvas(props) {
     setDisplayBackgroundPicker(false);
   };
 
+  const handleBodyPositionChange = (e) => {
+    console.log(e.target.value);
+    // props.applyTextLocation(e.target.value);
+    setTextPosition(e.target.value);
+  };
+
+  useEffect(() => {
+    if (textPosition) props.applyTextLocation(textPosition);
+  }, [props, textPosition]);
+
   /**
    * creates a Preview Canvas to allow color Picker to work its magic
    * 
@@ -196,6 +207,7 @@ export default function TextCanvas(props) {
           id="select-background"
           select
           label="Background"
+          defaultValue="image"
           // onChange={handleChange}
           variant="outlined"
           style={{flexGrow: "3"}}
@@ -216,8 +228,8 @@ export default function TextCanvas(props) {
           id="select-body"
           select
           label="Body"
-          defaultValue="left"
-          // onChange={handleChange}
+          value={textPosition}
+          onChange={handleBodyPositionChange}
           variant="outlined"
           style={{flexGrow: "3"}}
         >

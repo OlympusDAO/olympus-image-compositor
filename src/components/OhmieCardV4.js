@@ -74,7 +74,7 @@ function OhmieCardV4(props) {
 
   const medScreen = useMediaQuery('(min-width:900px)');
   const [fadeTransition, setFadeTransition] = useState(true);  
-  const fadeOutMs = 666;
+  const fadeOutMs = 333;
 
   var sOhmImg = new Image();
   sOhmImg.src = sOhm;
@@ -214,7 +214,6 @@ function OhmieCardV4(props) {
       rgb: {r: 255, g: 255, b: 255, a: 100},
     },
   });
-  const [lastTextEvent, setLastTextEvent] = useState(null);
 
   const getViewWidth = () => {
     var element = viewContainerRef.current;
@@ -277,9 +276,11 @@ function OhmieCardV4(props) {
     }, [stampSize.height, stampSize.width, croppedBg, stampFile]
   );
 
-  // allows detects clicking on canvas & places text
-  const applyTextListeners = useCallback(
-    () => {
+  /**
+   * @param {string} leftRight should be `left` or `right`
+   */
+  const applyTextLocation = useCallback(
+    (leftRight) => {
       // if you already set the listeners... you can stop
       // if (textListenersApplied === true) return;
 
@@ -297,12 +298,12 @@ function OhmieCardV4(props) {
       var ctx = canvasOnly.getContext('2d');
 
       // When true, moving the mouse draws on the canvas
-      let isDrawing = false;
+      // let isDrawing = false;
       
-      //////////// HISTORY
-      // NOTE (appleseed):
-      // 1. height & width are fixed aspect ratio now...
-      // 2. also won't want to redraw since this will apply to the textCanvas only. Just empty it
+      // //////////// HISTORY
+      // // NOTE (appleseed):
+      // // 1. height & width are fixed aspect ratio now...
+      // // 2. also won't want to redraw since this will apply to the textCanvas only. Just empty it
       var history = {
         restoreState: function() {
           ctx.clearRect(0, 0, croppedBg.governing_width, croppedBg.governing_height);
@@ -317,13 +318,13 @@ function OhmieCardV4(props) {
        * @param {float} fontSize used to determine ht of 1st row
        * @returns {array} x position, y position
        */
-      const setTextLeftOrRight = (offsetX, fontSize) => {
+      const setTextLeftOrRight = (leftRight, fontSize) => {
         // newY should be scaled based on canvasOnly.height
         // const newY = 67 + fontSize;
         var newY = 75/950 * canvasOnly.height;
         var newX;
-        console.log("offsetX", offsetX, parseFloat(canvasOnly.style.width)/2, canvasOnly.style.width);
-        if ( offsetX < parseFloat(canvasOnly.style.width)/2 ) {
+        // console.log("offsetX", offsetX, parseFloat(canvasOnly.style.width)/2, canvasOnly.style.width);
+        if ( leftRight === "left" ) {
           console.log("l");
           // left
           // newX = 67;
@@ -350,12 +351,12 @@ function OhmieCardV4(props) {
       let useTextColor = textColor.hex;
       let useButtonColor = buttonColor.hex;
       
-      const textToApply = (e) => {
+      const textToApply = (leftRight) => {
         var fontSize;
         fontSize = (29/scalingRatio);
-        console.log("offsetX", e.offsetX, e.offsetY);
-        var [newX, newY] = setTextLeftOrRight(e.offsetX, fontSize);
-        console.log("r", newX, newY, e.offsetX, e.offsetY);
+        console.log("offsetX");
+        var [newX, newY] = setTextLeftOrRight(leftRight, fontSize);
+        console.log("r", newX, newY);
         // return undefined;
         // var [newX, newY] = [e.offsetX, e.offsetY];
 
@@ -432,52 +433,54 @@ function OhmieCardV4(props) {
         ctx.font = 20/scalingRatio+"px RedHatDisplay";
         ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
-        setLastTextEvent(e);
+        // setLastTextEvent(e);
       }
 
       // Add the event listeners for mousedown, mousemove, and mouseup
-      const handleMouseDown = () => {
-        console.log("down");
-        isDrawing = true;
-      }
-      // remove old listeners
-      canvasOnly.removeEventListener('mousedown', handleMouseDown);
-      canvasOnly.addEventListener('mousedown', handleMouseDown);
+      // const handleMouseDown = () => {
+      //   console.log("down");
+      //   isDrawing = true;
+      // }
+      // // remove old listeners
+      // canvasOnly.removeEventListener('mousedown', handleMouseDown);
+      // canvasOnly.addEventListener('mousedown', handleMouseDown);
 
-      const handleMouseMove = (e) => {
-        if (isDrawing === true) {
+      // const handleMouseMove = (e) => {
+      //   if (isDrawing === true) {
 
-          if (croppedBg) history.restoreState();
-          textToApply(e);
-          // ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+      //     if (croppedBg) history.restoreState();
+      //     textToApply(e);
+      //     // ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
 
-        }
-      }
+      //   }
+      // }
 
-      // drawImage usage
-      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-      canvasOnly.removeEventListener('mousemove', handleMouseMove);
-      canvasOnly.addEventListener('mousemove', handleMouseMove);
+      // // drawImage usage
+      // // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+      // canvasOnly.removeEventListener('mousemove', handleMouseMove);
+      // canvasOnly.addEventListener('mousemove', handleMouseMove);
 
-      const handleMouseUp = e => {
-        if (isDrawing === true) {
+      // const handleMouseUp = e => {
+      //   if (isDrawing === true) {
 
-          if (croppedBg) history.restoreState();
+      //     if (croppedBg) history.restoreState();
 
-          textToApply(e);
+      //     textToApply(e);
 
-          isDrawing = false;
-        }
-      }
-      canvasOnly.removeEventListener('mouseup', handleMouseUp);
-      canvasOnly.addEventListener('mouseup', handleMouseUp);
+      //     isDrawing = false;
+      //   }
+      // }
+      // canvasOnly.removeEventListener('mouseup', handleMouseUp);
+      // canvasOnly.addEventListener('mouseup', handleMouseUp);
 
       // setTextListenersApplied(true);
-      if (lastTextEvent) {
-        if (croppedBg) history.restoreState();
-        textToApply(lastTextEvent);
-      }
-    }, [croppedBg, userName, textColor, buttonColor, lastTextEvent]
+      // if (lastTextEvent) {
+      //   if (croppedBg) history.restoreState();
+      //   textToApply(lastTextEvent);
+      // }
+      history.restoreState();
+      textToApply(leftRight);
+    }, [croppedBg, userName, textColor, buttonColor]
   );
     
   const step1Direction = {row: ""};
@@ -954,10 +957,10 @@ function OhmieCardV4(props) {
     }, fadeOutMs*0.75);
   };
 
-  useEffect(() => {
-    // needs to run when stampSize changes
-    applyTextListeners();
-  }, [userName, applyTextListeners, textColor, buttonColor]);
+  // useEffect(() => {
+  //   // needs to run when stampSize changes
+  //   applyTextListeners();
+  // }, [userName, applyTextListeners, textColor, buttonColor]);
 
   useEffect(() => {
     // needs to run when stampSize changes
@@ -1104,6 +1107,7 @@ function OhmieCardV4(props) {
                             backgroundColor={backgroundColor}
                             setBackgroundColor={setBackgroundColor}
                             previewFinalCanvas={previewFinalCanvas}
+                            applyTextLocation={applyTextLocation}
                           />
                         </Box>
                         <Box style={{width: "50%", padding: "10px"}}>
