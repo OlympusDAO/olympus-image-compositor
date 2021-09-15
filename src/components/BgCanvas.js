@@ -44,7 +44,6 @@ const BgCanvas = React.forwardRef((props, ref) => {
           props.setCroppedBg(image);
         }
       };
-
       image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(props.fileImageType, 1);
     }
   };

@@ -97,7 +97,7 @@ function OhmieCardV4(props) {
 
   const windowSize = useWindowSize();
 
-  const areaHt = (windowSize.height*0.6 ) || 0;
+  const areaHt = (windowSize.height*0.7 ) || 0;
   // TODO (appleseed): fix areaWd;
   const areaWd = windowSize.width*0.8;
   const areaMaxWd = 1100;
@@ -892,14 +892,14 @@ function OhmieCardV4(props) {
   }, [stampSize, setCanvasListeners, croppedBg, stampFile]);
 
   return (
-    <Fade ref={viewContainerRef} in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>
+    <Fade ref={viewContainerRef} in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} >
       <Box>
         <WelcomeHeadline headline={"Ohmie Card"} subText={"Personalized card to show off your gains."}/>
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
         <Box id="outer-wrap" className="module-border-wrap">
           {/*<Box display="flex" alignItems="center" className="module">*/}
           <Box display="flex" alignItems="center" className="module">
-            <Box className="pof-box">
+            <Box className="pof-box" style={{width: "100%"}}>
               <Box
                 className="inner-pof-box rectangle-2-backdrop"
                 style={{
@@ -1066,8 +1066,8 @@ function OhmieCardV4(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="contained"
-              className="ohmie-button"
+              variant="outlined"
+              className="outlined-ohmie-button"
               onClick={goBackToRoot}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>
@@ -1078,8 +1078,8 @@ function OhmieCardV4(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="contained"
-              className="ohmie-button"
+              variant="outlined"
+              className="outlined-ohmie-button"
               onClick={goBackOneStep}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>

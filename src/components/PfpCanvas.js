@@ -69,6 +69,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           goBackOneStep={props.goBackOneStep}
           downloadImage={props.downloadImage}
           downloadText={props.downloadText}
+          buttonsContainerStyle={{flexFlow: "row wrap", justifyContent: "space-around", width: "100%"}}
         />
         <input
           id="logoFile"

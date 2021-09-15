@@ -20,7 +20,7 @@
 
 - [ ] optimize for mobile
 - [ ] fix layout bugs on small screens (bottom of screen cutoff)
-- [ ] pof card not wide enough for 4/7-3/7 layout
+- [X] pof card not wide enough for 4/7-3/7 layout
 - [ ] fix any TODO messages
 
 - [X] center image resizer above slider
@@ -29,6 +29,6 @@
 - [ ] start over button back to 1st step
 - [ ] go to last step (disable background image picker)
 
-- [ ] share on twitter button
+- [X] share on twitter button
 
 - [ ] text canvas v4 is actually v1 & vice versa... doh

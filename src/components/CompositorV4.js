@@ -514,6 +514,7 @@ function CompositorV2(props) {
                       downloadText={"Download PFP"}
                       containerButton={containerButton}
                       containerHeight={objectFromScreenHeight()*0.80}
+                      buttonsContainerStyle={{flexFlow: "column wrap", justifyContent: "center"}}
                     />
                   </Box>
                 }
@@ -631,8 +632,8 @@ function CompositorV2(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="contained"
-              className="ohmie-button"
+              variant="outlined"
+              className="outlined-ohmie-button"
               onClick={goBackToRoot}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>
@@ -643,8 +644,8 @@ function CompositorV2(props) {
           <Box className="two-btns-horizontal">
             <Button
               id="upload-pfp-button"
-              variant="contained"
-              className="ohmie-button"
+              variant="outlined"
+              className="outlined-ohmie-button"
               onClick={goBackOneStep}
             >
               <Typography className="btn-text">Take Me Back Ser</Typography>

@@ -35,7 +35,7 @@ export default function LogoResizer(props) {
         onChange={props.resizeStamp}
       />
       {/*showCanvas && */}
-      <Box display="flex" style={{flexFlow: "column wrap"}} textAlign='center'>
+      <Box display="flex" style={props.buttonsContainerStyle} textAlign='center'>
         
         <Box style={{marginBottom: "1rem"}}>
           <Button
