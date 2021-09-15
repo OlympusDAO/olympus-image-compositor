@@ -368,7 +368,7 @@ function OhmieCardV4(props) {
 
         // console.log(scalingRatio, "fontSize", fontSize);
         ctx.fillStyle = useTextColor;
-        ctx.font = "medium "+fontSize+"px RedHatDisplay";
+        ctx.font = "500 "+fontSize+"px RedHatDisplay";
         ctx.fillText(nameString, newX, newY);
 
         // lineIndex 1 & 2 are 128 tall in total
@@ -430,7 +430,7 @@ function OhmieCardV4(props) {
 
         // letters in button
         ctx.fillStyle = useButtonColor;
-        ctx.font = "medium "+20/scalingRatio+"px RedHatDisplay";
+        ctx.font = "500 "+20/scalingRatio+"px RedHatDisplay";
         ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
         // setLastTextEvent(e);
@@ -1031,7 +1031,7 @@ function OhmieCardV4(props) {
                             <div style={{display: "flex", flexFlow: "column wrap"}}>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
-                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "medium", position: "absolute", top: "-100px"}}>Test</Typography>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "500", position: "absolute", top: "-100px"}}>Test</Typography>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
                             </div>
                           </div>
@@ -1189,7 +1189,7 @@ function OhmieCardV4(props) {
           </Box>
         }
         <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "normal", position: "absolute", top: "-100px"}}>Test</Typography>
-        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "medium", position: "absolute", top: "-100px"}}>Test</Typography>
+        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "500", position: "absolute", top: "-100px"}}>Test</Typography>
         <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
 
       </Box>
