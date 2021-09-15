@@ -8,7 +8,6 @@
 - [x] allow changing text & button color from black to white
 - [x] allow setting of name
 - [x] fix scaling on mobile
-- [ ] add stock backgrounds
 - [ ] fix text weight on Ohmie cards
 - [ ] add API to APY
 - [ ] Test on various image sizes, portrait, landscape, etc.

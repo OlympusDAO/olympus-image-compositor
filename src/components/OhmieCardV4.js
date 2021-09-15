@@ -368,7 +368,7 @@ function OhmieCardV4(props) {
 
         // console.log(scalingRatio, "fontSize", fontSize);
         ctx.fillStyle = useTextColor;
-        ctx.font = fontSize+"px RedHatDisplay";
+        ctx.font = "medium "+fontSize+"px RedHatDisplay";
         ctx.fillText(nameString, newX, newY);
 
         // lineIndex 1 & 2 are 128 tall in total
@@ -384,7 +384,7 @@ function OhmieCardV4(props) {
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
         linePosition = 36/scalingRatio + linePosition;
-        ctx.font = (21/scalingRatio)+"px RedHatDisplay";
+        ctx.font = "normal "+(21/scalingRatio)+"px RedHatDisplay";
         ctx.fillText("When you’re ready, we’re ready with your", newX, newY+linePosition);
         // lineIndex = 4;
         linePosition = 26/scalingRatio + linePosition;
@@ -430,7 +430,7 @@ function OhmieCardV4(props) {
 
         // letters in button
         ctx.fillStyle = useButtonColor;
-        ctx.font = 20/scalingRatio+"px RedHatDisplay";
+        ctx.font = "medium "+20/scalingRatio+"px RedHatDisplay";
         ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
         // setLastTextEvent(e);
@@ -1031,6 +1031,8 @@ function OhmieCardV4(props) {
                             <div style={{display: "flex", flexFlow: "column wrap"}}>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
                               <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "medium", position: "absolute", top: "-100px"}}>Test</Typography>
+                              <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
                             </div>
                           </div>
                         </div>
@@ -1186,6 +1188,10 @@ function OhmieCardV4(props) {
             </Button>
           </Box>
         }
+        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "normal", position: "absolute", top: "-100px"}}>Test</Typography>
+        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "medium", position: "absolute", top: "-100px"}}>Test</Typography>
+        <Typography variant="body1" style={{fontFamily: "RedHatDisplay", fontWeight: "bold", position: "absolute", top: "-100px"}}>Test</Typography>
+
       </Box>
     </Fade>
   );
