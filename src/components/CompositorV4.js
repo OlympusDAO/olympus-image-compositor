@@ -459,6 +459,11 @@ function CompositorV2(props) {
     }
   };
 
+  const rightSideContainerWidth = () => {
+    // console.log('width', parseFloat(canvasRef.current.style.width)*3/4);
+    return parseFloat(canvasRef.current.style.width)*7/8;
+  }
+
   const goBackToRoot = () => {
     setFadeTransition(false);
     setTimeout(() => {
@@ -492,23 +497,25 @@ function CompositorV2(props) {
 
                 {/* Logo Resizing */}
                 {uiStep === 3 &&
-                  <LogoResizerV4
-                    stampSrc={sOhm}
-                    stampHeight={stampSize.height}
-                    stampWidth={stampSize.width}
-                    defaultSize={sOhmSize}
-                    minSize={24}
-                    maxSize={200}
-                    resizeStamp={resizeStamp}
-                    medScreen={medScreen}
-                    directionText={"Resize and place your sOHM"}
-                    goBackOneStep={goBackOneStep}
-                    outlineButton={outlineButton}
-                    downloadImage={downloadImage}
-                    downloadText={"Download PFP"}
-                    containerButton={containerButton}
-                    containerHeight={objectFromScreenHeight()*0.80}
-                  />
+                  <Box style={{width: rightSideContainerWidth()}}>
+                    <LogoResizerV4
+                      stampSrc={sOhm}
+                      stampHeight={stampSize.height}
+                      stampWidth={stampSize.width}
+                      defaultSize={sOhmSize}
+                      minSize={24}
+                      maxSize={200}
+                      resizeStamp={resizeStamp}
+                      medScreen={medScreen}
+                      directionText={"Resize and place your sOHM"}
+                      goBackOneStep={goBackOneStep}
+                      outlineButton={outlineButton}
+                      downloadImage={downloadImage}
+                      downloadText={"Download PFP"}
+                      containerButton={containerButton}
+                      containerHeight={objectFromScreenHeight()*0.80}
+                    />
+                  </Box>
                 }
                 
                 {/* working on loader */}
