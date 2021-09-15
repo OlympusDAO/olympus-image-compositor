@@ -25,6 +25,8 @@ import LogoResizerV4 from "./LogoResizerV4.js";
 import WelcomeHeadline from "./WelcomeHeadline.js";
 import CloudUploadIcon from "./CloudUploadIcon.js";
 
+import {drawFinalCanvas} from "../helpers/drawCanvas.js";
+
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -57,6 +59,9 @@ const dropContainerStyle = {
   alignItems: "center",
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
+
+const fixedWidth = 446;
+const fixedHeight = 446;
 
 function CompositorV2(props) {
   let history = useHistory();
@@ -403,7 +408,8 @@ function CompositorV2(props) {
 }
 
   const downloadImage = () => {
-    console.log("downloadImage");
+    // drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
+    drawFinalCanvas(false, fileCropped, canvasRef, canvasRef, [canvasRef], fixedWidth, fixedHeight);
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {

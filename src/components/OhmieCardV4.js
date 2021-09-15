@@ -27,6 +27,8 @@ import {
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloudUploadIcon from "./CloudUploadIcon.js";
 
+import {setDPI, drawFinalCanvas} from "../helpers/drawCanvas.js";
+
 import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory } from "react-router-dom";
 
@@ -559,7 +561,7 @@ function OhmieCardV4(props) {
 
   const goToTextStep = () => {
     setdirectionState({row: "Enter your name, then place your text, Incooohmer"});
-    setDPI(textCanvasRef, "text");
+    setDPI(textCanvasRef, "text", bgCanvasRef);
     // applyTextListeners();
     canvasOrdering("text");
     setuiStep("text");
@@ -702,79 +704,16 @@ function OhmieCardV4(props) {
       // set canvas dims based on classifyImage results
       setCanvasDims();
 
-      setDPI(bgCanvasRef, false);
+      setDPI(bgCanvasRef, false, bgCanvasRef);
       var ctx = bgCanvasRef.current.getContext('2d');
       ctx.drawImage(croppedBg, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-      setDPI(pfpCanvasRef, false);
-      setDPI(textCanvasRef, false);
-      setDPI(finalCanvasRef, false);
+      setDPI(pfpCanvasRef, false, bgCanvasRef);
+      setDPI(textCanvasRef, false, bgCanvasRef);
+      setDPI(finalCanvasRef, false, bgCanvasRef);
       setCanvasListeners();
     }
     
   }, [setCanvasListeners, croppedBg]);
-
-  // TODO (appleseed):
-  // I think we'll want to setDPI on pfpCanvasRef
-  // ... but size based on bgCanvasRef
-  function setDPI(thisCanvasRef, type) {
-    var thisCanvas = thisCanvasRef.current;
-    var bgCanvas = bgCanvasRef.current;
-    // var dpi = 96*3;
-    // var scaleFactor = dpi / 96;
-    var scaleFactor;
-    if (type === "text") {
-      scaleFactor = 3;
-    } else if (type === "final") {
-      scaleFactor = 12;
-    } else {
-      scaleFactor = 3;
-    }
-    
-    // Set up CSS size.
-    thisCanvas.style.width = bgCanvas.style.width || bgCanvas.width + 'px';
-    thisCanvas.style.height = bgCanvas.style.height || bgCanvas.height + 'px';
-
-    // console.log('setDpi', canvas.style.width, canvas.style.height);
-    // Get size information.
-    var width = parseFloat(thisCanvas.style.width);
-    var height = parseFloat(thisCanvas.style.height);
-
-    // Backup the canvas contents.
-    var oldScale = thisCanvas.width / width;
-    var backupScale = scaleFactor / oldScale;
-    var backup = thisCanvas.cloneNode(false);
-    backup.getContext('2d').drawImage(thisCanvas, 0, 0);
-
-    // Resize the canvas.
-    var ctx = thisCanvas.getContext('2d');
-    thisCanvas.width = Math.ceil(width * scaleFactor);
-    thisCanvas.height = Math.ceil(height * scaleFactor);
-
-    // Redraw the canvas image and scale future draws.
-    ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
-    ctx.drawImage(backup, 0, 0);
-    ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
-  };
-
-  const resizeAndExport = (preview) => {
-    var thisCanvas = finalCanvasRef.current;
-    if (thisCanvas.width !== fixedWidth) {
-      var backup = thisCanvas.cloneNode(false);
-      backup.getContext('2d').drawImage(thisCanvas, 0, 0);
-
-      if (preview) {
-        thisCanvas.width = croppedBg.governing_width;
-        thisCanvas.height = croppedBg.governing_height;
-  
-        thisCanvas.getContext('2d').drawImage(backup, 0,0, croppedBg.governing_width, croppedBg.governing_height);  
-      } else {
-        thisCanvas.width = fixedWidth;
-        thisCanvas.height = fixedHeight;
-  
-        thisCanvas.getContext('2d').drawImage(backup, 0,0, backup.width, backup.height, 0, 0, fixedWidth, fixedHeight);  
-      }
-    }
-  };
 
   // for bgCanvas
   // or maybe multiple?
@@ -859,7 +798,8 @@ function OhmieCardV4(props) {
     // 1B. set cursor: "crosshair"
     // 2. addEventListener "click" (to picker canvas)
 
-    drawFinalCanvas(true);
+    // drawFinalCanvas(true);
+    drawFinalCanvas(true, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
     // setDPI(finalCanvasRef, false);
     // var ctx = finalCanvasRef.current.getContext('2d');
     // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
@@ -886,43 +826,12 @@ function OhmieCardV4(props) {
     }
   }
 
-  /**
-   * 
-   * @param {bool} preview is optional
-   */
-  const drawFinalCanvas = (preview) => {
-    var dpiType = "final";
-    // if (preview) dpiType = "preview";
-    setDPI(finalCanvasRef, dpiType);
-
-    // // ratio of screen height to original
-    // var scaleFactor = croppedBg.governing_height/croppedBg.height;
-
-    // // setting back to original height & width
-    // finalCanvasRef.current.width = croppedBg.width;
-    // finalCanvasRef.current.height = croppedBg.height;
-    // var ctx = finalCanvasRef.current.getContext('2d');
-    // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    // ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    // // draw Text
-    // ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width/scaleFactor, croppedBg.governing_height/scaleFactor);
-    
-    var ctx = finalCanvasRef.current.getContext('2d');
-    ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-    ctx.drawImage(pfpCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-    // draw Text
-    ctx.drawImage(textCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
-
-    // setting back to original height & width
-    // finalCanvasRef.current.width = croppedBg.width;
-    // finalCanvasRef.current.height = croppedBg.height;
-    // finalDPI(finalCanvasRef);
-    resizeAndExport(preview);
-  };
+  
 
   const downloadImage = () => {
     // first combine the canvases onto finalCanvasRef
-    drawFinalCanvas();
+    // drawFinalCanvas();
+    drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
 

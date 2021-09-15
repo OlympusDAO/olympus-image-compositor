@@ -36,9 +36,13 @@ const BgCanvas = React.forwardRef((props, ref) => {
       // console.log(cropper.getCroppedCanvas().toDataURL());
       let image = new Image();
       image.onload = () => {
-        image = classifyImage(image, cropperContainerRef.current.offsetWidth, props.areaHt, false);
-        console.log("cropped", image);
-        props.setCroppedBg(image);
+
+        // this .onload() is running on dropzone, too... so skip out with the if
+        if (cropperContainerRef.current) {
+          image = classifyImage(image, cropperContainerRef.current.offsetWidth, props.areaHt, false);
+          console.log("cropped", image);
+          props.setCroppedBg(image);
+        }
       };
 
       image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(props.fileImageType, 1);
