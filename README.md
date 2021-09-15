@@ -15,13 +15,12 @@
 
 ## Styling Updates
 
-- [ ] figure out vertical & horizontal placement of WelcomeHeadline
-- [ ] take another look at the BoxHomepage Card borders...
-
-WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/commit/948949371dac4beefde40e539be44fe23fb78ca1):
+- [X] figure out vertical & horizontal placement of WelcomeHeadline
+- [X] take another look at the BoxHomepage Card borders...
 
 - [ ] optimize for mobile
 - [ ] fix layout bugs on small screens (bottom of screen cutoff)
+- [ ] pof card not wide enough for 4/7-3/7 layout
 - [ ] fix any TODO messages
 
 - [X] center image resizer above slider
@@ -29,3 +28,5 @@ WIP from [commit 948949](https://github.com/OlympusDAO/olympus-image-compositor/
 
 - [ ] start over button back to 1st step
 - [ ] go to last step
+
+- [ ] share on twitter button

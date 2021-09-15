@@ -52,7 +52,9 @@ const canvasStyle = {
 const dropContainerStyle = {
   display: "flex",
   flexFlow: "column wrap",
-  justifyContent: "center"
+  justifyContent: "center",
+  width: "100%",
+  alignItems: "center",
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
 
@@ -101,12 +103,13 @@ function CompositorV2(props) {
     flexFlow: "column wrap",
     justifyContent: "center",
     cursor: "pointer",
-    maxHeight: "450px",
+    // maxHeight: "450px",
     height: areaHt,
-    width: areaWd,
+    width: "100%",
+    // width: areaWd,
     // TODO (appleseed): this width needs to be capped on mobile
     // ... also should handle border correctly
-    maxWidth: areaMaxWd,
+    // maxWidth: areaMaxWd,
     alignItems: "center",
   };
 
@@ -469,7 +472,7 @@ function CompositorV2(props) {
         
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
         <Box id="outer-wrap" className="module-border-wrap">
-          <Box display="flex" alignItems="center" className="module">
+          <Box alignItems="center" className="module">
             <Box className="pof-box">
               <Box
                 className="inner-pof-box rectangle-2-backdrop"

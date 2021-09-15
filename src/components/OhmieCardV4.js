@@ -1024,8 +1024,7 @@ function OhmieCardV4(props) {
                           <Typography className="btn-text">Upload file</Typography>
                         </Button>
                       </Box>
-                      
-                      <div style={{flexGrow: "0"}}>
+                      <div style={{flexGrow: "0", bottom: "0", position: "absolute", paddingBottom: "10px"}}>
                         <div style={{display: "flex", flexFlow: "column wrap"}}>
                           <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
                           <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
