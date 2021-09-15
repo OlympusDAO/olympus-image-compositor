@@ -470,146 +470,142 @@ function CompositorV2(props) {
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
         <Box id="outer-wrap" className="module-border-wrap">
           <Box display="flex" alignItems="center" className="module">
-            <Box className="rectangle-1-backdrop pof-box">
-              <Box className="inner-module-border-wrap" style={{margin: "10px"}}>
-                <Box className="inner-module">
-                  <Box
-                    className="inner-pof-box rectangle-2-backdrop"
-                    style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}>
+            <Box className="pof-box">
+              <Box
+                className="inner-pof-box rectangle-2-backdrop"
+                style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}>
 
-                    {/* direction text */}
-                    {Object.entries(directionState).map(([key, value]) => (
-                      <Typography key={key} className="direction-text">{value}</Typography>
-                    ))}
+                {/* direction text */}
+                {Object.entries(directionState).map(([key, value]) => (
+                  <Typography key={key} className="direction-text">{value}</Typography>
+                ))}
 
-                    {/* Logo Resizing */}
-                    {uiStep === 3 &&
-                      <LogoResizerV4
-                        stampSrc={sOhm}
-                        stampHeight={stampSize.height}
-                        stampWidth={stampSize.width}
-                        defaultSize={sOhmSize}
-                        minSize={24}
-                        maxSize={200}
-                        resizeStamp={resizeStamp}
-                        medScreen={medScreen}
-                        directionText={"Resize and place your sOHM"}
-                        goBackOneStep={goBackOneStep}
-                        outlineButton={outlineButton}
-                        downloadImage={downloadImage}
-                        downloadText={"Download PFP"}
-                        containerButton={containerButton}
-                        containerHeight={objectFromScreenHeight()*0.80}
-                      />
-                    }
-                    
-                    {/* working on loader */}
-                    {isLoading &&
-                      <CircularProgress />
-                    }
+                {/* Logo Resizing */}
+                {uiStep === 3 &&
+                  <LogoResizerV4
+                    stampSrc={sOhm}
+                    stampHeight={stampSize.height}
+                    stampWidth={stampSize.width}
+                    defaultSize={sOhmSize}
+                    minSize={24}
+                    maxSize={200}
+                    resizeStamp={resizeStamp}
+                    medScreen={medScreen}
+                    directionText={"Resize and place your sOHM"}
+                    goBackOneStep={goBackOneStep}
+                    outlineButton={outlineButton}
+                    downloadImage={downloadImage}
+                    downloadText={"Download PFP"}
+                    containerButton={containerButton}
+                    containerHeight={objectFromScreenHeight()*0.80}
+                  />
+                }
+                
+                {/* working on loader */}
+                {isLoading &&
+                  <CircularProgress />
+                }
 
-                    {uiStep === 1 &&
-                      <div className="dropContainer" style={dropContainerStyle}>
-                        <div id="dropzone-reg" {...getRootProps({style: dropZoneReg})}>
-                          <input {...getInputProps()} />
-                          <Box className="dropzone-interior-container vertical-centered-flex">
-                            <Box><CloudUploadIcon viewBox="0 0 102 48"/></Box>
-                            <Box className="vertical-centered-flex">
-                              <Typography className="pof-dropbox-text">Drag and Drop here</Typography>
-                              <Typography className="pof-dropbox-text">or</Typography>
-                            </Box>
-                            <Button
-                              id="upload-pfp-button"
-                              variant="contained"
-                              className="ohmie-button"
-                            >
-                              <Typography className="btn-text">Upload file</Typography>
-                            </Button>
-                          </Box>
-                        </div>
-                      </div>
-                    }
-
-                    {uiStep === 2 && fileImage &&
-                      <div>
-                        <Cropper
-                          id="cropper-js"
-                          src={fileImage.src}
-                          // style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
-                          style={cropperCanvasContainer}
-                          // Cropper.js options
-                          aspectRatio={1}
-                          cropBoxResizable={false}
-                          dragMode={"crop"}
-                          guides={false}
-                          autoCropArea={1}
-                          crop={onCrop}
-                          ready={imageLoaded}
-                          ref={cropperRef}
-                        />
-                      </div>
-                    }
-
-                    {/* Image Resizer was here... but didn't look right */}  
-                    {/* 
-                      Notes for below (Step 3): 
-                      1. canvas must ALWAYS be on screen
-                      2. when we don't want the CroppedCanvas to appear we change height to 0
-                    */}
-                    <div style={canvasContainer} ref={finalCanvas}>
-                      <canvas
-                        id="canvas"
-                        ref={canvasRef}
-                        style={canvasStyle}
-                        // className="canvasRendering"
-                        width={objectFromScreenWidth()}
-                        height={objectFromScreenHeight()}
-                      >
-                      </canvas>
-
-                      {uiStep === 4 &&
-                        <div>
-                          <img
-                            alt="finalImage"
-                            src={canvasRef.current.toDataURL(fileImageType, 1)}
-                            style={{
-                              height: canvasRef.current.style.height,
-                              width: canvasRef.current.style.width,
-                            }}
-                          />
-                          <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                            <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                              Back
-                            </Button>
-                            <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                              Download pfp
-                            </Button>
-                          </Box>
-                        </div>
-                      }
-
-                      {/* below is screen size notation for debugging */}
-                      {/*<div>
-                        {windowSize.width}px / {windowSize.height}px
-                        {console.log(browser)}
-                        {console.log(UA)}
-                        {console.log(getUA)}
-                      </div>
-                      <div>
-                        <p>isIOS: {isIOS.toString()}</p>
-                        <p>isMobile: {isMobile.toString()}</p>
-                        <p>browserName: {browserName}</p>
-                        <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
-                      </div>
-                      
-                      <div style={{overflowWrap: "anywhere"}}>
-                        <p>{JSON.stringify(deviceDetect())}</p>
-                      </div>
-                      */}
-
+                {uiStep === 1 &&
+                  <div className="dropContainer" style={dropContainerStyle}>
+                    <div id="dropzone-reg" {...getRootProps({style: dropZoneReg})}>
+                      <input {...getInputProps()} />
+                      <Box className="dropzone-interior-container vertical-centered-flex">
+                        <Box><CloudUploadIcon viewBox="0 0 102 48"/></Box>
+                        <Box className="vertical-centered-flex">
+                          <Typography className="pof-dropbox-text">Drag and Drop here</Typography>
+                          <Typography className="pof-dropbox-text">or</Typography>
+                        </Box>
+                        <Button
+                          id="upload-pfp-button"
+                          variant="contained"
+                          className="ohmie-button"
+                        >
+                          <Typography className="btn-text">Upload file</Typography>
+                        </Button>
+                      </Box>
                     </div>
-                  </Box>
-                </Box>
+                  </div>
+                }
+
+                {uiStep === 2 && fileImage &&
+                  <div>
+                    <Cropper
+                      id="cropper-js"
+                      src={fileImage.src}
+                      // style={{ margin: "auto", height: fileImage.governing_height, width: fileImage.governing_width }}
+                      style={cropperCanvasContainer}
+                      // Cropper.js options
+                      aspectRatio={1}
+                      cropBoxResizable={false}
+                      dragMode={"crop"}
+                      guides={false}
+                      autoCropArea={1}
+                      crop={onCrop}
+                      ready={imageLoaded}
+                      ref={cropperRef}
+                    />
+                  </div>
+                }
+
+                {/* Image Resizer was here... but didn't look right */}  
+                {/* 
+                  Notes for below (Step 3): 
+                  1. canvas must ALWAYS be on screen
+                  2. when we don't want the CroppedCanvas to appear we change height to 0
+                */}
+                <div style={canvasContainer} ref={finalCanvas}>
+                  <canvas
+                    id="canvas"
+                    ref={canvasRef}
+                    style={canvasStyle}
+                    // className="canvasRendering"
+                    width={objectFromScreenWidth()}
+                    height={objectFromScreenHeight()}
+                  >
+                  </canvas>
+
+                  {uiStep === 4 &&
+                    <div>
+                      <img
+                        alt="finalImage"
+                        src={canvasRef.current.toDataURL(fileImageType, 1)}
+                        style={{
+                          height: canvasRef.current.style.height,
+                          width: canvasRef.current.style.width,
+                        }}
+                      />
+                      <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
+                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
+                          Back
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
+                          Download pfp
+                        </Button>
+                      </Box>
+                    </div>
+                  }
+
+                  {/* below is screen size notation for debugging */}
+                  {/*<div>
+                    {windowSize.width}px / {windowSize.height}px
+                    {console.log(browser)}
+                    {console.log(UA)}
+                    {console.log(getUA)}
+                  </div>
+                  <div>
+                    <p>isIOS: {isIOS.toString()}</p>
+                    <p>isMobile: {isMobile.toString()}</p>
+                    <p>browserName: {browserName}</p>
+                    <p>isMobileSafariNotTrue: {(isMobileSafari !== true).toString()}</p>
+                  </div>
+                  
+                  <div style={{overflowWrap: "anywhere"}}>
+                    <p>{JSON.stringify(deviceDetect())}</p>
+                  </div>
+                  */}
+
+                </div>
               </Box>
             </Box>
           </Box>
