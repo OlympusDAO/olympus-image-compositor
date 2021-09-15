@@ -593,6 +593,7 @@ function OhmieCardV4(props) {
         // ... so we need to resize the image
         var maxHt = areaHt;
         // var maxWdth = canvasContainerRef.current.offsetWidth;
+        // TODO here
         var maxWdth = getViewWidth();
 
         var mobile = false;
@@ -874,19 +875,22 @@ function OhmieCardV4(props) {
   });
 
   return (
-    <Fade ref={viewContainerRef} in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} >
-      <Box>
+    <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} style={{width: "100%"}}>
+      <Box display="flex" style={{flexFlow: "column", alignItems: "center"}}>
         <WelcomeHeadline headline={"Ohmie Card"} subText={"Personalized card to show off your gains."}/>
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
-        <Box id="outer-wrap" className="module-border-wrap">
+        <Box id="outer-wrap" className="module-border-wrap" style={{maxWidth: "1100px", alignSelf: "center"}}>
           {/*<Box display="flex" alignItems="center" className="module">*/}
           <Box display="flex" alignItems="center" className="module">
             <Box className="pof-box" style={{width: "100%"}}>
               <Box
+                id="viewContainer"
+                ref={viewContainerRef} 
                 className="inner-pof-box rectangle-2-backdrop"
                 style={{
                   flexFlow: "column",
                   justifyContent: "space-between",
+                  maxWidth: "1100px"
                   // height: areaHt,
                   // width: areaWd,
                   // // TODO (appleseed): this width needs to be capped on mobile
@@ -930,7 +934,7 @@ function OhmieCardV4(props) {
                 {/* Background Cropper */}
                 {uiStep === "bg" && fileImage &&
                   <BgCanvas
-                    ref={{cropperRef: cropperRef, cropperContainerRef: cropperContainerRef}}
+                    ref={{cropperRef: cropperRef, viewContainerRef: viewContainerRef}}
                     imageLoaded={imageLoaded}
                     setCroppedBg={setCroppedBg}
                     goBackOneStep={goBackOneStep}
@@ -987,8 +991,8 @@ function OhmieCardV4(props) {
                 
                 {/* Logo Resizing */}
                 {(uiStep === "pfp" || uiStep === "text") &&
-                  <Box id="editable-features" display="flex" style={{flexFlow: "row wrap", width: "100%", padding: "33px"}}>
-                    <Box style={{width: "50%", padding: "10px"}}>
+                  <Box id="editable-features" display="flex">
+                    <Box className="ef-container">
                       <TextCanvas
                         setUserName={setUserName}
                         // applyTextListeners={applyTextListeners}
@@ -1005,7 +1009,7 @@ function OhmieCardV4(props) {
                         setTextPosition={setTextPosition}
                       />
                     </Box>
-                    <Box style={{width: "50%", padding: "10px"}}>
+                    <Box className="ef-container">
                       <PfpCanvas
                         ref={{stampInputRef: stampInputRef}}
                         setStampSize={setStampSize}

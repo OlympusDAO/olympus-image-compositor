@@ -17,14 +17,7 @@ function BoxHomepage() {
   };
 
   const contentOneStyle = {
-    flex: "none",
-    order: "1",
-    flexGrow: "0",
-    margin: "30px 0px",
-
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
+    
     // padding: "20px",
   }
 
@@ -97,7 +90,7 @@ function BoxHomepage() {
   return (
     <Box display="flex" justifyContent="center" style={containerStyle}>
       <Fade in={fadeTransition} timeout={{enter: 333, exit: fadeOutMs}}>
-        <Box id="content-1" style={contentOneStyle} display="flex" gap="6px">
+        <Box id="content-1" display="flex" gap="6px">
           {/* 
             Card Box (below)
             // TODO: should have click handlers & hover

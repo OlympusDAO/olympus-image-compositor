@@ -22,7 +22,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
   const fileImage = props.fileImage;
 
   // potential canvasContainerRef should just be a prop...
-  const { cropperRef, cropperContainerRef } = ref;
+  const { cropperRef, viewContainerRef } = ref;
 
   const cropperCanvasSettings = {
     imageSmoothingQuality: "high",
@@ -30,7 +30,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
 
   const onCrop = () => {
     // cropperContainerRef may not exist since we hide areas in different steps
-    if (cropperContainerRef.current) {
+    if (viewContainerRef.current) {
       const imageElement = cropperRef?.current;
       const cropper = imageElement?.cropper;
       // console.log(cropper.getCroppedCanvas().toDataURL());
@@ -38,8 +38,8 @@ const BgCanvas = React.forwardRef((props, ref) => {
       image.onload = () => {
 
         // this .onload() is running on dropzone, too... so skip out with the if
-        if (cropperContainerRef.current) {
-          image = classifyImage(image, cropperContainerRef.current.offsetWidth, props.areaHt, false);
+        if (viewContainerRef.current) {
+          image = classifyImage(image, viewContainerRef.current.offsetWidth, props.areaHt, false);
           console.log("cropped", image);
           props.setCroppedBg(image);
         }
@@ -50,7 +50,7 @@ const BgCanvas = React.forwardRef((props, ref) => {
 
   return (
     <Box style={props.containerStyle}>
-      <Box id="cropBoxContainer" ref={cropperContainerRef}>
+      <Box id="cropBoxContainer">
         <Cropper
           src={fileImage.src}
           style={{ margin: "20px", height: fileImage.governing_height, width: fileImage.governing_width }}

@@ -94,8 +94,13 @@ $mediaMinWidth: 480px;
 }
 
 .card-nav {
-  width: 490px;
   height: 300px;
+  width: 490px;
+  // mediaMinWidth = 480 & there are two side by side
+  // tablets & below would need flex-flow: column on #content-1
+  @media (max-width: $mediaMinWidth) {
+    width: 350px;
+  }
 }
 
 .pof-box {
@@ -206,6 +211,38 @@ $mediaMinWidth: 480px;
 #stamper-box {
   @media (max-width: $mediaBp1Width) {
     margin-top: 25px;
+  }
+}
+
+#editable-features {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+  padding: 33px;
+  @media (max-width: $mediaMinWidth) {
+    flex-flow: column wrap;
+  }
+  & .ef-container {
+    width: 50%;
+    padding: 10px;
+    @media (max-width: $mediaMinWidth) {
+      width: 100%;
+    }
+  }
+}
+
+#content-1 {
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 30px 0px;
+  display: flex;
+  
+  flex-flow: row wrap;
+  align-items: flex-start;
+  // card-navs side by side are 560+560 including padding
+  @media (max-width: 1200px) {
+    flex-flow: column wrap;
   }
 }
 
