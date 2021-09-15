@@ -973,7 +973,7 @@ function OhmieCardV4(props) {
       // restore to image
       drawCroppedCanvas();
     }
-  }, [backgroundColor]);
+  }, [backgroundColor, drawCroppedCanvas]);
 
   useEffect(() => {
     // needs to run when stampSize changes
