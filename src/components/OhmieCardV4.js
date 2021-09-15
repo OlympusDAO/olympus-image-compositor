@@ -632,7 +632,8 @@ function OhmieCardV4(props) {
       // set container height
       canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
       canvasContainerRef.current.style.width = croppedBg.governing_width + "px";
-
+      viewContainerRef.current.style.width = croppedBg.governing_width + "px";
+      
       bgCanvasRef.current.style.height = croppedBg.governing_height + "px";
       bgCanvasRef.current.style.width = croppedBg.governing_width + "px";
       bgCanvasRef.current.height = croppedBg.governing_height;
