@@ -125,7 +125,7 @@ function BoxHomepage() {
             Card Box (below)
             // TODO: should have click handlers & hover
           */}
-          <Box id="ohmie-card-trigger" class="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/ohmiecard")}}>
+          <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/ohmiecard")}}>
             <Box display="flex" alignItems="center" className="module">
               <Box className="rectangle-1-backdrop card-nav">
                 <Box style={textContainerStyles}>

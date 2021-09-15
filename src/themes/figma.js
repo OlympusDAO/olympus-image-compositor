@@ -16,31 +16,12 @@ const figmaTheme = {
   // backgroundColor: "#0C1B29",
   background: "rgba(45, 60, 120, 1)",
   filter: "blur(4px)",
-  // opacity: "0.5",
-  // background: `url(${bgImage}) no-repeat center center fixed`,
-  // webkitBackgroundSize: "cover",
-  // mozBackgroundSize: "cover",
-  // oBackgroundSize: "cover",
-  // backgroundSize: "cover",
-  // width: "100vw",
-  // height: "100vh",
-  // ADDED
 
-  // backgroundSize: "cover",
-  // background: `
-  //   linear-gradient(180deg, rgba(8, 15, 53, 0), rgba(0, 0, 10, 0.9)),
-  //   linear-gradient(333deg, rgba(153, 207, 255, 0.2), rgba(180, 255, 217, 0.08)),
-  //   radial-gradient(circle at 77% 89%, rgba(125, 163, 169, 0.8), rgba(125, 163, 169, 0) 50%),
-  //   radial-gradient(circle at 15% 95%, rgba(125, 163, 169, 0.8), rgba(125, 163, 169, 0) 43%),
-  //   radial-gradient(circle at 65% 23%, rgba(137, 151, 119, 0.4), rgba(137, 151, 119, 0) 70%),
-  //   radial-gradient(circle at 10% 0%, rgba(187, 211, 204, 0.33), rgba(187,211,204,0) 35%),
-  //   radial-gradient(circle at 11% 100%, rgba(131, 165, 203, 0.3), rgba(131, 165, 203, 0) 30%)
-  //   `,
-  paperBg: "rgba(54, 56, 64, 0.5)",
+  paperBg: "rgba(45, 60, 120, 0.5)",
   modalBg: "rgba(36, 36, 38, 0.6)",
-  popoverBg: "rgba(54, 56, 64, 1)",
+  popoverBg: "rgba(45, 60, 120, 1)",
   menuBg: "#36384080",
-  backdropBg: "rgba(54, 56, 64, 0.5)",
+  backdropBg: "rgba(45, 60, 120, 0.5)",
   largeTextColor: "#F4D092",
   activeLinkColor: "#F5DDB4",
   activeLinkSvgColor:
@@ -48,7 +29,7 @@ const figmaTheme = {
   primaryButtonColor: "#333333",
   primaryButtonBG: "#F4D092",
   primaryButtonHoverBG: "#EDD8B4",
-  secondaryButtonHoverBG: "rgba(54, 56, 64, 1)",
+  secondaryButtonHoverBG: "rgba(45, 60, 120, 1)",
   outlinedPrimaryButtonHoverBG: "#F8CC82",
   outlinedPrimaryButtonHoverColor: "#333333",
   outlinedSecondaryButtonHoverBG: "transparent",
@@ -156,9 +137,17 @@ export const figma = responsiveFontSizes(
         MuiOutlinedInput: {
           root: {
             focused: {
-              borderColor: figmaTheme.gold,
+              borderColor: "#fff",
+            },
+            "& fieldset": {
+              borderColor: "#fff",
             },
           },
+        },
+        MuiInputLabel: {
+          root: {
+            color: "#fff",
+          }
         },
         MuiToggleButton: {
           root: {

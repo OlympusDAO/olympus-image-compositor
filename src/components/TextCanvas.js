@@ -6,7 +6,8 @@ import React, {useState, useEffect} from 'react';
 import {
   Box,
   TextField,
-  Typography,
+  // Typography,
+  MenuItem,
   // Paper,
   // Typography,
   // Button,
@@ -59,8 +60,8 @@ export default function TextCanvas(props) {
 
   const colorStyle = (whichSwatch) => {
     const baseStyles = {
-      width: '36px',
-      height: '14px',
+      width: '100%',
+      height: '100%',
       borderRadius: '2px',
     };
     var backgroundStyles;
@@ -91,12 +92,14 @@ export default function TextCanvas(props) {
   };
 
   const swatchStyle = {
-    padding: '5px',
+    marginLeft: "3px",
+    padding: '2px',
     background: '#fff',
-    borderRadius: '1px',
+    borderRadius: '5px',
     boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
     display: 'inline-block',
     cursor: 'pointer',
+    width: "43px",
   };
 
   const popoverStyle = {
@@ -179,38 +182,63 @@ export default function TextCanvas(props) {
   }, [displayButtonPicker, displayTextPicker])
 
   return (
-    <Box style={{marginBottom: "1em"}}>
+    <Box style={{display: "flex", flexFlow: "column wrap", gap: "6px"}}>
       <TextField
-        id="your-name"
+        id="name-input"
         label="Your Name"
-        variant="filled"
-        onChange={handleChange} />
-
-      <Box display="flex" justifyContent="space-evenly" alignItems="center" style={{maxWidth: "600px", margin: "auto", paddingTop: "6px"}}>
-        <Box item>
-          <Typography>Text</Typography>
-          <Box style={ swatchStyle } onClick={ clickTextSwatch }>
-            <Box style={ colorStyle("text") } />
-          </Box>
-        </Box> 
-        <Box item>
-          <Typography>Button Text</Typography>
-          <Box style={ swatchStyle } onClick={ clickButtonSwatch }>
-            <Box style={ colorStyle("button") } />
-          </Box>
-        </Box>
-        <Box item>
-          <Typography>Background</Typography>
-          <Box style={ swatchStyle } onClick={ clickBackgroundSwatch }>
-            <Box style={ colorStyle("background") } />
-          </Box>
+        variant="outlined"
+        // style={{color: "white"}}
+        onChange={handleChange}
+      />
+      <Box id="background-inputs" display="flex" justifyContent="space-between">
+        <TextField
+          id="select-background"
+          select
+          label="Background"
+          // onChange={handleChange}
+          variant="outlined"
+          style={{flexGrow: "3"}}
+        >
+          <MenuItem value={"image"}>
+            Image
+          </MenuItem>
+          <MenuItem value={"solid"}>
+            Solid
+          </MenuItem>
+        </TextField>
+        <Box style={ swatchStyle } onClick={ clickBackgroundSwatch }>
+          <Box style={ colorStyle("background") } />
         </Box>
       </Box>
-
+      <Box id="body-inputs" display="flex" justifyContent="space-between">
+        <TextField
+          id="select-body"
+          select
+          label="Body"
+          defaultValue="left"
+          // onChange={handleChange}
+          variant="outlined"
+          style={{flexGrow: "3"}}
+        >
+          <MenuItem value={"left"}>
+            Left
+          </MenuItem>
+          <MenuItem value={"right"}>
+            Right
+          </MenuItem>
+        </TextField>
+        <Box style={ swatchStyle } onClick={ clickTextSwatch }>
+          <Box style={ colorStyle("text") } />
+        </Box>
+      </Box>
+      <Box>
+        <Box style={ swatchStyle } onClick={ clickButtonSwatch }>
+          <Box style={ colorStyle("button") } />
+        </Box>
+      </Box>
       {/* <Box>
         <CustomColorPicker colors={["#000000", "#FFFFFF"]}/>
       </Box> */}
-  
       <Box>
         { displayTextPicker ? (
             <div style={ popoverStyle }>

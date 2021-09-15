@@ -14,7 +14,7 @@ export default function LogoResizer(props) {
     <div style={props.medScreen ? (
       {marginLeft: "1rem", marginRight: "1rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", height: props.containerHeight}
     ): (
-      {marginTop: "0.75rem", display: "flex", flexDirection: "column", alignItems: "center"}
+      {display: "flex", flexDirection: "column", alignItems: "center"}
     )}>
       {/* TODO (appleseed): do you want click to replace option on POF? */}
       <Typography className="direction-text">{props.directionText}</Typography>
