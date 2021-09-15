@@ -16,11 +16,6 @@ function BoxHomepage() {
     padding: "0px",
   };
 
-  const contentOneStyle = {
-    
-    // padding: "20px",
-  }
-
   const textContainerStyles = {
     /* Auto Layout */
     display: "flex",

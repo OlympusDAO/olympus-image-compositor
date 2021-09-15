@@ -619,7 +619,6 @@ function OhmieCardV4(props) {
 
   // react-cropper
   const cropperRef = React.useRef(null);
-  const cropperContainerRef = React.useRef(null);
   
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...

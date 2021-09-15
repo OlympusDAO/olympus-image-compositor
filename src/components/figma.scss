@@ -194,6 +194,7 @@ $mediaMinWidth: 480px;
 
   flex-flow: row wrap;
   align-items: center;
+  width: 100%;
   @media (max-width: $mediaMinWidth) {
     flex-flow: column wrap;
     button:first-child {
