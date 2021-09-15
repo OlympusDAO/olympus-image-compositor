@@ -906,7 +906,7 @@ function OhmieCardV4(props) {
 
   useEffect(() => {
     function handleResize() {
-      drawCroppedCanvas();
+      if (uiStep === "pfp") drawCroppedCanvas();
     }
     window.addEventListener('resize', handleResize);
   });

@@ -485,6 +485,13 @@ function CompositorV2(props) {
     setCanvasListeners();
   }, [stampSize, setCanvasListeners, fileCropped]);
 
+  useEffect(() => {
+    function handleResize() {
+      if (uiStep === 3) drawCroppedCanvas();
+    }
+    window.addEventListener('resize', handleResize);
+  });
+
   return (
     <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}}>
       <Box>
