@@ -75,7 +75,7 @@ const dropContainerStyle = {
 function OhmieCardV4(props) {
   let history = useHistory();
 
-  const medScreen = useMediaQuery('(min-width:900px)');
+  const medScreen = useMediaQuery('(min-width:960px)');
   const [fadeTransition, setFadeTransition] = useState(true);  
   const fadeOutMs = 333;
 

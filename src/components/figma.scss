@@ -16,6 +16,11 @@
   @return mix(black, $color, $percentage);
 }
 
+// Predefined Break-points
+$mediaMaxWidth: 1260px;
+$mediaBp1Width: 960px;
+$mediaMinWidth: 480px;
+
 // iconStyle shrinks the svg path to fit...
 .iconStyle {
   & path {
@@ -180,8 +185,28 @@
 .two-btns-horizontal {
   text-align: center;
   display: flex;
-  flex-flow: row wrap;
   justify-content: space-evenly;
+
+  flex-flow: row wrap;
+  align-items: center;
+  @media (max-width: $mediaMinWidth) {
+    flex-flow: column wrap;
+    button:first-child {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+#pof-canvas-container {
+  @media (max-width: $mediaBp1Width) {
+    margin-top: 25px;
+  }
+}
+
+#stamper-box {
+  @media (max-width: $mediaBp1Width) {
+    margin-top: 25px;
+  }
 }
 
 .direction-text {

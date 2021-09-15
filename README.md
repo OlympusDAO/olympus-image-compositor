@@ -33,5 +33,5 @@
 
 - [ ] text canvas v4 is actually v1 & vice versa... doh
 
-- [ ] on resize, canvas is empty skewed
-- [ ] clear finalCanvas after download
+- [X] on resize, canvas is empty skewed
+- [X] clear finalCanvas after download

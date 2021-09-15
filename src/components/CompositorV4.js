@@ -511,7 +511,8 @@ function CompositorV2(props) {
             <Box className="pof-box">
               <Box
                 className="inner-pof-box rectangle-2-backdrop"
-                style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}>
+                style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}
+              >
 
                 {/* direction text */}
                 {Object.entries(directionState).map(([key, value]) => (
@@ -520,7 +521,7 @@ function CompositorV2(props) {
 
                 {/* Logo Resizing */}
                 {uiStep === 3 &&
-                  <Box style={{width: rightSideContainerWidth()}}>
+                  <Box id="stamper-box" style={{width: rightSideContainerWidth()}}>
                     <LogoResizerV4
                       stampSrc={sOhm}
                       stampHeight={stampSize.height}
@@ -595,7 +596,7 @@ function CompositorV2(props) {
                   1. canvas must ALWAYS be on screen
                   2. when we don't want the CroppedCanvas to appear we change height to 0
                 */}
-                <div style={canvasContainer} ref={finalCanvas}>
+                <div id="pof-canvas-container" style={canvasContainer} ref={finalCanvas}>
                   <canvas
                     id="canvas"
                     ref={canvasRef}
