@@ -26,6 +26,7 @@ import {
 } from "react-device-detect";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloudUploadIcon from "./CloudUploadIcon.js";
+import ShareOnTwitter from "./ShareOnTwitter.js";
 
 import {setDPI, drawFinalCanvas} from "../helpers/drawCanvas.js";
 
@@ -1036,6 +1037,7 @@ function OhmieCardV4(props) {
                   </Box>
                 }
                 
+                {/* TODO needs styles */}
                 {uiStep === "long-press" &&
                   <div>
                     <img
@@ -1091,6 +1093,10 @@ function OhmieCardV4(props) {
               <Typography className="btn-text">Confirm</Typography>
             </Button>
           </Box>
+        }
+
+        {(uiStep === "pfp" || uiStep === "text") &&
+          <ShareOnTwitter inOhmieCard={true} />
         }
 
         {/* hiding text so that it is preloaded for canvas */}

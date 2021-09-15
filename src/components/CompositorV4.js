@@ -24,6 +24,7 @@ import { useHistory } from "react-router-dom";
 import LogoResizerV4 from "./LogoResizerV4.js";
 import WelcomeHeadline from "./WelcomeHeadline.js";
 import CloudUploadIcon from "./CloudUploadIcon.js";
+import ShareOnTwitter from "./ShareOnTwitter.js";
 
 import {drawFinalCanvas} from "../helpers/drawCanvas.js";
 
@@ -650,6 +651,9 @@ function CompositorV2(props) {
               <Typography className="btn-text">Confirm</Typography>
             </Button>
           </Box>
+        }
+        {uiStep === 3 &&
+          <ShareOnTwitter inOhmieCard={false} />
         }
       </Box>
     </Fade>

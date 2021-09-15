@@ -9,7 +9,7 @@
 - [x] allow setting of name
 - [x] fix scaling on mobile
 - [X] fix text weight on Ohmie cards
-- [ ] add API to APY
+- [X] add API to APY
 - [ ] Test on various image sizes, portrait, landscape, etc.
 - [ ] change the url preview
 
