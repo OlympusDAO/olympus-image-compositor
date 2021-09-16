@@ -37,7 +37,8 @@ import "./stake.scss";
 import "./figma.scss";
 
 // import sOhm from '../assets/token_sOHM.png';
-import sOhm from '../assets/token_Ohm.svg';
+// import sOhm from '../assets/token_Ohm.svg';
+import sOhm from '../assets/token_sOHM.svg';
 import whiteBg from '../assets/whiteBg.png';
 import classifyImage, { classifyOhmieImage } from "../helpers/classifyImage";
 import RGB2Hex from "../helpers/RGB2Hex";
