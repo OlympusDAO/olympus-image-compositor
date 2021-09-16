@@ -67,10 +67,12 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           maxSize={props.maxHt*1.25}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
+          directionText={"Personalized Character"}
           goBackToStart={props.goBackToStart}
           downloadImage={props.downloadImage}
           downloadText={props.downloadText}
           buttonsContainerStyle={{flexFlow: "row wrap", justifyContent: "space-around", width: "100%"}}
+          isPfp={true}
         />
         <input
           id="logoFile"

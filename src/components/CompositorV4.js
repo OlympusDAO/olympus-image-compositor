@@ -544,10 +544,8 @@ function CompositorV2(props) {
                       medScreen={medScreen}
                       directionText={"Resize and place your sOHM"}
                       goBackToStart={goBackToStart}
-                      outlineButton={outlineButton}
                       downloadImage={downloadImage}
                       downloadText={"Download PFP"}
-                      containerButton={containerButton}
                       containerHeight={objectFromScreenHeight()*0.80}
                       buttonsContainerStyle={{flexFlow: "column wrap", justifyContent: "center"}}
                     />

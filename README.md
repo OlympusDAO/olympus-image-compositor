@@ -38,5 +38,5 @@
 - [X] on resize, canvas is empty skewed
 - [X] clear finalCanvas after download
 
-- [ ] remove directionState
-- [ ] remove darkTheme
+- [X] remove directionState
+- [X] remove darkTheme

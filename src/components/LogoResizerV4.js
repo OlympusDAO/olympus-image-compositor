@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Box,
@@ -8,7 +9,7 @@ import {
 
 import SizeSlider from './SizeSlider';
 
-export default function LogoResizer(props) {
+function LogoResizer(props) {
 
   return (
     <div style={props.medScreen ? (
@@ -18,18 +19,30 @@ export default function LogoResizer(props) {
     )}>
       {/* TODO (appleseed): do you want click to replace option on POF? */}
       <Typography className="direction-text">{props.directionText}</Typography>
-      <img
-        src={props.stampSrc}
-        height={props.stampHeight}
-        width={props.stampWidth}
-        style={props.imgStyle}
-        alt="stamp"
-        onClick={props.onStampClick}
-      />
+      {props.isPfp ? (
+        <Box id="pfp-mask" display="flex" onClick={props.onStampClick}>
+          <img
+            src={props.stampSrc}
+            height={props.stampHeight}
+            width={props.stampWidth}
+            style={props.imgStyle}
+            alt="stamp"
+          />
+        </Box>
+      ) : (
+        <img
+          src={props.stampSrc}
+          height={props.stampHeight}
+          width={props.stampWidth}
+          style={props.imgStyle}
+          alt="stamp"
+          onClick={props.onStampClick}
+        />
+      )}
       <SizeSlider
         valueLabelDisplay="auto"
         aria-label="size slider"
-        defaultValue={props.stampWidth}
+        // defaultValue={props.stampWidth}
         min={props.minSize}
         max={props.maxSize}
         onChange={props.resizeStamp}
@@ -57,13 +70,28 @@ export default function LogoResizer(props) {
             <Typography className="btn-text">Start Over</Typography>
           </Button>
         </Box>
-        {/*<Button variant="outlined" color="primary" style={props.outlineButton}>
-          Back
-        </Button>
-        <Button variant="contained" color="primary" onClick={props.downloadImage} style={props.containerButton}>
-          Download pfp
-        </Button>*/}
       </Box>
     </div>
   );
 }
+
+LogoResizer.propTypes = {
+  buttonsContainerStyle: PropTypes.object.isRequired,
+  downloadText: PropTypes.string.isRequired,
+  downloadImage: PropTypes.func.isRequired,
+  containerHeight: PropTypes.number,
+  goBackToStart: PropTypes.func.isRequired,
+  directionText: PropTypes.string.isRequired,
+  medScreen: PropTypes.bool,
+  resizeStamp: PropTypes.func.isRequired,
+  onStampClick: PropTypes.func,
+  maxSize: PropTypes.number.isRequired,
+  minSize: PropTypes.number.isRequired,
+  stampSrc: PropTypes.any.isRequired,
+  stampHeight: PropTypes.number.isRequired,
+  stampWidth: PropTypes.number.isRequired,
+  defaultSize: PropTypes.number,
+  isPfp: PropTypes.bool,
+};
+
+export default LogoResizer;
