@@ -64,6 +64,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     e.stopPropagation()
   }
   const handleDragIn = (e) => {
+    console.log('dragin');
     e.preventDefault()
     e.stopPropagation()
     setDragCounter(prev => prev+1);
@@ -80,25 +81,27 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     }
   }, [dragCounter]);
 
-  const handleDrop = (e) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     setDraggging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       // TODO handle dis
       // this.props.handleDrop(e.dataTransfer.files)
-      e.dataTransfer.clearData()
+      saveStamp(e.dataTransfer.files[0]);
+      e.dataTransfer.clearData();
       setDragCounter(0);
     }
-  }
+  }, [saveStamp]);
 
   useEffect(() => {
+    console.log('firing');
     let div = pfpDropZoneRef.current
     div.addEventListener('dragenter', handleDragIn)
     div.addEventListener('dragleave', handleDragOut)
     div.addEventListener('dragover', handleDrag)
     div.addEventListener('drop', handleDrop)
-  }, [handleDragOut, pfpDropZoneRef])
+  }, [handleDragOut, handleDrop])
   
   return (
     <Box>
