@@ -13,6 +13,35 @@ import SizeSlider from './SizeSlider';
 
 function LogoResizer(props) {
 
+  // STEP 1
+  // dropzone handling
+  // const {getRootProps, getInputProps} = useDropzone({
+  //   // heic/heif images aren't allowable...
+  //   accept: 'image/*',
+  //   multiple: false,
+  //   onDrop: acceptedFiles => {
+  //     console.log("acceptedFiles", acceptedFiles[0]);
+  //     var previewUrl = null;
+  //     if (acceptedFiles.length > 0) {
+  //       // // console.log('dropzone', acceptedFiles[0])
+  //       // // keep jpegs as pngs for transparent background
+  //       // if (acceptedFiles[0].type === "image/jpeg") {
+  //       //   setfileImageType("image/png");
+  //       // } else {
+  //       //   setfileImageType(acceptedFiles[0].type);
+  //       // }
+  //       previewUrl = URL.createObjectURL(acceptedFiles[0]);
+  //     }
+  //     let image = new Image();
+  //     // console.log('on drop');
+  //     image.onload = () => {
+  //       props.saveStamp(image);
+
+  //     };
+  //     image.src = previewUrl;
+  //   }
+  // });
+
   return (
     <Box style={props.medScreen ? (
       {marginLeft: "1rem", marginRight: "1rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", height: props.containerHeight}
@@ -23,14 +52,17 @@ function LogoResizer(props) {
       <Typography className={props.isPfp ? ("direction-text pfp-dt") : ("direction-text pof-dt")} >{props.directionText}</Typography>
       {props.isPfp ? (
         <Box className="pfp-mask pfp-box" display="flex" onClick={props.onStampClick}>
-          <Box style={{position: "absolute"}}><CloudUploadIcon viewBox="0 0 102 48"/></Box>
-          <img
-            src={props.stampSrc}
-            height={props.stampHeight}
-            width={props.stampWidth}
-            style={props.imgStyle}
-            alt="stamp"
-          />
+          {/*<div {...getRootProps()}>
+      <input {...getInputProps()} />*/}
+            <Box style={{position: "absolute"}}><CloudUploadIcon viewBox="0 0 102 48"/></Box>
+            <img
+              src={props.stampSrc}
+              height={props.stampHeight}
+              width={props.stampWidth}
+              style={props.imgStyle}
+              alt="stamp"
+            />
+          {/*</div>*/}
         </Box>
       ) : (
         <Box className="pfp-box" display="flex">

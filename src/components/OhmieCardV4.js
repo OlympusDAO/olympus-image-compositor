@@ -80,7 +80,7 @@ function OhmieCardV4(props) {
   var sOhmImg = new Image();
   sOhmImg.src = sOhm;
   sOhmImg = classifyImage(sOhmImg);
-  const [stampFile, setStampFile] = useState(sOhmImg); 
+  const [stampFile, setStampFile] = useState(sOhmImg);
   const sOhmSize = 60;
   const fixedWidth = 1013;
   const fixedHeight = 446;
