@@ -7,6 +7,8 @@ import {
   Button
 } from "@material-ui/core";
 
+import CloudUploadIcon from "./CloudUploadIcon";
+
 import SizeSlider from './SizeSlider';
 
 function LogoResizer(props) {
@@ -21,6 +23,7 @@ function LogoResizer(props) {
       <Typography className={props.isPfp ? ("direction-text pfp-dt") : ("direction-text pof-dt")} >{props.directionText}</Typography>
       {props.isPfp ? (
         <Box className="pfp-mask pfp-box" display="flex" onClick={props.onStampClick}>
+          <Box style={{position: "absolute"}}><CloudUploadIcon viewBox="0 0 102 48"/></Box>
           <img
             src={props.stampSrc}
             height={props.stampHeight}
