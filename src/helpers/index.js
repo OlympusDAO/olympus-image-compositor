@@ -33,4 +33,9 @@ export const getViewWidth = (containerRef) => {
                 parseFloat(styles.paddingRight);
 
   return element.clientWidth - padding;
-}
+};
+
+export const heightFromAspectRatio = (width, aspectRatio) => {
+  const height = width/(aspectRatio);
+  return height;
+};

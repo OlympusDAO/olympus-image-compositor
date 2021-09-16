@@ -37,10 +37,11 @@ import "./stake.scss";
 import "./figma.scss";
 
 import sOhm from '../assets/token_sOHM.png';
-import classifyImage from "../helpers/classifyImage";
+import whiteBg from '../assets/whiteBg.png';
+import classifyImage, { classifyOhmieImage } from "../helpers/classifyImage";
 import RGB2Hex from "../helpers/RGB2Hex";
 import {setDPI, drawFinalCanvas} from "../helpers/drawCanvas.js";
-import {getViewWidth} from "../helpers/index.js";
+import {getViewWidth, heightFromAspectRatio} from "../helpers/index.js";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -184,6 +185,7 @@ function OhmieCardV4(props) {
   const [fileImage, setfileImage] = useState(false);
   const [fileImageType, setfileImageType] = useState("image/png");
   const [croppedBg, setCroppedBg] = useState(false);
+  const [disabledImageButton, setDisabledImageButton] = useState(false);
   const [uiStep, setuiStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [stampSize, setStampSize] = useState({
@@ -435,10 +437,6 @@ function OhmieCardV4(props) {
     }, [croppedBg, userName, textColor, buttonColor, currentAPY]
   );
     
-  const step1Direction = {row: ""};
-  const [directionState, setdirectionState] = useState(step1Direction);
-  // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
-  
   // uiSteps
   // 1. Click to start
   // 2. take user's image to cropper
@@ -450,8 +448,6 @@ function OhmieCardV4(props) {
   const goToBgStep = (image) => {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: ""});
-    console.log(directionState);
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
@@ -486,17 +482,7 @@ function OhmieCardV4(props) {
     }
   }
 
-  const goToPfpStep = (sameCanvas) => {
-    // setdirectionState({
-    //   row: "Three steps here, fren:",
-    //   row2: "1. Resize your logo w/ the slider",
-    //   row3: "2. Click to place your logo",
-    //   row4: "3. Click 'Download pfp' at the bottom",
-    // });
-    setdirectionState({
-      row: ""
-    });
-
+  const goToPfpStep = (sameCanvas, disabledImage) => {
     // which canvas should be shown?
     // pfpCanvas on top textCanvas on top of BgCanvas
     canvasOrdering("pfp");
@@ -510,7 +496,6 @@ function OhmieCardV4(props) {
   }
 
   const goToTextStep = () => {
-    setdirectionState({row: "Enter your name, then place your text, Incooohmer"});
     setDPI(textCanvasRef, "text", bgCanvasRef);
     // applyTextListeners();
     canvasOrdering("text");
@@ -519,7 +504,6 @@ function OhmieCardV4(props) {
 
   // this only happens for iOSMobile, non-Safari users
   const goToLongPress = () => {
-    setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     bgCanvasRef.current.style.display="none";
@@ -540,7 +524,6 @@ function OhmieCardV4(props) {
       goToBgStep();
     } else if (uiStep === "bg") {
       clearTheCanvas(bgCanvasRef);
-      setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === "long-press") {
       // make the canvas show again
@@ -833,6 +816,25 @@ function OhmieCardV4(props) {
     }, fadeOutMs*0.33);
   };
 
+  const skipBgStep = () => {
+    // should just create a white background
+    let image = new Image();
+    image.onload = () => {
+      image = classifyOhmieImage(image, getViewWidth(viewContainerRef), heightFromAspectRatio(getViewWidth(viewContainerRef), (fixedWidth / fixedHeight)));
+      setCroppedBg(image);
+      setDisabledImageButton(true);
+      goToPfpStep(true);
+    };
+    image.src = whiteBg;
+  };
+
+  const goToLastStep = (e) => {
+    e.preventDefault();
+    // console.log('go to last step');
+    skipBgStep();
+    e.stopPropagation();
+  };
+
   // useEffect(() => {
   //   // needs to run when stampSize changes
   //   applyTextListeners();
@@ -910,6 +912,17 @@ function OhmieCardV4(props) {
                           className="ohmie-button"
                         >
                           <Typography className="btn-text">Upload file</Typography>
+                        </Button>
+                        <Box className="vertical-centered-flex ">
+                          <Typography className="pof-dropbox-text">or</Typography>
+                        </Box>
+                        <Button
+                          id="upload-pfp-button"
+                          variant="contained"
+                          className="ohmie-button"
+                          onClick={goToLastStep}
+                        >
+                          <Typography className="btn-text">I don't want a Bg Image Ser</Typography>
                         </Button>
                       </Box>
                       <div style={{flexGrow: "0", bottom: "0", position: "absolute", paddingBottom: "10px"}}>
@@ -998,6 +1011,7 @@ function OhmieCardV4(props) {
                         setCurrentAPY={setCurrentAPY}
                         textPosition={textPosition}
                         setTextPosition={setTextPosition}
+                        disabledImageButton={disabledImageButton}
                       />
                     </Box>
                     <Box className="ef-container">

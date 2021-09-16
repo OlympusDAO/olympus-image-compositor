@@ -31,7 +31,8 @@ export default function TextCanvas(props) {
   const [displayTextPicker, setDisplayTextPicker] = useState(false);
   const [displayButtonPicker, setDisplayButtonPicker] = useState(false);
   const [displayBackgroundPicker, setDisplayBackgroundPicker] = useState(false);
-  const [backgroundType, setBackgroundType] = useState("image");
+  const disabledImageButton = props.disabledImageButton;
+  const [backgroundType, setBackgroundType] = useState(disabledImageButton ? ("solid") : ("image"));
   const [hasCurrentAPY, setHasCurrentAPY] = useState(false);
 
   const textPosition = props.textPosition;
@@ -244,6 +245,10 @@ export default function TextCanvas(props) {
     }
   }, [hasCurrentAPY, props]);
 
+  // useEffect(() => {
+  //   setBackgroundType(disabledImageButton ? ("solid") : ("image"));
+  // }, [disabledImageButton])
+
 
   return (
     <Box id="text-canvas-fields-container">
@@ -307,10 +312,12 @@ export default function TextCanvas(props) {
           id="select-background"
           select
           label="Background"
-          defaultValue="image"
+          // defaultValue="image"
+          value={backgroundType}
           onChange={handleBackgroundSelectChange}
           variant="outlined"
           style={{flexGrow: "2"}}
+          disabled={disabledImageButton}
         >
           <MenuItem value={"image"}>
             Image
