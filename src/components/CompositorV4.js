@@ -33,7 +33,8 @@ import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
-import sOhm from '../assets/token_sOHM.png';
+// import sOhm from '../assets/token_sOHM.png';
+import sOhm from '../assets/token_Ohm.svg';
 import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
 import {drawFinalCanvas} from "../helpers/drawCanvas.js";
 import {getViewWidth} from "../helpers/index.js";
