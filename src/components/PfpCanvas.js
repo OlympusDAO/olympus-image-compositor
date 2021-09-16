@@ -64,7 +64,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           stampWidth={props.stampSize.width}
           resizeStamp={resizeStamp}
           minSize={24}
-          maxSize={props.maxHt*1.25}
+          maxSize={props.maxHt*1.5}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
           directionText={"Personalized Character"}
