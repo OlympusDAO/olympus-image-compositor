@@ -7,9 +7,9 @@ function ShareOnTwitter(props) {
   const urlString = () => {
     var text;
     if (props.inOhmieCard) {
-      text = "When you're ready, come on over at @OlympusDAO and earn rewards every 8 hours. #OHMISBACKED"
+      text = "When you're ready, come on over at @OlympusDAO and earn rewards every 8 hours. #OHMISBACKED #OHMIECARD"
     } else {
-      text = "I'm an Ohmie, are you anon? #OHMISBACKED @OlympusDAO";
+      text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO";
     }
     return `https://twitter.com/intent/tweet?url=https%3A%2F%2Fohmie.olympusdao.finance&text=${encodeURIComponent(text)}`;
   }
