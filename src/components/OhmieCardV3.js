@@ -33,10 +33,7 @@ import {useDropzone} from 'react-dropzone';
 
 import "./stake.scss";
 
-// import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
-// import whiteButton from '../assets/whiteButton.png';
-// import blackButton from '../assets/blackButton.png';
 import classifyImage from "../helpers/classifyImage";
 import RGB2Hex from "../helpers/RGB2Hex";
 
@@ -431,7 +428,6 @@ function CompositorV3(props) {
   );
     
   const step1Direction = {row: ""};
-  const [directionState, setdirectionState] = useState(step1Direction);
   // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
   // uiSteps
@@ -445,7 +441,6 @@ function CompositorV3(props) {
   const goToBgStep = (image) => {
     if (image) setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: "Crop your image, then click 'Crop' at the bottom"});
     setIsLoading(true);
     canvasOrdering("bg");
     setuiStep("bg");
@@ -481,16 +476,6 @@ function CompositorV3(props) {
   }
 
   const goToPfpStep = (sameCanvas) => {
-    // setdirectionState({
-    //   row: "Three steps here, fren:",
-    //   row2: "1. Resize your logo w/ the slider",
-    //   row3: "2. Click to place your logo",
-    //   row4: "3. Click 'Download pfp' at the bottom",
-    // });
-    setdirectionState({
-      row: "Click to place your pfp, then click 'Next'"
-    });
-
     // which canvas should be shown?
     // pfpCanvas on top textCanvas on top of BgCanvas
     canvasOrdering("pfp");
@@ -504,7 +489,6 @@ function CompositorV3(props) {
   }
 
   const goToTextStep = () => {
-    setdirectionState({row: "Enter your name, then place your text, Incooohmer"});
     setDPI(textCanvasRef, "text");
     // applyTextListeners();
     canvasOrdering("text");
@@ -513,7 +497,6 @@ function CompositorV3(props) {
 
   // this only happens for iOSMobile, non-Safari users
   const goToLongPress = () => {
-    setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     bgCanvasRef.current.style.display="none";
@@ -534,7 +517,6 @@ function CompositorV3(props) {
       goToBgStep();
     } else if (uiStep === "bg") {
       clearTheCanvas();
-      setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === "long-press") {
       // make the canvas show again
@@ -925,11 +907,6 @@ function CompositorV3(props) {
             </div>
           </Grid>
         </Grid>
-
-        {/* direction text */}
-        {Object.entries(directionState).map(([key, value]) => (
-          <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-        ))}
         
         {/* working on loader */}
         {isLoading &&

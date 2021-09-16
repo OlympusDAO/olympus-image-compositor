@@ -27,7 +27,6 @@ import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
-// import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
 import classifyImage from "../helpers/classifyImage";
 
@@ -171,7 +170,6 @@ function CompositorV2(props) {
   );
     
   const step1Direction = {row: ""};
-  const [directionState, setdirectionState] = useState(step1Direction);
   // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
   
   // uiSteps
@@ -182,23 +180,11 @@ function CompositorV2(props) {
   const goToStepTwo = (image) => {
     setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: "Crop your image, then click 'Crop pfp' at the bottom"});
     setIsLoading(true);
     setuiStep(2);
   }
 
   const goToStepThree = (sameCanvas) => {
-    // setTextPromptState("Back to Cropping");
-    // setdirectionState({
-    //   row: "Three steps here, fren:",
-    //   row2: "1. Resize your logo w/ the slider",
-    //   row3: "2. Click to place your logo",
-    //   row4: "3. Click 'Download pfp' at the bottom",
-    // });
-    setdirectionState({
-      row: "Click to place your logo, then click 'Download pfp' at the bottom"
-    })
-    // setSecondaryDirection({row: "2. Click to place your logo, then click 'Download pdf' at the bottom"});
     // clear the canvas...
     if (sameCanvas !== true) {
       clearTheCanvas();
@@ -209,7 +195,6 @@ function CompositorV2(props) {
 
   // this only happens for iOSMobile, non-Safari users
   const goToStepFour = () => {
-    setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     canvasRef.current.style.display="none";
@@ -223,7 +208,6 @@ function CompositorV2(props) {
       goToStepTwo(fileImage);
     } else if (uiStep === 2) {
       clearTheCanvas();
-      setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === 4) {
       // make the canvas show again
@@ -415,11 +399,6 @@ function CompositorV2(props) {
             </div>
           </Grid>
         </Grid>
-
-        {/* direction text */}
-        {Object.entries(directionState).map(([key, value]) => (
-          <Typography key={key} variant="h5" color="textSecondary" style={{marginBottom: "0.5rem"}}>{value}</Typography>
-        ))}
 
         {/* Logo Resizing */}
         {uiStep === 3 &&
