@@ -103,15 +103,41 @@ $mediaMinWidth: 480px;
   }
 }
 
-#pfp-mask {
-  width: 80%;
-  height: 150px;
-  overflow: hidden;
+.pfp-box {
   justify-content: center;
   align-items: center;
+}
+
+.pfp-mask {
+  width: 80%;
+  height: 120px;
+  overflow: hidden;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.7);
   cursor: pointer;
+}
+
+.pfp-dt {
+  font-size: 11px !important;
+  font-weight: normal !important;
+  align-self: flex-start;
+  margin-bottom: 8px !important;
+  margin-top: -10px !important;
+  @media (min-width: $mediaMinWidth) {
+    margin-top: -20px !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+.pof-dt {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.direction-text {
+  font-family: Open Sans !important;
+  font-style: normal !important;
+  line-height: 19px !important;
 }
 
 .pof-box {
@@ -256,14 +282,6 @@ $mediaMinWidth: 480px;
   @media (max-width: 1200px) {
     flex-flow: column wrap;
   }
-}
-
-.direction-text {
-  font-family: Open Sans !important;
-  font-style: normal !important;
-  font-weight: bold !important;
-  font-size: 14px !important;
-  line-height: 19px !important;
 }
 
 .swatchBox {

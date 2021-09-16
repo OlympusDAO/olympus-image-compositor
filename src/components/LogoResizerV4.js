@@ -12,15 +12,15 @@ import SizeSlider from './SizeSlider';
 function LogoResizer(props) {
 
   return (
-    <div style={props.medScreen ? (
+    <Box style={props.medScreen ? (
       {marginLeft: "1rem", marginRight: "1rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", height: props.containerHeight}
     ): (
       {display: "flex", flexDirection: "column", alignItems: "center"}
     )}>
       {/* TODO (appleseed): do you want click to replace option on POF? */}
-      <Typography className="direction-text">{props.directionText}</Typography>
+      <Typography className={props.isPfp ? ("direction-text pfp-dt") : ("direction-text pof-dt")} >{props.directionText}</Typography>
       {props.isPfp ? (
-        <Box id="pfp-mask" display="flex" onClick={props.onStampClick}>
+        <Box className="pfp-mask pfp-box" display="flex" onClick={props.onStampClick}>
           <img
             src={props.stampSrc}
             height={props.stampHeight}
@@ -30,14 +30,15 @@ function LogoResizer(props) {
           />
         </Box>
       ) : (
-        <img
-          src={props.stampSrc}
-          height={props.stampHeight}
-          width={props.stampWidth}
-          style={props.imgStyle}
-          alt="stamp"
-          onClick={props.onStampClick}
-        />
+        <Box className="pfp-box" display="flex">
+          <img
+            src={props.stampSrc}
+            height={props.stampHeight}
+            width={props.stampWidth}
+            style={props.imgStyle}
+            alt="stamp"
+          />
+        </Box>
       )}
       <SizeSlider
         valueLabelDisplay="auto"
@@ -71,7 +72,7 @@ function LogoResizer(props) {
           </Button>
         </Box>
       </Box>
-    </div>
+    </Box>
   );
 }
 
