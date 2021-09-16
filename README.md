@@ -18,8 +18,8 @@
 - [X] figure out vertical & horizontal placement of WelcomeHeadline
 - [X] take another look at the BoxHomepage Card borders...
 
-- [ ] optimize for mobile
-- [ ] fix layout bugs on small screens (bottom of screen cutoff)
+- [X] optimize for mobile
+- [X] fix layout bugs on small screens (bottom of screen cutoff)
 - [X] pof card not wide enough for 4/7-3/7 layout
 - [ ] fix any TODO messages
 
@@ -28,6 +28,8 @@
 
 - [X] start over button back to 1st step
 - [ ] go to last step (disable background image picker)
+- [ ] download step styles for ios non safari
+- [ ] super narrow image doesn't scale UP (it shoudl) on ohmie card
 
 - [X] share on twitter button
 

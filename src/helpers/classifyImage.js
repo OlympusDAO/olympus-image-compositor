@@ -12,6 +12,7 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
     portrait = false;
   }
   image.portrait = portrait;
+  image.parentWidth = parentWidth;
 
   // need to limit image & canvas height & width to parent
   // console.log('classifyimage');
@@ -96,6 +97,17 @@ function classifyImage(image, parentWidth, parentHeight, mobile) {
     image.governing_width = parentWidth;
     image.governing_height = (parentWidth / image.aspectRatio);
   }
+
+  return image;
+}
+
+/**
+ * stretches image to fit our desired view port
+ */
+export const classifyOhmieImage = (image, parentWidth, parentHeight) => {
+  image.aspectRatio = parentWidth / parentHeight;
+  image.governing_width = parentWidth;
+  image.governing_height = parentHeight;
 
   return image;
 }

@@ -16,21 +16,26 @@ import {
 
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import classifyImage from "../helpers/classifyImage";
+import { classifyOhmieImage } from "../helpers/classifyImage";
 
 const BgCanvas = React.forwardRef((props, ref) => {
   const fileImage = props.fileImage;
 
   // potential canvasContainerRef should just be a prop...
-  const { cropperRef, viewContainerRef } = ref;
+  const { cropperRef } = ref;
 
   const cropperCanvasSettings = {
     imageSmoothingQuality: "high",
   };
 
+  const heightFromAspectRatio = (width) => {
+    const height = width/(props.aspectRatio)
+    return height;
+  };
+
   const onCrop = () => {
     // cropperContainerRef may not exist since we hide areas in different steps
-    if (viewContainerRef.current) {
+    // if (viewContainerRef.current) {
       const imageElement = cropperRef?.current;
       const cropper = imageElement?.cropper;
       // console.log(cropper.getCroppedCanvas().toDataURL());
@@ -38,14 +43,15 @@ const BgCanvas = React.forwardRef((props, ref) => {
       image.onload = () => {
 
         // this .onload() is running on dropzone, too... so skip out with the if
-        if (viewContainerRef.current) {
-          image = classifyImage(image, viewContainerRef.current.offsetWidth, props.areaHt, false);
+        // if (viewContainerRef.current) {
+          // image = classifyImage(image, viewContainerRef.current.offsetWidth, heightFromAspectRatio(viewContainerRef.current.offsetWidth));
+          image = classifyOhmieImage(image, fileImage.parentWidth, heightFromAspectRatio(fileImage.parentWidth));
           console.log("cropped", image);
           props.setCroppedBg(image);
-        }
+        // }
       };
       image.src = cropper.getCroppedCanvas(cropperCanvasSettings).toDataURL(props.fileImageType, 1);
-    }
+    // }
   };
 
   return (

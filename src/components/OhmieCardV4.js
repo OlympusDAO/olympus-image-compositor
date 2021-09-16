@@ -79,6 +79,8 @@ function OhmieCardV4(props) {
   const [fadeTransition, setFadeTransition] = useState(true);  
   const fadeOutMs = 333;
 
+  // const [viewContainerWidth, setViewContainerWidth] = useState(undefined);
+
   var sOhmImg = new Image();
   sOhmImg.src = sOhm;
   sOhmImg = classifyImage(sOhmImg);
@@ -290,7 +292,7 @@ function OhmieCardV4(props) {
       // if (textListenersApplied === true) return;
 
       // scalingRatio for scaling text size on mobile...
-      const scalingRatio = fixedHeight/croppedBg.governing_height;
+      const scalingRatio = fixedHeight / croppedBg.governing_height;
 
       // var redHatFont = new FontFace("RedHatDisplay", "../assets/fonts/");
       // redHatFont.load().then(function(font){
@@ -609,6 +611,9 @@ function OhmieCardV4(props) {
           mobile = true;
 
         }
+        // set viewContainerWidth for image size calcs since cropper will shrink our window depending
+        // on image size
+        // setViewContainerWidth(maxWdth);
         image = classifyImage(image, maxWdth, maxHt, mobile);
         goToBgStep(image);
 
@@ -632,8 +637,8 @@ function OhmieCardV4(props) {
       // set container height
       canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
       canvasContainerRef.current.style.width = croppedBg.governing_width + "px";
-      viewContainerRef.current.style.width = croppedBg.governing_width + "px";
-      
+      // viewContainerRef.current.style.width = croppedBg.governing_width + "px";
+
       bgCanvasRef.current.style.height = croppedBg.governing_height + "px";
       bgCanvasRef.current.style.width = croppedBg.governing_width + "px";
       bgCanvasRef.current.height = croppedBg.governing_height;
@@ -934,7 +939,7 @@ function OhmieCardV4(props) {
                 {/* Background Cropper */}
                 {uiStep === "bg" && fileImage &&
                   <BgCanvas
-                    ref={{cropperRef: cropperRef, viewContainerRef: viewContainerRef}}
+                    ref={{cropperRef: cropperRef}}
                     imageLoaded={imageLoaded}
                     setCroppedBg={setCroppedBg}
                     goBackOneStep={goBackOneStep}
@@ -946,7 +951,7 @@ function OhmieCardV4(props) {
                     areaHt={areaHt}
                     fileImageType={fileImageType}
                     containerStyle={dropContainerStyle}
-                    aspectRatio={fixedWidth/fixedHeight}
+                    aspectRatio={fixedWidth / fixedHeight}
                   />
                 }
 
