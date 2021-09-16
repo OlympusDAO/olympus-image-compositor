@@ -43,7 +43,7 @@ function LogoResizer(props) {
       <SizeSlider
         valueLabelDisplay="auto"
         aria-label="size slider"
-        value={props.stampWidth}
+        defaultValue={props.stampWidth}
         min={props.minSize}
         max={props.maxSize}
         onChange={props.resizeStamp}
