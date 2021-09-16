@@ -26,7 +26,6 @@ import WelcomeHeadline from "./WelcomeHeadline.js";
 import CloudUploadIcon from "./CloudUploadIcon.js";
 import ShareOnTwitter from "./ShareOnTwitter.js";
 
-import {drawFinalCanvas} from "../helpers/drawCanvas.js";
 
 import {useDropzone} from 'react-dropzone';
 import Cropper from "react-cropper";
@@ -34,17 +33,16 @@ import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
-// import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
-import classifyImage from "../helpers/classifyImage";
+import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
+import {drawFinalCanvas} from "../helpers/drawCanvas.js";
+import {getViewWidth} from "../helpers/index.js";
 
 import useWindowSize from "../hooks/useWindowSize";
 import { useEffect } from "react";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
-
-// import { dark } from "../themes/dark";
 
 const canvasStyle = {
   margin: "auto",
@@ -73,6 +71,7 @@ function CompositorV2(props) {
   const fadeOutMs = 333;
   const sOhmSize = 60;
 
+  const viewContainerRef = React.useRef(null);
   const canvasRef = React.useRef(null);
   const finalCanvas = React.useRef(null);
 
@@ -299,7 +298,8 @@ function CompositorV2(props) {
         // ... so we need to resize the image
         var maxHt = areaHt;
         // var maxWdth = finalCanvas.current.offsetWidth;
-        var maxWdth = areaMaxWd;
+        // var maxWdth = areaMaxWd;
+        var maxWdth = getViewWidth(viewContainerRef);
 
         var mobile = false;
         if (isIOS) {
@@ -329,7 +329,15 @@ function CompositorV2(props) {
     let image = new Image();
     image.onload = () => {
       // image = classifyImage(image, finalCanvas.current.offsetWidth, areaHt, false);
-      image = classifyImage(image, areaMaxWd, areaHt, false);
+      // image = classifyImage(image, areaMaxWd, areaHt, false);
+      // should be the smaller of areaMaxWd & fixedWidth
+      // let governingWidth;
+      // if (areaMaxWd > fixedWidth) {
+      //   governingWidth = fixedWidth;
+      // } else {
+      //   governingWidth = areaMaxWd;
+      // }
+      image = classifyOhmieImage(image, fileImage.parentWidth, fileImage.parentWidth, false);
       setfileCropped(image);
     };
 
@@ -449,6 +457,7 @@ function CompositorV2(props) {
   };
 
   const objectFromScreenWidth = () => {
+    console.log("objectFromScreenWidth")
     if (medScreen) {
       return 0;
     } else {
@@ -506,10 +515,12 @@ function CompositorV2(props) {
         <WelcomeHeadline headline={"Proof of Ohmie"} subText={"Show everyone that you're staked (3,3)."}/>
         
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
-        <Box id="outer-wrap" className="module-border-wrap">
-          <Box alignItems="center" className="module">
-            <Box className="pof-box">
+        <Box id="outer-wrap" className="module-border-wrap" style={{maxWidth: "1100px", alignSelf: "center"}}>
+          <Box display="flex" alignItems="center" className="module">
+            <Box className="pof-box" style={{width: "100%"}}>
               <Box
+                id="viewContainer"
+                ref={viewContainerRef}
                 className="inner-pof-box rectangle-2-backdrop"
                 style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}
               >

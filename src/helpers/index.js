@@ -21,3 +21,16 @@
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+/**
+ * computes width of viewport for a `given containerRef`
+ * @return {Float}
+ */
+export const getViewWidth = (containerRef) => {
+  var element = containerRef.current;
+  var styles = window.getComputedStyle(element);
+  var padding = parseFloat(styles.paddingLeft) +
+                parseFloat(styles.paddingRight);
+
+  return element.clientWidth - padding;
+}

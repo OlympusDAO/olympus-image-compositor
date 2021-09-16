@@ -28,8 +28,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloudUploadIcon from "./CloudUploadIcon.js";
 import ShareOnTwitter from "./ShareOnTwitter.js";
 
-import {setDPI, drawFinalCanvas} from "../helpers/drawCanvas.js";
-
 import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory } from "react-router-dom";
 
@@ -38,12 +36,11 @@ import {useDropzone} from 'react-dropzone';
 import "./stake.scss";
 import "./figma.scss";
 
-// import zeusImg from '../assets/Zeus_Full_Body.png';
 import sOhm from '../assets/token_sOHM.png';
-// import whiteButton from '../assets/whiteButton.png';
-// import blackButton from '../assets/blackButton.png';
 import classifyImage from "../helpers/classifyImage";
 import RGB2Hex from "../helpers/RGB2Hex";
+import {setDPI, drawFinalCanvas} from "../helpers/drawCanvas.js";
+import {getViewWidth} from "../helpers/index.js";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -54,8 +51,6 @@ import WelcomeHeadline from "./WelcomeHeadline";
 
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
-
-// import { dark } from "../themes/dark";
 
 const canvasStyle = {
   margin: "auto",
@@ -221,15 +216,6 @@ function OhmieCardV4(props) {
       rgb: {r: 255, g: 255, b: 255, a: 100},
     },
   });
-
-  const getViewWidth = () => {
-    var element = viewContainerRef.current;
-    var styles = window.getComputedStyle(element);
-    var padding = parseFloat(styles.paddingLeft) +
-                  parseFloat(styles.paddingRight);
-
-    return element.clientWidth - padding;
-  }
 
   // allows detects clicking on canvas & places image
   // will need to pass in:
@@ -596,7 +582,7 @@ function OhmieCardV4(props) {
         var maxHt = areaHt;
         // var maxWdth = canvasContainerRef.current.offsetWidth;
         // TODO here
-        var maxWdth = getViewWidth();
+        var maxWdth = getViewWidth(viewContainerRef);
 
         var mobile = false;
         if (isIOS) {
