@@ -18,10 +18,10 @@ function ShareOnTwitter(props) {
     <Box display="flex" justifyContent="center">
       <Button
         id="create-pfp-trigger-button"
-        variant="outlined"
+        variant="contained"
         // color="primary"
         // onClick={handleCompleteAward}
-        className="outlined-ohmie-button"
+        className="ohmie-button"
         href={urlString()}
         target="_blank"
         data-text="w"
