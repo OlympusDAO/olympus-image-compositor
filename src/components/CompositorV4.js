@@ -121,27 +121,6 @@ function CompositorV2(props) {
     alignItems: "center",
   };
 
-  const outlineButton = {
-    height: "33px",
-    marginLeft: "0.25rem",
-    marginRight: "0.25rem",
-    marginTop: "0.5rem",
-    marginBottom: "0.5rem",
-  }
-
-  const containerButton = {
-    height: "33px",
-    marginLeft: "0.25rem",
-    marginRight: "0.25rem",
-    marginTop: "0.5rem",
-    marginBottom: "0.5rem",
-  }
-
-  const hiddenButton = {
-    ...containerButton,
-    ...{visibility: "hidden"}
-  }
-
   const [fileImage, setfileImage] = useState(false);
   const [fileImageType, setfileImageType] = useState("image/png");
   const [fileCropped, setfileCropped] = useState(false);

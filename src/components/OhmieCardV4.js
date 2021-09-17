@@ -185,11 +185,6 @@ function OhmieCardV4(props) {
     marginBottom: "0.5rem",
   }
 
-  const hiddenButton = {
-    ...containerButton,
-    ...{visibility: "hidden"}
-  }
-
   const [fileImage, setfileImage] = useState(false);
   const [fileImageType, setfileImageType] = useState("image/png");
   const [croppedBg, setCroppedBg] = useState(false);
@@ -503,12 +498,12 @@ function OhmieCardV4(props) {
     setuiStep("pfp");
   }
 
-  const goToTextStep = () => {
-    setDPI(textCanvasRef, "text", bgCanvasRef);
-    // applyTextListeners();
-    canvasOrdering("text");
-    setuiStep("text");
-  }
+  // const goToTextStep = () => {
+  //   setDPI(textCanvasRef, "text", bgCanvasRef);
+  //   // applyTextListeners();
+  //   canvasOrdering("text");
+  //   setuiStep("text");
+  // }
 
   // this only happens for iOSMobile, non-Safari users
   const goToLongPress = () => {
@@ -783,7 +778,7 @@ function OhmieCardV4(props) {
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
 
-    if (true) {
+    if (isIOS && isMobile && !isMobileSafari) {
       // take us to uiStep(4)
       goToLongPress();
     } else {
