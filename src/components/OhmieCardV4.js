@@ -1032,7 +1032,9 @@ function OhmieCardV4(props) {
                         setStampFile={setStampFile}
                         stampFile={stampFile}
                         stampSize={stampSize}
-                        maxHt = {parseFloat(bgCanvasRef.current.style.height)}
+                        // maxHt = {parseFloat(bgCanvasRef.current.style.height)}
+                        defaultSize = {parseFloat(bgCanvasRef.current.style.height)}
+                        maxHt = {700}
                         downloadText={"Download Card"}
                         downloadImage={downloadImage}
                         goBackToStart={goBackToStart}

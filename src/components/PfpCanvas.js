@@ -18,6 +18,7 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   const [dragging, setDraggging] = useState(false);
   const setStampFile = props.setStampFile;
   const maxHt = props.maxHt;
+  const defaultSize = props.defaultSize;
   const setStampSize = props.setStampSize;
   const stampFile = props.stampFile;
 
@@ -44,18 +45,18 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     const maxWdth = 400;
     const mobile = false;
     image.onload = () => {
-      image = classifyImage(image, maxWdth, maxHt, mobile);
+      image = classifyImage(image, maxWdth, defaultSize, mobile);
       console.log(image);
 
       // set to whatever size == height = max canvas height
       setStampSize({
-        width: maxHt*image.aspectRatio,
-        height: maxHt
+        width: defaultSize*image.aspectRatio,
+        height: defaultSize
       });
     }
     image.src = URL.createObjectURL(file);
     setStampFile(image);
-  }, [maxHt, setStampFile, setStampSize]);
+  }, [defaultSize, setStampFile, setStampSize]);
 
   const handleDrag = (e) => {
     e.preventDefault()
@@ -119,8 +120,10 @@ const PfpCanvas = React.forwardRef((props, ref) => {
           stampHeight={props.stampSize.height}
           stampWidth={props.stampSize.width}
           resizeStamp={resizeStamp}
-          minSize={24}
-          maxSize={maxHt*1.25}
+          // minSize={24}
+          minSize={300}
+          // maxSize={maxHt*1.25}
+          maxSize={maxHt}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
           directionText={"Personalized Character"}
@@ -153,6 +156,8 @@ PfpCanvas.propTypes = {
   stampFile: PropTypes.any.isRequired,
   stampSize: PropTypes.object.isRequired,
   // sOhmSize: PropTypes.number.isRequired,
+  maxHt: PropTypes.number,
+  defaultSize: PropTypes.number,
 
 };
 
