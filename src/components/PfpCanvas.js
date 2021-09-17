@@ -5,13 +5,7 @@ import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  // Grid,
   Box,
-  // Paper,
-  // Typography,
-  // Button,
-  // CircularProgress,
-  // Zoom,
 } from "@material-ui/core";
 
 import LogoResizerV4 from "./LogoResizerV4";
@@ -100,20 +94,11 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   }, [saveStamp]);
 
   useEffect(() => {
-    console.log('firing', dragging);
     let div = pfpDropZoneRef.current;
-    // if (dragging === false) {
-      console.log("dragging false", dragging);
-      div.addEventListener('dragenter', handleDragIn);
-      div.addEventListener('dragleave', handleDragOut);
-      div.addEventListener('dragover', handleDrag);
-      div.addEventListener('drop', handleDrop);
-    // } else {
-    //   div.removeEventListener('dragenter', handleDragIn);
-    //   div.removeEventListener('dragleave', handleDragOut);
-    //   div.removeEventListener('dragover', handleDrag);
-    //   div.removeEventListener('drop', handleDrop);
-    // }
+    div.addEventListener('dragenter', handleDragIn);
+    div.addEventListener('dragleave', handleDragOut);
+    div.addEventListener('dragover', handleDrag);
+    div.addEventListener('drop', handleDrop);
 
     return () => { 
       div.removeEventListener('dragenter', handleDragIn);
@@ -121,13 +106,12 @@ const PfpCanvas = React.forwardRef((props, ref) => {
       div.removeEventListener('dragover', handleDrag);
       div.removeEventListener('drop', handleDrop);
     }
-
   }, [dragging, handleDragIn, handleDragOut, handleDrop]);
   
   return (
     <Box>
       {/* Logo Resizing */}
-      <Box ref={pfpDropZoneRef}>
+      <Box id="pfp-dropper" ref={pfpDropZoneRef}>
         <LogoResizerV4
           // stampInputRef={stampInputRef}
           stampSrc={props.stampFile.src}
