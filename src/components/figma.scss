@@ -300,3 +300,16 @@ $mediaMinWidth: 480px;
     cursor: not-allowed !important;
   }
 }
+
+.share-btns {
+  width: 662px;
+  justify-content: space-evenly;
+  @media (max-width: 500px) {
+    a:first-child {
+      margin-bottom: 10px;
+    }
+    align-items: center;
+    width: 320px;
+    flex-flow: column wrap;
+  }
+}
