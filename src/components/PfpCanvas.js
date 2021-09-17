@@ -100,21 +100,29 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   }, [saveStamp]);
 
   useEffect(() => {
-    console.log('firing');
+    console.log('firing', dragging);
     let div = pfpDropZoneRef.current;
-    div.addEventListener('dragenter', handleDragIn);
-    div.addEventListener('dragleave', handleDragOut);
-    div.addEventListener('dragover', handleDrag);
-    div.addEventListener('drop', handleDrop);
-
-    return () => { 
+    // if (dragging === false) {
+      console.log("dragging false", dragging);
       div.addEventListener('dragenter', handleDragIn);
       div.addEventListener('dragleave', handleDragOut);
       div.addEventListener('dragover', handleDrag);
       div.addEventListener('drop', handleDrop);
+    // } else {
+    //   div.removeEventListener('dragenter', handleDragIn);
+    //   div.removeEventListener('dragleave', handleDragOut);
+    //   div.removeEventListener('dragover', handleDrag);
+    //   div.removeEventListener('drop', handleDrop);
+    // }
+
+    return () => { 
+      div.removeEventListener('dragenter', handleDragIn);
+      div.removeEventListener('dragleave', handleDragOut);
+      div.removeEventListener('dragover', handleDrag);
+      div.removeEventListener('drop', handleDrop);
     }
 
-  }, []);
+  }, [dragging, handleDragIn, handleDragOut, handleDrop]);
   
   return (
     <Box>
