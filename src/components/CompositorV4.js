@@ -206,10 +206,6 @@ function CompositorV2(props) {
     }, [stampSize.height, stampSize.width, fileCropped]
   );
     
-  const step1Direction = {row: ""};
-  const [directionState, setdirectionState] = useState(step1Direction);
-  // const [secondaryDirection, setSecondaryDirection] = useState({row: ""});
-  
   // react-cropper
   const cropperRef = React.useRef(null);
   const cropperCanvasSettings = {
@@ -224,23 +220,11 @@ function CompositorV2(props) {
   const goToStepTwo = (image) => {
     setfileImage(image);
     // setTextPromptState("Start Over");
-    setdirectionState({row: ""});
     setIsLoading(true);
     setuiStep(2);
   }
 
   const goToStepThree = (sameCanvas) => {
-    // setTextPromptState("Back to Cropping");
-    // setdirectionState({
-    //   row: "Three steps here, fren:",
-    //   row2: "1. Resize your logo w/ the slider",
-    //   row3: "2. Click to place your logo",
-    //   row4: "3. Click 'Download pfp' at the bottom",
-    // });
-    setdirectionState({
-      row: ""
-    })
-    // setSecondaryDirection({row: "2. Click to place your logo, then click 'Download pdf' at the bottom"});
     // clear the canvas...
     if (sameCanvas !== true) {
       clearTheCanvas();
@@ -251,7 +235,6 @@ function CompositorV2(props) {
 
   // this only happens for iOSMobile, non-Safari users
   const goToStepFour = () => {
-    setdirectionState({row: "Long-press to save, Incooohmer"});
     // must set display.none rather than height 0
     // height 0 doesn't allow the image to be created...
     canvasRef.current.style.display="none";
@@ -265,7 +248,6 @@ function CompositorV2(props) {
       goToStepTwo(fileImage);
     } else if (uiStep === 2) {
       clearTheCanvas();
-      setdirectionState(step1Direction);
       setuiStep(1);
     } else if (uiStep === 4) {
       // make the canvas show again
@@ -528,11 +510,6 @@ function CompositorV2(props) {
                 style={medScreen ? ({flexFlow: "row-reverse"}) : ({flexFlow: "column", justifyContent: "space-between"})}
               >
 
-                {/* direction text */}
-                {Object.entries(directionState).map(([key, value]) => (
-                  <Typography key={key} className="direction-text">{value}</Typography>
-                ))}
-
                 {/* Logo Resizing */}
                 {uiStep === 3 &&
                   <Box id="stamper-box" style={{width: rightSideContainerWidth()}}>
@@ -620,24 +597,31 @@ function CompositorV2(props) {
                   </canvas>
 
                   {uiStep === 4 &&
-                    <div>
+                    <Box display="flex" className="vertical-centered-flex">
                       <img
                         alt="finalImage"
                         src={canvasRef.current.toDataURL(fileImageType, 1)}
                         style={{
                           height: canvasRef.current.style.height,
                           width: canvasRef.current.style.width,
+                          borderRadius: "16px",
                         }}
                       />
-                      <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                        <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                          Back
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                          Download pfp
+                      <Box display="flex" className="vertical-centered-flex">
+                        <Box className="vertical-centered-flex">
+                          <Typography className="pof-dropbox-text">Long Press / Right Click</Typography>
+                          <Typography className="pof-dropbox-text">to save, Incooohmer</Typography>
+                        </Box>
+                        <Button
+                          id="upload-pfp-button"
+                          variant="outlined"
+                          className="outlined-ohmie-button"
+                          onClick={goBackOneStep}
+                        >
+                          <Typography className="btn-text">Back</Typography>
                         </Button>
                       </Box>
-                    </div>
+                    </Box>
                   }
 
                   {/* below is screen size notation for debugging */}

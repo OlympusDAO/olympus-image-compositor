@@ -541,7 +541,8 @@ function OhmieCardV4(props) {
       finalCanvasRef.current.style.display="block";
       canvasContainerRef.current.style.height = croppedBg.governing_height + "px";
       // goToStepThree(true);
-      goToTextStep();
+      clearTheCanvas(finalCanvasRef);
+      goToPfpStep(true);
     }
   }
 
@@ -782,7 +783,7 @@ function OhmieCardV4(props) {
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
 
-    if (isIOS && isMobile && !isMobileSafari) {
+    if (true) {
       // take us to uiStep(4)
       goToLongPress();
     } else {
@@ -873,9 +874,13 @@ function OhmieCardV4(props) {
 
   useEffect(() => {
     function handleResize() {
-      if (uiStep === "pfp") drawCroppedCanvas();
+      drawCroppedCanvas();
     }
-    window.addEventListener('resize', handleResize);
+    if (uiStep === "pfp") {
+      window.addEventListener('resize', handleResize);
+    } else {
+      window.removeEventListener('resize', handleResize);
+    }
   }, [drawCroppedCanvas, uiStep]);
 
   return (
@@ -1043,24 +1048,31 @@ function OhmieCardV4(props) {
                 
                 {/* TODO needs styles */}
                 {uiStep === "long-press" &&
-                  <div>
+                  <Box display="flex" style={{flexFlow: "column wrap"}}>
                     <img
                       alt="finalImage"
                       src={finalCanvasRef.current.toDataURL(fileImageType, 1)}
                       style={{
                         height: finalCanvasRef.current.style.height,
                         width: finalCanvasRef.current.style.width,
+                        borderRadius: "16px",
                       }}
                     />
-                    <Box textAlign='center' style={{marginTop: "-0.13rem"}}>
-                      <Button variant="outlined" color="primary" onClick={goBackOneStep} style={outlineButton}>
-                        Back
+                    <Box display="flex" style={{flexFlow: "row wrap", justifyContent: "center", margin: "15px"}}>
+                      <Button
+                        id="upload-pfp-button"
+                        variant="outlined"
+                        className="outlined-ohmie-button"
+                        onClick={goBackOneStep}
+                      >
+                        <Typography className="btn-text">Back</Typography>
                       </Button>
-                      <Button variant="contained" color="primary" onClick={downloadImage} style={hiddenButton}>
-                      Download Ohmie Card
-                      </Button>
+                      <Box className="vertical-centered-flex">
+                        <Typography className="pof-dropbox-text">Long Press / Right Click</Typography>
+                        <Typography className="pof-dropbox-text">to save, Incooohmer</Typography>
+                      </Box>
                     </Box>
-                  </div>
+                  </Box>
                 }
               </Box>
             </Box>
