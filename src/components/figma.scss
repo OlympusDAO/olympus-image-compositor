@@ -302,14 +302,14 @@ $mediaMinWidth: 480px;
 }
 
 .share-btns {
-  width: 662px;
+  width: 100%;
   justify-content: space-evenly;
   @media (max-width: 500px) {
     a:first-child {
       margin-bottom: 10px;
     }
     align-items: center;
-    width: 320px;
+    // width: 320px;
     flex-flow: column wrap;
   }
 }
