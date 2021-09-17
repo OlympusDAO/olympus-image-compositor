@@ -19,13 +19,14 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   const setStampFile = props.setStampFile;
   const maxHt = props.maxHt;
   const setStampSize = props.setStampSize;
+  const stampFile = props.stampFile;
 
-  const resizeStamp = (e, value) => {
-    props.setStampSize({
-      width: value*props.stampFile.aspectRatio,
+  const resizeStamp = useCallback((e, value) => {
+    setStampSize({
+      width: value*stampFile.aspectRatio,
       height: value,
     });
-  }
+  }, [stampFile, setStampSize]);
 
   const onStampClick = () => {
     stampInputRef.current.click();
@@ -114,12 +115,12 @@ const PfpCanvas = React.forwardRef((props, ref) => {
       <Box id="pfp-dropper" ref={pfpDropZoneRef}>
         <LogoResizerV4
           // stampInputRef={stampInputRef}
-          stampSrc={props.stampFile.src}
+          stampSrc={stampFile.src}
           stampHeight={props.stampSize.height}
           stampWidth={props.stampSize.width}
           resizeStamp={resizeStamp}
           minSize={24}
-          maxSize={props.maxHt*1.25}
+          maxSize={maxHt*1.25}
           onStampClick={onStampClick}
           imgStyle={{cursor: "pointer"}}
           directionText={"Personalized Character"}

@@ -79,10 +79,16 @@ function OhmieCardV4(props) {
 
   // const [viewContainerWidth, setViewContainerWidth] = useState(undefined);
 
-  var sOhmImg = new Image();
-  sOhmImg.src = sOhm;
-  sOhmImg = classifyImage(sOhmImg);
-  const [stampFile, setStampFile] = useState(sOhmImg);
+  
+  useEffect(() => {
+    console.log("first effect");
+    var sOhmImg = new Image();
+    sOhmImg.src = sOhm;
+    sOhmImg = classifyImage(sOhmImg);
+    setStampFile(sOhmImg);
+  }, []);
+
+  const [stampFile, setStampFile] = useState(undefined);
   const sOhmSize = 60;
   const fixedWidth = 1013;
   const fixedHeight = 446;
@@ -858,16 +864,19 @@ function OhmieCardV4(props) {
   useEffect(() => {
     // needs to run when stampSize changes
     // drawCroppedCanvas();
-    setCanvasListeners();
-    applyTextLocation(textPosition);
-  }, [stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition]);
+    if (uiStep === "pfp") {
+      setCanvasListeners();
+      applyTextLocation(textPosition);
+    }
+    
+  }, [uiStep, stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition]);
 
   useEffect(() => {
     function handleResize() {
       if (uiStep === "pfp") drawCroppedCanvas();
     }
     window.addEventListener('resize', handleResize);
-  });
+  }, [drawCroppedCanvas, uiStep]);
 
   return (
     <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} style={{width: "100%"}}>
