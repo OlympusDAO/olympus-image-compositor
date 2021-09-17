@@ -22,6 +22,9 @@ const PfpCanvas = React.forwardRef((props, ref) => {
   const pfpDropZoneRef = React.useRef(null);
   const [dragCounter, setDragCounter] = useState(0);
   const [dragging, setDraggging] = useState(false);
+  const setStampFile = props.setStampFile;
+  const maxHt = props.maxHt;
+  const setStampSize = props.setStampSize;
 
   const resizeStamp = (e, value) => {
     props.setStampSize({
@@ -41,29 +44,30 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     }
   }
 
-  const saveStamp = (file) => {
+  const saveStamp = useCallback((file) => {
     let image = new Image();
     const maxWdth = 400;
     const mobile = false;
     image.onload = () => {
-      image = classifyImage(image, maxWdth, props.maxHt, mobile);
+      image = classifyImage(image, maxWdth, maxHt, mobile);
       console.log(image);
 
       // set to whatever size == height = max canvas height
-      props.setStampSize({
-        width: props.maxHt*image.aspectRatio,
-        height: props.maxHt
+      setStampSize({
+        width: maxHt*image.aspectRatio,
+        height: maxHt
       });
     }
     image.src = URL.createObjectURL(file);
-    props.setStampFile(image);
-  };
+    setStampFile(image);
+  }, [maxHt, setStampFile, setStampSize]);
 
   const handleDrag = (e) => {
     e.preventDefault()
     e.stopPropagation()
-  }
-  const handleDragIn = (e) => {
+  };
+
+  const handleDragIn = useCallback((e) => {
     console.log('dragin');
     e.preventDefault()
     e.stopPropagation()
@@ -71,7 +75,8 @@ const PfpCanvas = React.forwardRef((props, ref) => {
     if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
       setDraggging(true);
     }
-  }
+  }, []);
+
   const handleDragOut = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -96,12 +101,20 @@ const PfpCanvas = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     console.log('firing');
-    let div = pfpDropZoneRef.current
-    div.addEventListener('dragenter', handleDragIn)
-    div.addEventListener('dragleave', handleDragOut)
-    div.addEventListener('dragover', handleDrag)
-    div.addEventListener('drop', handleDrop)
-  }, [handleDragOut, handleDrop])
+    let div = pfpDropZoneRef.current;
+    div.addEventListener('dragenter', handleDragIn);
+    div.addEventListener('dragleave', handleDragOut);
+    div.addEventListener('dragover', handleDrag);
+    div.addEventListener('drop', handleDrop);
+
+    return () => { 
+      div.addEventListener('dragenter', handleDragIn);
+      div.addEventListener('dragleave', handleDragOut);
+      div.addEventListener('dragover', handleDrag);
+      div.addEventListener('drop', handleDrop);
+    }
+
+  }, []);
   
   return (
     <Box>
