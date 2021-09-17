@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import { StaticJsonRpcProvider, WebSocketProvider } from "@ethersproject/providers";
+// import { StaticJsonRpcProvider, WebSocketProvider } from "@ethersproject/providers";
+import { WebSocketProvider } from "@ethersproject/providers";
 import { EnvHelper } from "../helpers/Environment";
 import { trim } from "../helpers/index.js";
 
@@ -12,10 +13,10 @@ const SOHM_ADDRESS = "0x04F2694C8fcee23e8Fd0dfEA1d4f5Bb8c352111F";
 // Use the mainnet
 // const network = "homestead";
 
-const ALCHEMY_ID_LIST = EnvHelper.getAlchemyAPIKeyList();
+// const ALCHEMY_ID_LIST = EnvHelper.getAlchemyAPIKeyList();
 const SELF_HOSTED_LIST = EnvHelper.getSelfHostedSockets();
 const _selfHostedURIs = SELF_HOSTED_LIST;
-const _alchemyURIs = ALCHEMY_ID_LIST.map(alchemyID => `https://eth-mainnet.alchemyapi.io/v2/${alchemyID}`);
+// const _alchemyURIs = ALCHEMY_ID_LIST.map(alchemyID => `https://eth-mainnet.alchemyapi.io/v2/${alchemyID}`);
 const ALL_URIs = [..._selfHostedURIs];
 
 // console.log("self hosted", SELF_HOSTED_LIST);
