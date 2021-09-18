@@ -195,6 +195,7 @@ function OhmieCardV4(props) {
     height: sOhmSize,
     width: sOhmSize,
   });
+  const [stampPosition, setStampPosition] = useState({x: undefined, y:undefined});
   // const [textListenersApplied, setTextListenersApplied] = useState(false);
   const [userName, setUserName] = useState("[your name]");
   const [textColor, setTextColor] = useState({
@@ -221,6 +222,16 @@ function OhmieCardV4(props) {
       rgb: {r: 255, g: 255, b: 255, a: 100},
     },
   });
+
+  // var canvasOnly = pfpCanvasRef.current;
+  //   var ctx = canvasOnly.getContext('2d');
+  //   var logo = new Image();
+  //   logo.src = stampFile.src;
+    // drawStamp(ctx, logo, e.offsetX, e.offsetY);
+  const drawStamp = useCallback((ctx, logo, x, y) => {
+    ctx.drawImage(logo, (x-(stampSize.width/2)), (y-(stampSize.height/2)), stampSize.width, stampSize.height);
+    setStampPosition({x: x, y: y});
+  }, [stampSize.height, stampSize.width]);
 
   // allows detects clicking on canvas & places image
   // will need to pass in:
@@ -260,18 +271,18 @@ function OhmieCardV4(props) {
       canvasOnly.addEventListener('mousemove', e => {
         if (isDrawing === true) {
           if (croppedBg) history.restoreState();
-          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+          drawStamp(ctx, logo, e.offsetX, e.offsetY);
         }
       });
 
       window.addEventListener('mouseup', e => {
         if (isDrawing === true) {
           if (croppedBg) history.restoreState();
-          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
           isDrawing = false;
+          drawStamp(ctx, logo, e.offsetX, e.offsetY);
         }
       });
-    }, [stampSize, croppedBg, stampFile]
+    }, [stampFile.src, croppedBg, drawStamp]
   );
 
   /**
@@ -870,13 +881,21 @@ function OhmieCardV4(props) {
   useEffect(() => {
     function handleResize() {
       drawCroppedCanvas();
+      applyTextLocation(textPosition);
+      // draw stamp
+      var canvasOnly = pfpCanvasRef.current;
+      var ctx = canvasOnly.getContext('2d');
+      var logo = new Image();
+      logo.src = stampFile.src;
+      drawStamp(ctx, logo, stampPosition.x, stampPosition.y);
     }
+    // if (isMobile) return;
     if (uiStep === "pfp") {
       window.addEventListener('resize', handleResize);
     } else {
       window.removeEventListener('resize', handleResize);
     }
-  }, [drawCroppedCanvas, uiStep]);
+  }, [applyTextLocation, drawCroppedCanvas, drawStamp, setCanvasListeners, stampFile, stampPosition, textPosition, uiStep]);
 
   return (
     <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} style={{width: "100%"}}>
