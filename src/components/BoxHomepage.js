@@ -95,7 +95,7 @@ function BoxHomepage() {
               <Box className="rectangle-1-backdrop card-nav">
                 <Box style={textContainerStyles}>
                   <Typography style={pofTextStyle}>Proof of Ohmie</Typography>
-                  <Typography style={stakedTextStyle}>Show everyone that your staked (3,3).</Typography>
+                  <Typography style={stakedTextStyle}>Show everyone that you're staked (3,3).</Typography>
                   <Button
                     id="create-pfp-trigger-button"
                     variant="contained"
