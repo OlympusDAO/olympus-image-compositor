@@ -292,7 +292,7 @@ export default function TextCanvas(props) {
               ref={backgroundColorRef}
               name='color'
               // defaultValue={backgroundColorString}
-              color={props.backgroundColor}
+              color={props.backgroundColor.color}
               onChangeComplete={handleBackgroundColor}
             />
           </div>
