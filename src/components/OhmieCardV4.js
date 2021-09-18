@@ -282,7 +282,7 @@ function OhmieCardV4(props) {
           drawStamp(ctx, logo, e.offsetX, e.offsetY);
         }
       });
-    }, [stampFile.src, croppedBg, drawStamp]
+    }, [stampFile, croppedBg, drawStamp]
   );
 
   /**

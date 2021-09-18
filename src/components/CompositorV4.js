@@ -35,7 +35,7 @@ import "./stake.scss";
 
 // import sOhm from '../assets/token_sOHM.png';
 // import sOhm from '../assets/token_Ohm.svg';
-import sOhm from '../assets/token_sOHM.svg';
+import sOhm from '../assets/token_sOHM-481.svg';
 
 import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
 import {drawFinalCanvas} from "../helpers/drawCanvas.js";
@@ -72,7 +72,7 @@ function CompositorV2(props) {
 
   const [fadeTransition, setFadeTransition] = useState(true);  
   const fadeOutMs = 333;
-  const sOhmSize = 60;
+  const sOhmSize = 120;
 
   const viewContainerRef = React.useRef(null);
   const canvasRef = React.useRef(null);
@@ -354,7 +354,12 @@ function CompositorV2(props) {
     var canvas = canvasRef.current;
     // var dpi = 96*3;
     // var scaleFactor = dpi / 96;
-    var scaleFactor = 3;
+    var scaleFactor = 12;
+    if (isMobile) {
+      scaleFactor = 12;
+    } else {
+      scaleFactor = 25;
+    }
     
     // Set up CSS size.
     canvas.style.width = canvas.style.width || canvas.width + 'px';
