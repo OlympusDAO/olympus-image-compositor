@@ -33,9 +33,9 @@ import "cropperjs/dist/cropper.css";
 
 import "./stake.scss";
 
-// import sOhm from '../assets/token_sOHM.png';
+import sOhm from '../assets/token_sOHM.png';
 // import sOhm from '../assets/token_Ohm.svg';
-import sOhm from '../assets/token_sOHM-481.svg';
+// import sOhm from '../assets/token_sOHM-481.svg';
 
 import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
 import {drawFinalCanvas} from "../helpers/drawCanvas.js";
@@ -342,6 +342,7 @@ function CompositorV2(props) {
       canvasOnly.style.width = fileCropped.governing_width + "px";
       canvasOnly.height = fileCropped.governing_height;
       canvasOnly.width = fileCropped.governing_width;
+      // setDPI();
 
       ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);
       setDPI();
@@ -354,11 +355,11 @@ function CompositorV2(props) {
     var canvas = canvasRef.current;
     // var dpi = 96*3;
     // var scaleFactor = dpi / 96;
-    var scaleFactor = 12;
+    var scaleFactor = 3;
     if (isMobile) {
-      scaleFactor = 12;
+      scaleFactor = 3;
     } else {
-      scaleFactor = 25;
+      scaleFactor = 3;
     }
     
     // Set up CSS size.
@@ -574,7 +575,7 @@ function CompositorV2(props) {
                     id="canvas"
                     ref={canvasRef}
                     style={canvasStyle}
-                    // className="canvasRendering"
+                    className="canvasRendering"
                     width={objectFromScreenWidth()}
                     height={objectFromScreenHeight()}
                   >
