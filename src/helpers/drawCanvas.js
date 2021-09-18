@@ -1,11 +1,11 @@
 /**
-   * 
-   * @param {bool} preview is optional
-   * @param {object} croppedBg the background image
-   * @param {object} toCanvasRef the finalCanvas, i.e.`finalCanvasRef`
-   * @param {Array} combinedCanvases the array of canvases to combine, i.e. `[bgCanvasRef, pfpCanvasRef, textCanvasRef]`
-   * @param {float} fixedWidth
-   */
+ * 
+ * @param {bool} preview is optional
+ * @param {object} croppedBg the background image
+ * @param {object} toCanvasRef the finalCanvas, i.e.`finalCanvasRef`
+ * @param {Array} combinedCanvases the array of canvases to combine, i.e. `[bgCanvasRef, pfpCanvasRef, textCanvasRef]`
+ * @param {float} fixedWidth
+ */
 export const drawFinalCanvas = (preview, croppedBg, toCanvasRef, governingCanvasRef, combineCanvases, fixedWidth, fixedHeight) => {
   var dpiType = "final";
   // if (preview) dpiType = "preview";

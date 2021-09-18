@@ -894,7 +894,7 @@ function OhmieCardV4(props) {
                 style={{
                   flexFlow: "column",
                   justifyContent: "space-between",
-                  maxWidth: "1100px"
+                  maxWidth: "1100px",
                   // height: areaHt,
                   // width: areaWd,
                   // // TODO (appleseed): this width needs to be capped on mobile
@@ -972,7 +972,7 @@ function OhmieCardV4(props) {
                   2. when we don't want the CroppedCanvas to appear we change height to 0
                 */}
                 {/*<Box style={canvasContainer} ref={canvasContainerRef}>*/}
-                <Box ref={canvasContainerRef}>
+                <Box ref={canvasContainerRef} style={{position: "relative", alignSelf: "start"}}>
                   <canvas
                     id="bgCanvas"
                     ref={bgCanvasRef}
