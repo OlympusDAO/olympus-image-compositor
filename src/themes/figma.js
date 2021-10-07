@@ -14,14 +14,14 @@ const figmaTheme = {
 
   // ADDED
   // backgroundColor: "#0C1B29",
-  background: "rgba(45, 60, 120, 1)",
+  background: "rgba(6, 11, 31, 1)",
   filter: "blur(4px)",
 
-  paperBg: "rgba(45, 60, 120, 0.5)",
+  paperBg: "rgba(6, 11, 31, 0.5)",
   modalBg: "rgba(36, 36, 38, 0.6)",
-  popoverBg: "rgba(45, 60, 120, 1)",
+  popoverBg: "rgba(6, 11, 31, 1)",
   menuBg: "#36384080",
-  backdropBg: "rgba(45, 60, 120, 0.5)",
+  backdropBg: "rgba(6, 11, 31, 0.5)",
   largeTextColor: "#F4D092",
   activeLinkColor: "#F5DDB4",
   activeLinkSvgColor:
@@ -29,7 +29,7 @@ const figmaTheme = {
   primaryButtonColor: "#000000",
   primaryButtonBG: "#fff",
   primaryButtonHoverBG: "#e5e5e5",
-  secondaryButtonHoverBG: "rgba(45, 60, 120, 1)",
+  secondaryButtonHoverBG: "rgba(6, 11, 31, 1)",
   outlinedPrimaryButtonHoverBG: "#F8CC82",
   outlinedPrimaryButtonHoverColor: "#333333",
   outlinedSecondaryButtonHoverBG: "transparent",
