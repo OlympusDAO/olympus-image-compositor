@@ -38,7 +38,6 @@ import sOhm from '../assets/token_sOHM.png';
 // import sOhm from '../assets/token_sOHM-481.svg';
 
 import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
-import {drawFinalCanvas} from "../helpers/drawCanvas.js";
 import {getViewWidth} from "../helpers/index.js";
 
 import useWindowSize from "../hooks/useWindowSize";
@@ -61,9 +60,6 @@ const dropContainerStyle = {
   alignItems: "center",
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
-
-const fixedWidth = 446;
-const fixedHeight = 446;
 
 function CompositorV2(props) {
   let history = useHistory();
@@ -360,8 +356,6 @@ function CompositorV2(props) {
   }, [setCanvasListeners, fileCropped]);
 
   const downloadImage = () => {
-    // drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
-    drawFinalCanvas(false, fileCropped, canvasRef, canvasRef, [canvasRef], fixedWidth, fixedHeight);
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {
