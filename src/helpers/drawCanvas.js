@@ -44,17 +44,20 @@ export const resizeAndExport = (preview, toCanvasRef, croppedBg, fixedWidth, fix
   if (thisCanvas.width !== fixedWidth) {
     var backup = thisCanvas.cloneNode(false);
     backup.getContext('2d').drawImage(thisCanvas, 0, 0);
+    const ctx = thisCanvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     if (preview) {
       thisCanvas.width = croppedBg.governing_width;
       thisCanvas.height = croppedBg.governing_height;
 
-      thisCanvas.getContext('2d').drawImage(backup, 0,0, croppedBg.governing_width, croppedBg.governing_height);  
+      ctx.drawImage(backup, 0,0, croppedBg.governing_width, croppedBg.governing_height);
     } else {
       thisCanvas.width = fixedWidth;
       thisCanvas.height = fixedHeight;
 
-      thisCanvas.getContext('2d').drawImage(backup, 0,0, backup.width, backup.height, 0, 0, fixedWidth, fixedHeight);  
+      ctx.drawImage(backup, 0,0, backup.width, backup.height, 0, 0, fixedWidth, fixedHeight);
     }
   }
 };

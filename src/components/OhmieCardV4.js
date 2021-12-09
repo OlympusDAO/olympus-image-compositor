@@ -753,7 +753,7 @@ function OhmieCardV4(props) {
     // 2. addEventListener "click" (to picker canvas)
 
     // drawFinalCanvas(true);
-    drawFinalCanvas(true, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
+    drawFinalCanvas(true, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], 2 * fixedWidth,  2 * fixedHeight);
     // setDPI(finalCanvasRef, false);
     // var ctx = finalCanvasRef.current.getContext('2d');
     // ctx.drawImage(bgCanvasRef.current, 0, 0, croppedBg.governing_width, croppedBg.governing_height);
@@ -785,7 +785,7 @@ function OhmieCardV4(props) {
   const downloadImage = () => {
     // first combine the canvases onto finalCanvasRef
     // drawFinalCanvas();
-    drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
+    drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], 2 * fixedWidth, 2 * fixedHeight);
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
 
