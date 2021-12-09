@@ -38,7 +38,6 @@ import sOhm from '../assets/token_sOHM.png';
 // import sOhm from '../assets/token_sOHM-481.svg';
 
 import classifyImage, {classifyOhmieImage} from "../helpers/classifyImage";
-import {drawFinalCanvas} from "../helpers/drawCanvas.js";
 import {getViewWidth} from "../helpers/index.js";
 
 import useWindowSize from "../hooks/useWindowSize";
@@ -61,9 +60,6 @@ const dropContainerStyle = {
   alignItems: "center",
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
-
-const fixedWidth = 446;
-const fixedHeight = 446;
 
 function CompositorV2(props) {
   let history = useHistory();
@@ -146,7 +142,10 @@ function CompositorV2(props) {
       var history = {
         restoreState: function() {
           ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
-          ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);  
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(fileCropped, 0, 0, 2 * fileCropped.governing_width, 2 * fileCropped.governing_height);  
         }
       }
       ///////////////
@@ -163,7 +162,10 @@ function CompositorV2(props) {
           // ctx.drawImage(image, dx, dy, dWidth, dHeight);
           // history.undo(canvasOnly, ctx);
           if (fileCropped) history.restoreState();
-          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(logo, 2 * (e.offsetX-(stampSize.width/2)), 2 * (e.offsetY-(stampSize.height/2)), 2 * stampSize.width, 2 * stampSize.height);
           // drawLine(context, x, y, e.offsetX, e.offsetY);
           // x = e.offsetX;
           // y = e.offsetY;
@@ -175,7 +177,9 @@ function CompositorV2(props) {
           // history.undo(canvasOnly, ctx);
           if (fileCropped) history.restoreState();
 
-          ctx.drawImage(logo, (e.offsetX-(stampSize.width/2)), (e.offsetY-(stampSize.height/2)), stampSize.width, stampSize.height);
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(logo, 2 * (e.offsetX-(stampSize.width/2)), 2 * (e.offsetY-(stampSize.height/2)), 2 * stampSize.width, 2 * stampSize.height);
           // drawLine(context, x, y, e.offsetX, e.offsetY);
           // x = 0;
           // y = 0;
@@ -340,57 +344,18 @@ function CompositorV2(props) {
       // set canvas dims based on classifyImage results
       canvasOnly.style.height = fileCropped.governing_height + "px";
       canvasOnly.style.width = fileCropped.governing_width + "px";
-      canvasOnly.height = fileCropped.governing_height;
-      canvasOnly.width = fileCropped.governing_width;
-      // setDPI();
+      canvasOnly.height = 2 * fileCropped.governing_height;
+      canvasOnly.width = 2 * fileCropped.governing_width;
 
-      ctx.drawImage(fileCropped, 0, 0, fileCropped.governing_width, fileCropped.governing_height);
-      setDPI();
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(fileCropped, 0, 0, 2 * fileCropped.governing_width, 2 * fileCropped.governing_height);
       setCanvasListeners();
     }
     
   }, [setCanvasListeners, fileCropped]);
 
-  function setDPI() {
-    var canvas = canvasRef.current;
-    // var dpi = 96*3;
-    // var scaleFactor = dpi / 96;
-    var scaleFactor = 3;
-    if (isMobile) {
-      scaleFactor = 3;
-    } else {
-      scaleFactor = 3;
-    }
-    
-    // Set up CSS size.
-    canvas.style.width = canvas.style.width || canvas.width + 'px';
-    canvas.style.height = canvas.style.height || canvas.height + 'px';
-
-    // console.log('setDpi', canvas.style.width, canvas.style.height);
-    // Get size information.
-    var width = parseFloat(canvas.style.width);
-    var height = parseFloat(canvas.style.height);
-
-    // Backup the canvas contents.
-    var oldScale = canvas.width / width;
-    var backupScale = scaleFactor / oldScale;
-    var backup = canvas.cloneNode(false);
-    backup.getContext('2d').drawImage(canvas, 0, 0);
-
-    // Resize the canvas.
-    var ctx = canvas.getContext('2d');
-    canvas.width = Math.ceil(width * scaleFactor);
-    canvas.height = Math.ceil(height * scaleFactor);
-
-    // Redraw the canvas image and scale future draws.
-    ctx.setTransform(backupScale, 0, 0, backupScale, 0, 0);
-    ctx.drawImage(backup, 0, 0);
-    ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
-}
-
   const downloadImage = () => {
-    // drawFinalCanvas(false, croppedBg, finalCanvasRef, bgCanvasRef, [bgCanvasRef, pfpCanvasRef, textCanvasRef], fixedWidth, fixedHeight);
-    drawFinalCanvas(false, fileCropped, canvasRef, canvasRef, [canvasRef], fixedWidth, fixedHeight);
     // if an iOS non-safari browser tries to download then canvas.toBlob opens a new tab
     // this works for Chrome mobile, but not Brave since brave uses WebKit...
     if (isIOS && isMobile && !isMobileSafari) {
