@@ -85,77 +85,76 @@ function BoxHomepage() {
   return (
     <Box display="flex" justifyContent="center" style={containerStyle}>
       <Fade in={fadeTransition} timeout={{enter: 333, exit: fadeOutMs}}>
-        <Box id="content-1" display="flex" gap="6px">
-          {/* 
-            Card Box (below)
-            // TODO: should have click handlers & hover
-          */}
-          <Box id="pof-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/pof")}}>
-            <Box display="flex" alignItems="center" className="module">
-              <Box className="rectangle-1-backdrop card-nav">
-                <Box style={textContainerStyles}>
-                  <Typography style={pofTextStyle}>Proof of Ohmie</Typography>
-                  <Typography style={stakedTextStyle}>Show everyone that you're staked (3,3).</Typography>
-                  <Button
-                    id="create-pfp-trigger-button"
-                    variant="contained"
-                    className="ohmie-button"
-                  >
-                    <Typography className="btn-text">Create PFP</Typography>
-                  </Button>
+        <Box id="content-1" display="flex" gap="6px" justifyContent="center">
+            {/* 
+              Card Box (below)
+              // TODO: should have click handlers & hover
+            */}
+            <Box id="pof-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/pof")}}>
+              <Box display="flex" alignItems="center" className="module">
+                <Box className="rectangle-1-backdrop card-nav">
+                  <Box style={textContainerStyles}>
+                    <Typography style={pofTextStyle}>Proof of Ohmie</Typography>
+                    <Typography style={stakedTextStyle}>Show everyone that you're staked (3,3).</Typography>
+                    <Button
+                      id="create-pfp-trigger-button"
+                      variant="contained"
+                      className="ohmie-button"
+                    >
+                      <Typography className="btn-text">Create PFP</Typography>
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-          {/* End Card Box */}
+            {/* End Card Box */}
 
-          {/* 
-            Card Box (below)
-            // TODO: should have click handlers & hover
-          */}
-          <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/ohmiecard")}}>
-            <Box display="flex" alignItems="center" className="module">
-              <Box className="rectangle-1-backdrop card-nav">
-                <Box style={textContainerStyles}>
-                  <Typography style={pofTextStyle}>Ohmie Card</Typography>
-                  <Typography style={stakedTextStyle}>Personalized card just to show off your gains.</Typography>
-                  <Button
-                    id="pool-complete-award-button"
-                    variant="contained"
-                    className="ohmie-button"
-                  >
-                    <Typography className="btn-text">Create Card</Typography>
-                  </Button>
+            {/* 
+              Card Box (below)
+              // TODO: should have click handlers & hover
+            */}
+            <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/ohmiecard")}}>
+              <Box display="flex" alignItems="center" className="module">
+                <Box className="rectangle-1-backdrop card-nav">
+                  <Box style={textContainerStyles}>
+                    <Typography style={pofTextStyle}>Ohmie Card</Typography>
+                    <Typography style={stakedTextStyle}>Personalized card just to show off your gains.</Typography>
+                    <Button
+                      id="pool-complete-award-button"
+                      variant="contained"
+                      className="ohmie-button"
+                    >
+                      <Typography className="btn-text">Create Card</Typography>
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-          {/* End Card Box */}
+            {/* End Card Box */}
 
-          {/* 
-            Card Box (below)
-            // TODO: should have click handlers & hover
-          */}
-          <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/fohmo")}}>
-            <Box display="flex" alignItems="center" className="module">
-              <Box className="rectangle-1-backdrop card-nav">
-                <Box style={textContainerStyles}>
-                  <Typography style={pofTextStyle}>Proof of FOHMO</Typography>
-                  <Typography style={stakedTextStyle}>Get ready for Fohmo ohmie</Typography>
-                  <Button
-                    id="pool-complete-award-button"
-                    variant="contained"
-                    className="ohmie-button"
-                  >
-                    <Typography className="btn-text">Create PFP</Typography>
-                  </Button>
+            {/* 
+              Card Box (below)
+              // TODO: should have click handlers & hover
+            */}
+            <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/fohmo")}}>
+              <Box display="flex" alignItems="center" className="module">
+                <Box className="rectangle-1-backdrop card-nav">
+                  <Box style={textContainerStyles}>
+                    <Typography style={pofTextStyle}>Proof of FOHMO</Typography>
+                    <Typography style={stakedTextStyle}>Get ready for Fohmo ohmie</Typography>
+                    <Button
+                      id="pool-complete-award-button"
+                      variant="contained"
+                      className="ohmie-button"
+                    >
+                      <Typography className="btn-text">Create PFP</Typography>
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
             </Box>
+            {/* End Card Box */}
           </Box>
-          {/* End Card Box */}
-
-        </Box>
       </Fade>
     </Box>
   )
