@@ -99,8 +99,6 @@ function BoxHomepage() {
                   <Button
                     id="create-pfp-trigger-button"
                     variant="contained"
-                    // color="primary"
-                    // onClick={handleCompleteAward}
                     className="ohmie-button"
                   >
                     <Typography className="btn-text">Create PFP</Typography>
@@ -124,8 +122,6 @@ function BoxHomepage() {
                   <Button
                     id="pool-complete-award-button"
                     variant="contained"
-                    // color="primary"
-                    // onClick={handleCompleteAward}
                     className="ohmie-button"
                   >
                     <Typography className="btn-text">Create Card</Typography>
@@ -135,6 +131,30 @@ function BoxHomepage() {
             </Box>
           </Box>
           {/* End Card Box */}
+
+          {/* 
+            Card Box (below)
+            // TODO: should have click handlers & hover
+          */}
+          <Box id="ohmie-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/fohmo")}}>
+            <Box display="flex" alignItems="center" className="module">
+              <Box className="rectangle-1-backdrop card-nav">
+                <Box style={textContainerStyles}>
+                  <Typography style={pofTextStyle}>Proof of FOHMO</Typography>
+                  <Typography style={stakedTextStyle}>Get ready for Fohmo ohmie</Typography>
+                  <Button
+                    id="pool-complete-award-button"
+                    variant="contained"
+                    className="ohmie-button"
+                  >
+                    <Typography className="btn-text">Create PFP</Typography>
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+          {/* End Card Box */}
+
         </Box>
       </Fade>
     </Box>

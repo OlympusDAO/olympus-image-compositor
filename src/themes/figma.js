@@ -15,7 +15,8 @@ const figmaTheme = {
   // ADDED
   // backgroundColor: "#0C1B29",
   // background: "rgba(6, 11, 31, 1)",
-  background: "#798399",
+  // background: "#798399",
+  background: "#424B63",
   filter: "blur(4px)",
 
   paperBg: "rgba(6, 11, 31, 0.5)",

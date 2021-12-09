@@ -15,6 +15,7 @@ import "./components/stake.scss";
 // import MainNavLinks from './components/MainNavLinks';
 // import OhmieCardV3 from './components/OhmieCardV3';
 import CompositorV4 from './components/CompositorV4';
+import Fohmo4 from './components/Fohmo4';
 import MainNavLinksV4 from './components/MainNavLinksV4';
 import OhmieCardV4 from './components/OhmieCardV4';
 // import SOhmLogoBottomBar from "./components/SOhmLogoBottomBar";
@@ -35,6 +36,9 @@ function App() {
   return (
     <div id="stake-view">
       <Switch>
+        <Route path="/fohmo">
+          <Fohmo4 />
+        </Route>
         <Route path="/pof">
           <CompositorV4 />
         </Route>
