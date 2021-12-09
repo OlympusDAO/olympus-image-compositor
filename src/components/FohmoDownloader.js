@@ -7,10 +7,6 @@ import {
   Button
 } from "@material-ui/core";
 
-import CloudUploadIcon from "./CloudUploadIcon";
-
-import SizeSlider from './SizeSlider';
-
 function FohmoDownloader(props) {
 
   return (

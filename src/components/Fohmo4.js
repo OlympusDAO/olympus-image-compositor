@@ -345,19 +345,19 @@ function Fohmo(props) {
 
   };
 
-  const clearTheCanvas = () => {
-    var canvas = canvasRef.current;
-    var ctx = canvas.getContext('2d');
-    if (fileCropped) ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
-    if (medScreen) {
-      canvas.width = 0;
-      canvas.style.width = 0;
-    } else {
-      canvas.height = 0;
-      canvas.style.height = 0;
-    }
+  // const clearTheCanvas = () => {
+  //   var canvas = canvasRef.current;
+  //   var ctx = canvas.getContext('2d');
+  //   if (fileCropped) ctx.clearRect(0, 0, fileCropped.governing_width, fileCropped.governing_height);
+  //   if (medScreen) {
+  //     canvas.width = 0;
+  //     canvas.style.width = 0;
+  //   } else {
+  //     canvas.height = 0;
+  //     canvas.style.height = 0;
+  //   }
 
-  }
+  // }
 
   // PIXELATED logo issue:
   // Canvases have two different 'sizes': their DOM width/height and their CSS width/height...
@@ -455,10 +455,10 @@ function Fohmo(props) {
     }
   };
 
-  const rightSideContainerWidth = () => {
-    // console.log('width', parseFloat(canvasRef.current.style.width)*3/4);
-    return parseFloat(canvasRef.current.style.width) * 7 / 8;
-  }
+  // const rightSideContainerWidth = () => {
+  //   // console.log('width', parseFloat(canvasRef.current.style.width)*3/4);
+  //   return parseFloat(canvasRef.current.style.width) * 7 / 8;
+  // }
 
   const goBackToRoot = () => {
     setFadeTransition(false);
