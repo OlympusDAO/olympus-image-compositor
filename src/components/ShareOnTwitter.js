@@ -14,7 +14,7 @@ function ShareOnTwitter(props) {
       // text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO";
       text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO"
     }
-    return `https://twitter.com/intent/tweet?url=https%3A%2F%2Fohmie.olympusdao.finance&text=${encodeURIComponent(text)}`;
+    return `https://twitter.com/intent/tweet?url=https%3A%2F%2Fproofof.ohmie.xyz&text=${encodeURIComponent(text)}`;
   };
 
   const discordString = () => {
