@@ -301,8 +301,8 @@ function Fohmo(props) {
     var context = canvas.getContext('2d');
     // var canvas = canvasRef.current;
     // var context = canvas.getContext('2d');
-    var width = sourceCanvas.width;
-    var height = sourceCanvas.height;
+    var width = sourceCanvas.width * 0.95;
+    var height = sourceCanvas.height * 0.95;
 
     canvas.width = width;
     canvas.height = height;
