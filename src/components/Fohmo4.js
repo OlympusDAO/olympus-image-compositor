@@ -11,10 +11,6 @@ import {
   isIOS,
   isMobile,
   isMobileSafari,
-  // browser,
-  // getUA,
-  // deviceDetect,
-  // browserName
 } from "react-device-detect";
 
 import React, { useState, useCallback } from 'react';
@@ -35,6 +31,7 @@ import "./stake.scss";
 
 import sOhm from '../assets/token_Ohm.svg';
 import fohmoCircle from '../assets/Fohmo4_Circle.svg';
+import fohmoSquare from '../assets/FOHMO.svg';
 
 import classifyImage, { classifyOhmieImage } from "../helpers/classifyImage";
 import { getViewWidth } from "../helpers/index.js";
@@ -389,7 +386,7 @@ function Fohmo(props) {
       // setCanvasListeners();
       // placeBorderSvg();
       var logo = new Image();
-      logo.src = fohmoCircle;
+      logo.src = fohmoSquare;
       logo.onload = () => {
 
         ctx.imageSmoothingEnabled = true;
