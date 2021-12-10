@@ -30,7 +30,7 @@ import "cropperjs/dist/cropper.css";
 import "./stake.scss";
 
 import sOhm from '../assets/token_Ohm.svg';
-import fohmoCircle from '../assets/Fohmo4_Circle.svg';
+// import fohmoCircle from '../assets/Fohmo4_Circle.svg';
 import fohmoSquare from '../assets/FOHMO.svg';
 
 import classifyImage, { classifyOhmieImage } from "../helpers/classifyImage";
