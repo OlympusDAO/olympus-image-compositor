@@ -9,16 +9,10 @@ import { abi as sOHMv2 } from "../abi/sOhmv2.json";
 const STAKING_ADDRESS = "0xB63cac384247597756545b500253ff8E607a8020";
 const SOHM_ADDRESS = "0x04906695D6D12CF5459975d7C3C03356E4Ccd460";
 
-// Use the mainnet
-// const network = "homestead";
-
 const ALCHEMY_ID_LIST = EnvHelper.getAlchemyAPIKeyList();
-// const SELF_HOSTED_LIST = EnvHelper.getSelfHostedSockets();
-// const _selfHostedURIs = SELF_HOSTED_LIST;
 const _alchemyURIs = ALCHEMY_ID_LIST.map(alchemyID => `https://eth-mainnet.alchemyapi.io/v2/${alchemyID}`);
 const ALL_URIs = [..._alchemyURIs];
 
-// console.log("self hosted", SELF_HOSTED_LIST);
 /**
  * "intelligently" loadbalances production API Keys
  * @returns string
