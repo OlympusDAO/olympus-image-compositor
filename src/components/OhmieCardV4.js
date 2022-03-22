@@ -1,6 +1,6 @@
-// OhmieCardV3.js
+// OhmieCardV4.js
 //
-// OhmieCardV3 should be the compositor. Combines the three canvas layers:
+// OhmieCardV4 should be the compositor. Combines the three canvas layers:
 // 1. BgCanvas.js
 // 2. PfpCanvas.js
 // 3. TextCanvas.js

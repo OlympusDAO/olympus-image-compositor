@@ -13,11 +13,11 @@ import "./components/stake.scss";
 
 // import CompositorV2 from './components/CompositorV2';
 // import MainNavLinks from './components/MainNavLinks';
-// import OhmieCardV3 from './components/OhmieCardV3';
 import CompositorV4 from './components/CompositorV4';
 import Fohmo4 from './components/Fohmo4';
 import MainNavLinksV4 from './components/MainNavLinksV4';
 import OhmieCardV4 from './components/OhmieCardV4';
+import Citizenship from './components/Citizenship';
 // import SOhmLogoBottomBar from "./components/SOhmLogoBottomBar";
 
 import {
@@ -44,6 +44,9 @@ function App() {
         </Route>
         <Route path="/ohmiecard">
           <OhmieCardV4 />
+        </Route>
+        <Route exact path="/citizenship">
+          <Citizenship />
         </Route>
         <Route exact path="/">
           <MainNavLinksV4 />

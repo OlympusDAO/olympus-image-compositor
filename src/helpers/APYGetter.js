@@ -6,8 +6,8 @@ import { trim } from "../helpers/index.js";
 import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
 import { abi as sOHMv2 } from "../abi/sOhmv2.json";
 
-const STAKING_ADDRESS = "0xfd31c7d00ca47653c6ce64af53c1571f9c36566a";
-const SOHM_ADDRESS = "0x04F2694C8fcee23e8Fd0dfEA1d4f5Bb8c352111F";
+const STAKING_ADDRESS = "0xB63cac384247597756545b500253ff8E607a8020";
+const SOHM_ADDRESS = "0x04906695D6D12CF5459975d7C3C03356E4Ccd460";
 
 // Use the mainnet
 // const network = "homestead";
@@ -23,7 +23,7 @@ const ALL_URIs = [..._alchemyURIs];
  * "intelligently" loadbalances production API Keys
  * @returns string
  */
-function getMainnetURI(): string {
+function getMainnetURI() {
   // Shuffles the URIs for "intelligent" loadbalancing
   const allURIs = ALL_URIs.sort(() => Math.random() - 0.5);
 
@@ -52,13 +52,3 @@ export const getStakingAPY = async () => {
   const trimmedStakingAPY = trim(stakingAPY * 100, 0);
   return {raw: stakingAPY, formatted: trimmedStakingAPY};  
 };
-
-// export const getFormattedStakingAPY = async () => {
-//   getStakingAPY().then(rawStakingAPY => {
-
-//     const trimmedStakingAPY = trim(rawStakingAPY * 100, 1);
-//     console.log("formatted, raw", trimmedStakingAPY, rawStakingAPY);
-
-//     return trimmedStakingAPY;
-//   });
-// }
