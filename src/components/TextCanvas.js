@@ -20,7 +20,6 @@ import { SketchPicker } from "react-color";
 import EyeDropper from "./EyeDropper";
 
 import { getStakingAPY } from "../helpers/APYGetter.js";
-import { getArcxScore } from "../helpers/ArcxScore.js";
 
 export default function TextCanvas(props) {
   // const small = useMediaQuery('(min-width:600px)');
