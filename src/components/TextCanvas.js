@@ -190,7 +190,6 @@ export default function TextCanvas(props) {
     } else {
       props.setBackgroundColor(prev => ({fill: true, color: prev.color}));
     }
-    
   };
 
   const applyTextLocation = props.applyTextLocation;

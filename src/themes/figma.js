@@ -17,6 +17,7 @@ const figmaTheme = {
   // background: "rgba(6, 11, 31, 1)",
   // background: "#798399",
   background: "#424B63",
+  // background: "url(https://verified.olympusdao.finance/images/background/bg-dark.jpg)",
   filter: "blur(4px)",
 
   paperBg: "rgba(6, 11, 31, 0.5)",

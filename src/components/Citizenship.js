@@ -860,7 +860,7 @@ function Citizenship(props) {
       applyTextLocation(textPosition);
     }
     
-  }, [uiStep, stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition]);
+  }, [uiStep, stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition, backgroundColor]);
 
   useEffect(() => {
     function handleResize() {

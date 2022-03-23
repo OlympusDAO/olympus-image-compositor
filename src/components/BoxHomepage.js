@@ -90,8 +90,8 @@ function BoxHomepage() {
             Card Box (below)
           */}
           <Box id="citizenship-card-trigger" className="homepage-box-trigger module-border-wrap" onClick={() => {clickCardTrigger("/citizenship")}}>
-            <Box display="flex" alignItems="center" className="module">
-              <Box className="rectangle-1-backdrop card-nav">
+            <Box display="flex" alignItems="center" className="module verifiedSvg">
+              <Box className="card-nav" style={{borderRadius: "16px"}}>
                 <Box style={textContainerStyles}>
                   <Typography style={pofTextStyle}>{CITIZEN_TITLE}</Typography>
                   <Typography style={stakedTextStyle}>{CITIZEN_SUBTITLE}</Typography>
