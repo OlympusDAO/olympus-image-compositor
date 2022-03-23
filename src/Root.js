@@ -21,6 +21,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 const config = {
   readOnlyChainId: Mainnet.chainId,
@@ -42,6 +43,7 @@ function Root() {
           <DAppProvider config={config}>
             <App />
           </DAppProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
     </BrowserRouter>

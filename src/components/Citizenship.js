@@ -76,7 +76,7 @@ const dropContainerStyle = {
 function Citizenship(props) {
   let history = useHistory();
   const { account: walletAddress, activate, activateBrowserWallet } = useEthers();
-  const { data: citizenshipScore = 0 } = useArcxScore(walletAddress);
+  const { data: citizenshipScore } = useArcxScore(walletAddress);
 
   const medScreen = useMediaQuery('(min-width:960px)');
   const [fadeTransition, setFadeTransition] = useState(true);  

@@ -238,7 +238,8 @@ export default function TextCanvas(props) {
   useEffect(() => {
     if (hasCurrentAPY === false) {
       if (props.citizenshipScore) {
-        setHasCurrentAPY(props.citizenshipScore);
+        props.setCurrentAPY(props.citizenshipScore);
+        setHasCurrentAPY(true);
       } else {
         getStakingAPY().then(value => {
           props.setCurrentAPY(value.formatted);
