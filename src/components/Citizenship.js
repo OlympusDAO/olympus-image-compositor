@@ -1,6 +1,6 @@
-// OhmieCardV4.js
+// Citizenship.js
 //
-// OhmieCardV4 should be the compositor. Combines the three canvas layers:
+// Citizenship should be the compositor. Combines the three canvas layers:
 // 1. BgCanvas.js
 // 2. PfpCanvas.js
 // 3. TextCanvas.js
@@ -15,14 +15,10 @@ import {
   CircularProgress,
   Fade
 } from "@material-ui/core";
-import {
+import {  
   isIOS,
   isMobile,
   isMobileSafari,
-  // browser,
-  // getUA,
-  // deviceDetect,
-  // browserName
 } from "react-device-detect";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloudUploadIcon from "./CloudUploadIcon.js";
@@ -32,6 +28,7 @@ import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory } from "react-router-dom";
 
 import {useDropzone} from 'react-dropzone';
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
 import "./stake.scss";
 import "./figma.scss";
@@ -51,7 +48,13 @@ import PfpCanvas from "./PfpCanvas";
 import BgCanvas from "./BgCanvas";
 import TextCanvas from "./TextCanvas";
 import WelcomeHeadline from "./WelcomeHeadline";
+import {
+  useEthers,
+} from '@usedapp/core';
+import { useArcxScore } from "../hooks/useArcxScore.js";
 
+export const CITIZEN_TITLE = "Ohmie Score";
+export const CITIZEN_SUBTITLE = "Are you 3, 3 & an active governoooor?";
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
 
@@ -70,15 +73,14 @@ const dropContainerStyle = {
   // backgroundColor: shade(dark.palette.background.paperBg, 0.5)
 }
 
-function OhmieCardV4(props) {
+function Citizenship(props) {
   let history = useHistory();
+  const { account: walletAddress, activate, activateBrowserWallet } = useEthers();
+  const { data: citizenshipScore = 0 } = useArcxScore(walletAddress);
 
   const medScreen = useMediaQuery('(min-width:960px)');
   const [fadeTransition, setFadeTransition] = useState(true);  
   const fadeOutMs = 333;
-
-  // const [viewContainerWidth, setViewContainerWidth] = useState(undefined);
-
   
   useEffect(() => {
     console.log("first effect");
@@ -124,37 +126,12 @@ function OhmieCardV4(props) {
     }
   };
 
-  // const dropContainerStyleR1 = {
-  //   display: "flex",
-  //   flexFlow: "column wrap",
-  //   justifyContent: "center",
-  //   // width: objectFromScreenWidth(),
-  //   width: "100%",
-  // }
-
-  // const canvasContainer = {
-  //   // display: 'flex',
-  //   // flexDirection: 'row',
-  //   // flexWrap: 'wrap',
-  //   // marginTop: 16,
-  //   // margin: 'auto',
-  //   // width: "100%",
-  //   // position: "relative",
-  // };
-
   const cropperCanvasContainer = {
     width: (areaWd+20),
     margin: "10px",
     borderRadius: "16px",
   };
 
-  // const dropZoneReg = {
-  //   display: "flex",
-  //   flexFlow: "column wrap",
-  //   alignItems: "center",
-  //   cursor: "pointer",
-  //   height: areaHt
-  // }
   const dropZoneReg = {
     display: "flex",
     flexFlow: "column wrap",
@@ -208,8 +185,9 @@ function OhmieCardV4(props) {
     hex: "#FFFFFF",
     rgb: {r: 255, g: 255, b: 255, a: 100},
   });
+  // eslint-disable-next-line no-unused-vars
   const [currentAPY, setCurrentAPY] = useState("5,000");
-
+  
   /**
    * backgroundColor has two keys, denoted as params below
    * @param {*} fill: true if we want to fill the background
@@ -346,7 +324,7 @@ function OhmieCardV4(props) {
           // desired: [x, y] = [375, 75] on [w, h] = [2154, 950]
           // x/w === 375/2154
           // y/h === 75/950
-          newX = 375/2154 * canvasOnly.width;
+          newX = 350/2154 * canvasOnly.width;
           // newX = canvasOnly.width - 67;
 
         }
@@ -385,19 +363,19 @@ function OhmieCardV4(props) {
         let linePosition = 64/scalingRatio;
         fontSize = (48/scalingRatio);
         ctx.font = "bold "+fontSize+"px RedHatDisplay";
-        ctx.fillText("They are earning", newX, newY+linePosition);
+        ctx.fillText("They're an Ohmie", newX, newY+linePosition);
         // lineIndex = 2;
         linePosition = 64/scalingRatio + linePosition;
-        ctx.fillText(currentAPY+"% APY.", newX, newY+linePosition);
+        ctx.fillText("with a score of "+citizenshipScore, newX, newY+linePosition);
 
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
         linePosition = 36/scalingRatio + linePosition;
         ctx.font = "normal "+(21/scalingRatio)+"px RedHatDisplay";
-        ctx.fillText("When you’re ready, we’re ready with your", newX, newY+linePosition);
+        ctx.fillText("Citizenship awaits, as our Ohmiversary takes place!", newX, newY+linePosition);
         // lineIndex = 4;
-        linePosition = 26/scalingRatio + linePosition;
-        ctx.fillText("Ohmie account. Earn rewards every 8 hours.", newX, newY+linePosition);
+        // linePosition = 26/scalingRatio + linePosition;
+        // ctx.fillText("Powered by Arcx, made for Ohmies.", newX, newY+linePosition);
 
         ///////////////////////////// BUTTON /////////////////////////////
         // button -> top left corner @ linePosition
@@ -406,7 +384,7 @@ function OhmieCardV4(props) {
         let radius = 28/scalingRatio;
         let x = newX+radius;
         let y = newY+linePosition+radius;
-        let length = 182/scalingRatio;
+        let length = 315/scalingRatio;
         
         // left semi-circle
         // ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
@@ -440,7 +418,7 @@ function OhmieCardV4(props) {
         // letters in button
         ctx.fillStyle = useButtonColor;
         ctx.font = "500 "+20/scalingRatio+"px RedHatDisplay";
-        ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
+        ctx.fillText("Powered by Arcx, made for Ohmies", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
         // setLastTextEvent(e);
       }
@@ -448,7 +426,7 @@ function OhmieCardV4(props) {
       history.restoreState();
       textToApply(leftRight);
       console.log("text to apply");
-    }, [croppedBg, userName, textColor, buttonColor, currentAPY]
+    }, [croppedBg, userName, textColor, buttonColor, citizenshipScore]
   );
     
   // uiSteps
@@ -848,16 +826,22 @@ function OhmieCardV4(props) {
     // console.log('go to last step');
     skipBgStep();
     e.stopPropagation();
-  };
+  };  
 
-  // useEffect(() => {
-  //   // needs to run when stampSize changes
-  //   applyTextListeners();
-  // }, [userName, applyTextListeners, textColor, buttonColor]);
+  async function walletConnectClick() {
+    try {
+      const provider = new WalletConnectProvider({
+        rpc: {1: process.env.REACT_APP_ALCHEMY_IDS},
+      })
+      await provider.enable()
+      activate(provider)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     if (backgroundColor.fill === true) {
-      // console.log(backgroundColor);
       var ctx = bgCanvasRef.current.getContext('2d')
       ctx.fillStyle = backgroundColor.color.hex;
       ctx.rect(0, 0, bgCanvasRef.current.width, bgCanvasRef.current.height);
@@ -876,7 +860,7 @@ function OhmieCardV4(props) {
       applyTextLocation(textPosition);
     }
     
-  }, [uiStep, stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition]);
+  }, [uiStep, stampSize, setCanvasListeners, croppedBg, stampFile, drawCroppedCanvas, applyTextLocation, textPosition, backgroundColor]);
 
   useEffect(() => {
     function handleResize() {
@@ -900,8 +884,9 @@ function OhmieCardV4(props) {
   return (
     <Fade in={fadeTransition} timeout={{enter: fadeOutMs, exit: fadeOutMs}} style={{width: "100%"}}>
       <Box display="flex" style={{flexFlow: "column", alignItems: "center"}}>
-        <WelcomeHeadline headline={"Ohmie Card"} subText={"Personalized card to show off your gains."}/>
+        <WelcomeHeadline headline={CITIZEN_TITLE} subText={CITIZEN_SUBTITLE}/>
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
+        
         <Box id="outer-wrap" className="module-border-wrap" style={{maxWidth: "1100px", alignSelf: "center"}}>
           {/*<Box display="flex" alignItems="center" className="module">*/}
           <Box display="flex" alignItems="center" className="module">
@@ -914,11 +899,6 @@ function OhmieCardV4(props) {
                   flexFlow: "column",
                   justifyContent: "space-between",
                   maxWidth: "1100px",
-                  // height: areaHt,
-                  // width: areaWd,
-                  // // TODO (appleseed): this width needs to be capped on mobile
-                  // // ... also should handle border correctly
-                  // maxWidth: areaMaxWd,
                 }}
               >
                 {/* working on loader */}
@@ -926,7 +906,29 @@ function OhmieCardV4(props) {
                   <CircularProgress />
                 }
 
-                {uiStep === 1 &&
+                
+                {!walletAddress ? (
+                  <div className="dropContainer" style={dropContainerStyle}>
+                    <div style={dropZoneReg}>
+                      <Box className="dropzone-interior-container vertical-centered-flex">
+                        <Box className="vertical-centered-flex">
+                            <Typography className="pof-dropbox-text">Please Connect</Typography>
+                            <Typography className="pof-dropbox-text">your Wallet</Typography>
+                          </Box>
+                        <Button
+                          variant="contained"
+                          className="ohmie-button"
+                          onClick={activateBrowserWallet}
+                        >Metamask</Button>
+                        <Button
+                          variant="contained"
+                          className="ohmie-button"
+                          onClick={() => walletConnectClick()}
+                        >Wallet Connect</Button>
+                      </Box>
+                    </div>
+                  </div>
+                ) : uiStep === 1 ? (
                   <div className="dropContainer" style={dropContainerStyle}>
                     <div {...getRootProps({style: dropZoneReg})}>
                       <input {...getInputProps()} />
@@ -941,7 +943,7 @@ function OhmieCardV4(props) {
                           variant="contained"
                           className="ohmie-button"
                         >
-                          <Typography className="btn-text">Upload file</Typography>
+                          <Typography className="btn-text">Upload Background</Typography>
                         </Button>
                         <Box className="vertical-centered-flex ">
                           <Typography className="pof-dropbox-text">or</Typography>
@@ -963,7 +965,7 @@ function OhmieCardV4(props) {
                       </div>
                     </div>
                   </div>
-                }
+                ) : (<div></div>)}
                 {/*<Box id="mainContainer">*/}
                 {/* Background Cropper */}
                 {uiStep === "bg" && fileImage &&
@@ -1042,6 +1044,7 @@ function OhmieCardV4(props) {
                         textPosition={textPosition}
                         setTextPosition={setTextPosition}
                         disabledImageButton={disabledImageButton}
+                        citizenshipScore={citizenshipScore}
                       />
                     </Box>
                     <Box className="ef-container">
@@ -1128,7 +1131,7 @@ function OhmieCardV4(props) {
         }
 
         {(uiStep === "pfp" || uiStep === "text") &&
-          <ShareOnTwitter inOhmieCard={true} />
+          <ShareOnTwitter inCitizenship={true} />
         }
 
         {/* hiding text so that it is preloaded for canvas */}
@@ -1142,4 +1145,4 @@ function OhmieCardV4(props) {
   );
 }
 
-export default OhmieCardV4;
+export default Citizenship;

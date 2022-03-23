@@ -190,7 +190,6 @@ export default function TextCanvas(props) {
     } else {
       props.setBackgroundColor(prev => ({fill: true, color: prev.color}));
     }
-    
   };
 
   const applyTextLocation = props.applyTextLocation;
@@ -237,18 +236,18 @@ export default function TextCanvas(props) {
 
   useEffect(() => {
     if (hasCurrentAPY === false) {
-      console.log("staking useeffect");
-      getStakingAPY().then(value => {
-        props.setCurrentAPY(value.formatted);
+      console.log("props", props);
+      if (props.citizenshipScore) {
+        props.setCurrentAPY(props.citizenshipScore);
         setHasCurrentAPY(true);
-      });
+      } else {
+        getStakingAPY().then(value => {
+          props.setCurrentAPY(value.formatted);
+          setHasCurrentAPY(true);
+        });
+      }
     }
   }, [hasCurrentAPY, props]);
-
-  // useEffect(() => {
-  //   setBackgroundType(disabledImageButton ? ("solid") : ("image"));
-  // }, [disabledImageButton])
-
 
   return (
     <Box id="text-canvas-fields-container">
@@ -262,7 +261,6 @@ export default function TextCanvas(props) {
                 ref={textColorRef}
                 name='color'
                 color={props.textColor}
-                // value={textColorString}
                 onChangeComplete={handleTextColor}
               />
             </div>

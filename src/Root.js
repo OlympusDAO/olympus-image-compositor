@@ -12,6 +12,26 @@ import {
   BrowserRouter,
 } from "react-router-dom";
 
+import {
+  Mainnet,
+  DAppProvider,
+} from '@usedapp/core'
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+
+const config = {
+  readOnlyChainId: Mainnet.chainId,
+  readOnlyUrls: {
+    [Mainnet.chainId]: `https://eth-mainnet.alchemyapi.io/v2/${process.env.REACT_APP_ALCHEMY_IDS}`,
+  },
+}
+
+const queryClient = new QueryClient();
+
 function Root() {
   // useGoogleAnalytics();
   let themeMode = figmaTheme;
@@ -19,7 +39,12 @@ function Root() {
     <BrowserRouter basename={"/#"}>
       <ThemeProvider theme={themeMode}>
         <CssBaseline />
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <DAppProvider config={config}>
+            <App />
+          </DAppProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
