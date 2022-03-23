@@ -20,6 +20,7 @@ import { SketchPicker } from "react-color";
 import EyeDropper from "./EyeDropper";
 
 import { getStakingAPY } from "../helpers/APYGetter.js";
+import { getArcxScore } from "../helpers/ArcxScore.js";
 
 export default function TextCanvas(props) {
   // const small = useMediaQuery('(min-width:600px)');
@@ -237,18 +238,16 @@ export default function TextCanvas(props) {
 
   useEffect(() => {
     if (hasCurrentAPY === false) {
-      console.log("staking useeffect");
-      getStakingAPY().then(value => {
-        props.setCurrentAPY(value.formatted);
-        setHasCurrentAPY(true);
-      });
+      if (props.citizenshipScore) {
+        setHasCurrentAPY(props.citizenshipScore);
+      } else {
+        getStakingAPY().then(value => {
+          props.setCurrentAPY(value.formatted);
+          setHasCurrentAPY(true);
+        });
+      }
     }
   }, [hasCurrentAPY, props]);
-
-  // useEffect(() => {
-  //   setBackgroundType(disabledImageButton ? ("solid") : ("image"));
-  // }, [disabledImageButton])
-
 
   return (
     <Box id="text-canvas-fields-container">
@@ -262,7 +261,6 @@ export default function TextCanvas(props) {
                 ref={textColorRef}
                 name='color'
                 color={props.textColor}
-                // value={textColorString}
                 onChangeComplete={handleTextColor}
               />
             </div>

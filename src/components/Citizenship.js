@@ -15,14 +15,10 @@ import {
   CircularProgress,
   Fade
 } from "@material-ui/core";
-import {
+import {  
   isIOS,
   isMobile,
   isMobileSafari,
-  // browser,
-  // getUA,
-  // deviceDetect,
-  // browserName
 } from "react-device-detect";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloudUploadIcon from "./CloudUploadIcon.js";
@@ -32,6 +28,7 @@ import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory } from "react-router-dom";
 
 import {useDropzone} from 'react-dropzone';
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
 import "./stake.scss";
 import "./figma.scss";
@@ -51,6 +48,10 @@ import PfpCanvas from "./PfpCanvas";
 import BgCanvas from "./BgCanvas";
 import TextCanvas from "./TextCanvas";
 import WelcomeHeadline from "./WelcomeHeadline";
+import {
+  useEthers,
+} from '@usedapp/core';
+import { useArcxScore } from "../hooks/useArcxScore.js";
 
 export const CITIZEN_TITLE = "Ohmie Score";
 export const CITIZEN_SUBTITLE = "Ohmie Score based on your hodling & governance participation.";
@@ -74,6 +75,8 @@ const dropContainerStyle = {
 
 function Citizenship(props) {
   let history = useHistory();
+  const { account: walletAddress, activate, activateBrowserWallet } = useEthers();
+  const { data: citizenshipScore = 0 } = useArcxScore(walletAddress);
 
   const medScreen = useMediaQuery('(min-width:960px)');
   const [fadeTransition, setFadeTransition] = useState(true);  
@@ -126,37 +129,12 @@ function Citizenship(props) {
     }
   };
 
-  // const dropContainerStyleR1 = {
-  //   display: "flex",
-  //   flexFlow: "column wrap",
-  //   justifyContent: "center",
-  //   // width: objectFromScreenWidth(),
-  //   width: "100%",
-  // }
-
-  // const canvasContainer = {
-  //   // display: 'flex',
-  //   // flexDirection: 'row',
-  //   // flexWrap: 'wrap',
-  //   // marginTop: 16,
-  //   // margin: 'auto',
-  //   // width: "100%",
-  //   // position: "relative",
-  // };
-
   const cropperCanvasContainer = {
     width: (areaWd+20),
     margin: "10px",
     borderRadius: "16px",
   };
 
-  // const dropZoneReg = {
-  //   display: "flex",
-  //   flexFlow: "column wrap",
-  //   alignItems: "center",
-  //   cursor: "pointer",
-  //   height: areaHt
-  // }
   const dropZoneReg = {
     display: "flex",
     flexFlow: "column wrap",
@@ -850,12 +828,19 @@ function Citizenship(props) {
     // console.log('go to last step');
     skipBgStep();
     e.stopPropagation();
-  };
+  };  
 
-  // useEffect(() => {
-  //   // needs to run when stampSize changes
-  //   applyTextListeners();
-  // }, [userName, applyTextListeners, textColor, buttonColor]);
+  async function walletConnectClick() {
+    try {
+      const provider = new WalletConnectProvider({
+        rpc: {1: process.env.REACT_APP_ALCHEMY_IDS},
+      })
+      await provider.enable()
+      activate(provider)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     if (backgroundColor.fill === true) {
@@ -904,6 +889,7 @@ function Citizenship(props) {
       <Box display="flex" style={{flexFlow: "column", alignItems: "center"}}>
         <WelcomeHeadline headline={CITIZEN_TITLE} subText={CITIZEN_SUBTITLE}/>
         {/*<Box className="card-nav" elevation={3} style={compositorPaper}>*/}
+        
         <Box id="outer-wrap" className="module-border-wrap" style={{maxWidth: "1100px", alignSelf: "center"}}>
           {/*<Box display="flex" alignItems="center" className="module">*/}
           <Box display="flex" alignItems="center" className="module">
@@ -916,11 +902,6 @@ function Citizenship(props) {
                   flexFlow: "column",
                   justifyContent: "space-between",
                   maxWidth: "1100px",
-                  // height: areaHt,
-                  // width: areaWd,
-                  // // TODO (appleseed): this width needs to be capped on mobile
-                  // // ... also should handle border correctly
-                  // maxWidth: areaMaxWd,
                 }}
               >
                 {/* working on loader */}
@@ -928,7 +909,29 @@ function Citizenship(props) {
                   <CircularProgress />
                 }
 
-                {uiStep === 1 &&
+                
+                {!walletAddress ? (
+                  <div className="dropContainer" style={dropContainerStyle}>
+                    <div style={dropZoneReg}>
+                      <Box className="dropzone-interior-container vertical-centered-flex">
+                        <Box className="vertical-centered-flex">
+                            <Typography className="pof-dropbox-text">Please Connect</Typography>
+                            <Typography className="pof-dropbox-text">your Wallet</Typography>
+                          </Box>
+                        <Button
+                          variant="contained"
+                          className="ohmie-button"
+                          onClick={activateBrowserWallet}
+                        >Metamask</Button>
+                        <Button
+                          variant="contained"
+                          className="ohmie-button"
+                          onClick={() => walletConnectClick()}
+                        >Wallet Connect</Button>
+                      </Box>
+                    </div>
+                  </div>
+                ) : uiStep === 1 ? (
                   <div className="dropContainer" style={dropContainerStyle}>
                     <div {...getRootProps({style: dropZoneReg})}>
                       <input {...getInputProps()} />
@@ -965,7 +968,7 @@ function Citizenship(props) {
                       </div>
                     </div>
                   </div>
-                }
+                ) : (<div></div>)}
                 {/*<Box id="mainContainer">*/}
                 {/* Background Cropper */}
                 {uiStep === "bg" && fileImage &&
@@ -1044,6 +1047,7 @@ function Citizenship(props) {
                         textPosition={textPosition}
                         setTextPosition={setTextPosition}
                         disabledImageButton={disabledImageButton}
+                        citizenshipScore={citizenshipScore}
                       />
                     </Box>
                     <Box className="ef-container">
