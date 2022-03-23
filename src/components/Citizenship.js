@@ -783,7 +783,7 @@ function Citizenship(props) {
         }, fileImageType, 1);
         // clearTheCanvas(finalCanvasRef);
         // canvasOrdering("pfp");
-        goToPfpStep();
+        // goToPfpStep();
       }
     }
   };
