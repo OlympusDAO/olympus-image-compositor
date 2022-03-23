@@ -656,7 +656,7 @@ function Fohmo(props) {
               className="ohmie-button"
               onClick={goBackToRoot}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
           </Box>
         }
@@ -668,7 +668,7 @@ function Fohmo(props) {
               className="ohmie-button"
               onClick={goBackOneStep}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
             <Button
               id="upload-pfp-button"

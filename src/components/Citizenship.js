@@ -54,7 +54,7 @@ import {
 import { useArcxScore } from "../hooks/useArcxScore.js";
 
 export const CITIZEN_TITLE = "Ohmie Score";
-export const CITIZEN_SUBTITLE = "Ohmie Score based on your hodling & governance participation.";
+export const CITIZEN_SUBTITLE = "Are you 3, 3 & an active governoooor?";
 // var UAParser = require('ua-parser-js/dist/ua-parser.min');
 // var UA = new UAParser();
 
@@ -76,14 +76,11 @@ const dropContainerStyle = {
 function Citizenship(props) {
   let history = useHistory();
   const { account: walletAddress, activate, activateBrowserWallet } = useEthers();
-  const { data: citizenshipScore } = useArcxScore(walletAddress);
+  const { data: citizenshipScore = 0 } = useArcxScore(walletAddress);
 
   const medScreen = useMediaQuery('(min-width:960px)');
   const [fadeTransition, setFadeTransition] = useState(true);  
   const fadeOutMs = 333;
-
-  // const [viewContainerWidth, setViewContainerWidth] = useState(undefined);
-
   
   useEffect(() => {
     console.log("first effect");
@@ -188,8 +185,9 @@ function Citizenship(props) {
     hex: "#FFFFFF",
     rgb: {r: 255, g: 255, b: 255, a: 100},
   });
+  // eslint-disable-next-line no-unused-vars
   const [currentAPY, setCurrentAPY] = useState("5,000");
-
+  
   /**
    * backgroundColor has two keys, denoted as params below
    * @param {*} fill: true if we want to fill the background
@@ -326,7 +324,7 @@ function Citizenship(props) {
           // desired: [x, y] = [375, 75] on [w, h] = [2154, 950]
           // x/w === 375/2154
           // y/h === 75/950
-          newX = 375/2154 * canvasOnly.width;
+          newX = 350/2154 * canvasOnly.width;
           // newX = canvasOnly.width - 67;
 
         }
@@ -365,10 +363,10 @@ function Citizenship(props) {
         let linePosition = 64/scalingRatio;
         fontSize = (48/scalingRatio);
         ctx.font = "bold "+fontSize+"px RedHatDisplay";
-        ctx.fillText("They're an OHM citizen", newX, newY+linePosition);
+        ctx.fillText("They're an Ohmie", newX, newY+linePosition);
         // lineIndex = 2;
         linePosition = 64/scalingRatio + linePosition;
-        ctx.fillText("with an Ohmie score of "+currentAPY, newX, newY+linePosition);
+        ctx.fillText("with a score of "+citizenshipScore, newX, newY+linePosition);
 
         // lineIndex 3 & 4 are 48 tall in total
         // lineIndex = 3;
@@ -376,8 +374,8 @@ function Citizenship(props) {
         ctx.font = "normal "+(21/scalingRatio)+"px RedHatDisplay";
         ctx.fillText("Citizenship awaits, as our Ohmiversary takes place!", newX, newY+linePosition);
         // lineIndex = 4;
-        linePosition = 26/scalingRatio + linePosition;
-        ctx.fillText("Powered by Arcx, made for Ohmies.", newX, newY+linePosition);
+        // linePosition = 26/scalingRatio + linePosition;
+        // ctx.fillText("Powered by Arcx, made for Ohmies.", newX, newY+linePosition);
 
         ///////////////////////////// BUTTON /////////////////////////////
         // button -> top left corner @ linePosition
@@ -386,7 +384,7 @@ function Citizenship(props) {
         let radius = 28/scalingRatio;
         let x = newX+radius;
         let y = newY+linePosition+radius;
-        let length = 182/scalingRatio;
+        let length = 315/scalingRatio;
         
         // left semi-circle
         // ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
@@ -420,7 +418,7 @@ function Citizenship(props) {
         // letters in button
         ctx.fillStyle = useButtonColor;
         ctx.font = "500 "+20/scalingRatio+"px RedHatDisplay";
-        ctx.fillText("olympusdao.finance", x, y+(6/scalingRatio));
+        ctx.fillText("Powered by Arcx, made for Ohmies", x, y+(6/scalingRatio));
         ///////////////////////////// BUTTON /////////////////////////////
         // setLastTextEvent(e);
       }
@@ -428,7 +426,7 @@ function Citizenship(props) {
       history.restoreState();
       textToApply(leftRight);
       console.log("text to apply");
-    }, [croppedBg, userName, textColor, buttonColor, currentAPY]
+    }, [croppedBg, userName, textColor, buttonColor, citizenshipScore]
   );
     
   // uiSteps
@@ -844,7 +842,6 @@ function Citizenship(props) {
 
   useEffect(() => {
     if (backgroundColor.fill === true) {
-      // console.log(backgroundColor);
       var ctx = bgCanvasRef.current.getContext('2d')
       ctx.fillStyle = backgroundColor.color.hex;
       ctx.rect(0, 0, bgCanvasRef.current.width, bgCanvasRef.current.height);
@@ -957,13 +954,13 @@ function Citizenship(props) {
                           className="ohmie-button"
                           onClick={goToLastStep}
                         >
-                          <Typography className="btn-text">I don't want a Bg Image Ser</Typography>
+                          <Typography className="btn-text">I don't want a Bg Image, Fren</Typography>
                         </Button>
                       </Box>
                       <div style={{flexGrow: "0", bottom: "0", position: "absolute", paddingBottom: "10px"}}>
                         <div style={{display: "flex", flexFlow: "column wrap"}}>
                           <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
-                          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
+                          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop in the next step.</Typography>
                         </div>
                       </div>
                     </div>
@@ -1108,7 +1105,7 @@ function Citizenship(props) {
               className="ohmie-button"
               onClick={goBackToRoot}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
           </Box>
         }
@@ -1120,7 +1117,7 @@ function Citizenship(props) {
               className="ohmie-button"
               onClick={goBackOneStep}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
             <Button
               id="upload-pfp-button"
@@ -1134,7 +1131,7 @@ function Citizenship(props) {
         }
 
         {(uiStep === "pfp" || uiStep === "text") &&
-          <ShareOnTwitter inOhmieCard={true} />
+          <ShareOnTwitter inCitizenship={true} />
         }
 
         {/* hiding text so that it is preloaded for canvas */}

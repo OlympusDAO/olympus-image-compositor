@@ -9,16 +9,18 @@ function ShareOnTwitter(props) {
     var text;
     if (props.inOhmieCard) {
       // text = "When you're ready, come on over at @OlympusDAO and earn rewards every 8 hours. #OHMISBACKED #OHMIECARD"
-      text = "When you're ready, come on over at @OlympusDAO and earn rewards every 8 hours. #OHMISBACKED #OHMIECARD"
+      text = "When you're ready, come on over at @OlympusDAO and earn rewards every 8 hours. #OHMISBACKED #OHMIECARD";  
+    } else if (props.inCitizenship) {
+      text = "What's your Ohmie Score, anon? #Ohmieversary @OlympusDAO";
     } else {
       // text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO";
-      text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO"
+      text = "I'm an Ohmie, are you anon? #OHMISBACKED #PROOFOFOHMIE @OlympusDAO";
     }
     return `https://twitter.com/intent/tweet?url=https%3A%2F%2Fproofof.ohmie.xyz&text=${encodeURIComponent(text)}`;
   };
 
   const discordString = () => {
-    return "https://discord.com/invite/6QjjtUcfM4";
+    return "https://discord.gg/tbaQVt6P2S";
   };
   
   return (

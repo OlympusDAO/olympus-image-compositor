@@ -952,13 +952,13 @@ function OhmieCardV4(props) {
                           className="ohmie-button"
                           onClick={goToLastStep}
                         >
-                          <Typography className="btn-text">I don't want a Bg Image Ser</Typography>
+                          <Typography className="btn-text">I don't want a Bg Image, Fren</Typography>
                         </Button>
                       </Box>
                       <div style={{flexGrow: "0", bottom: "0", position: "absolute", paddingBottom: "10px"}}>
                         <div style={{display: "flex", flexFlow: "column wrap"}}>
                           <Typography variant="body1" style={{fontFamily: "RedHatDisplay", marginTop: "0.25rem"}}>Optimal Aspect Ratio: {fixedWidth}/{fixedHeight} (width/height).</Typography>
-                          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop on next step.</Typography>
+                          <Typography variant="body1" style={{fontFamily: "RedHatDisplay", margin: "0.1rem"}}>Don't worry, fren. You can crop in the next step.</Typography>
                         </div>
                       </div>
                     </div>
@@ -1102,7 +1102,7 @@ function OhmieCardV4(props) {
               className="ohmie-button"
               onClick={goBackToRoot}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
           </Box>
         }
@@ -1114,7 +1114,7 @@ function OhmieCardV4(props) {
               className="ohmie-button"
               onClick={goBackOneStep}
             >
-              <Typography className="btn-text">Take Me Back Ser</Typography>
+              <Typography className="btn-text">Take Me Back, Fren</Typography>
             </Button>
             <Button
               id="upload-pfp-button"

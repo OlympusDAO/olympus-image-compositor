@@ -100,7 +100,7 @@ function BoxHomepage() {
                     variant="contained"
                     className="ohmie-button"
                   >
-                    <Typography className="btn-text">Create Card</Typography>
+                    <Typography className="btn-text">Create Citizenship</Typography>
                   </Button>
                 </Box>
               </Box>
